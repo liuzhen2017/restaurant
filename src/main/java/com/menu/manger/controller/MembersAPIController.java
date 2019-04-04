@@ -346,6 +346,7 @@ public class MembersAPIController extends BaseController
     		return	membersService.saveIntegral(str);
     	}
     	str =AESUtil.AES_CBC_Decrypt(str);
+    	//扫描二维码怎共
     	if(!StringUtils.isEmpty(str) && str.contains("type=menuFood;")){
     		return	menuFoodService.qcMenuFood(str);
     	}

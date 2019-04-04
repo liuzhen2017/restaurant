@@ -21,6 +21,7 @@ import com.menu.manger.mapper.MembersMapper;
 import com.menu.manger.mapper.MenuFoodExchangeMapper;
 import com.menu.manger.mapper.MenuFoodMapper;
 import com.menu.manger.mapper.MyCouponMapper;
+import com.menu.manger.service.IAccountFlowService;
 import com.menu.manger.service.IMenuFoodService;
 import com.menu.manger.service.INoticeInfoService;
 import com.menu.manger.service.ISendMessagerService;
@@ -65,6 +66,8 @@ public class MenuFoodServiceImpl implements IMenuFoodService
 	ISendMessagerService sendMessService;
 	@Autowired
 	private INoticeInfoService notiCeInfoService;
+	@Autowired
+	IAccountFlowService accountFlowService;
 	/**
      * 查询餐牌信息
      * 
@@ -305,7 +308,7 @@ public class MenuFoodServiceImpl implements IMenuFoodService
 		if(StringUtils.isEmpty(couponCode)){
 			return AjaxResult.error("該二維碼無效!");
 		}
-		
+		//invoiceNo
 		MenuFood menuFood =new MenuFood();
 		menuFood.setIsExchange("yes");
 		menuFood.setIsValid("yes");

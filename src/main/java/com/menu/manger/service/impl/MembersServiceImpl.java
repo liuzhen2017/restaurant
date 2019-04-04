@@ -432,24 +432,33 @@ public class MembersServiceImpl implements IMembersService {
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
 	public AjaxResult saveIntegral(String info)
 			throws UnsupportedEncodingException, NumberFormatException, ParseException {
+		Lock lock =new ReentrantLock();
+		lock.lock();
 		log.info("request parmat ={}", info);
 		info = info.replace("http://www.storellet.com/a/qrCode/s=", "")
 				.replace("&brandId=100", "");
 		log.info("request replace head,food ={}", info);
-		info = java.net.URLDecoder.decode(info, "utf-8");
-		log.info("url decode={}", info);
 		info = AESUtil.AES_CBC_Decrypt(info);
 		log.info("decrypt Info={}", info);
 		if(StringUtils.isEmpty(info)){
 			return AjaxResult.error("解析二維碼錯誤!");
 		}
-		info = info.replace("&", "%%%%%%%%%%%%%%%");
+//		info = info.replace("&", "%%%%%%%%%%%%%%%");
+		String [] result =info.split(";");
 		
-		
+		AccountFlow accountFlow =new AccountFlow();
 		//判斷時間,是否是配置時間
-		//transactionDatetime=201504151759
+		accountFlow.setInvoiceNo(result[2]);
+		List<AccountFlow> selectAccountFlowList2 = accountFlowService.selectAccountFlowList(accountFlow);
+		if(selectAccountFlowList2 ==null || selectAccountFlowList2.size() ==0) {
+			return AjaxResult.error("很抱歉,该账单没有同步到系统里面");
+		}
+		if(selectAccountFlowList2.get(0).getTranType() != 2) {
+			return AjaxResult.error("该二维码已经积分过了,不允许重复积分");
+		}
+		
 		SysConfig invaildDay = sysConfigService.selectByKey(HttpConstants.qcSaveDate);
-		String transactionDatetime =getValueByKey("transactionDatetime",info);
+		String transactionDatetime =getValueByKey("transactionDatetime",result[3]);
 		transactionDatetime =transactionDatetime.substring(0, 8);
 		Date tranctionDate= DateUtils.addDays(DateUtils.parseDate(transactionDatetime, "yyyyMMdd"),Integer.parseInt(invaildDay.getConfigValue()));
 		if(tranctionDate.before(new Date())){
@@ -459,38 +468,24 @@ public class MembersServiceImpl implements IMembersService {
 		
 		
 		Members loginUser = (Members) ThreadLocalUtil.getUserInfo();
-		loginUser.setScore(loginUser.getScore());
+		Members selectMembersById = membersMapper.selectMembersById(loginUser.getId());
 		log.info("submitRedemption 3:填写账户流水 ");
-		AccountFlow accountFlow = new AccountFlow();
-		accountFlow.setInvoiceNo(getValueByKey("invoiceNo",info));
-		List<AccountFlow> selectAccountFlowList = accountFlowService.selectAccountFlowList(accountFlow);
-		if(selectAccountFlowList !=null && selectAccountFlowList.size() >0){
-			return AjaxResult.error("積分錯誤！該二維碼已經積分！請勿重複積分");
-		}
-		accountFlow.setAccNo(loginUser.getId() + "");
 		
 		
 		BranchStore branchStore = new BranchStore();
-		branchStore.setStoreNo(Integer.parseInt(getValueByKey("brandId",info) + ""));
+		branchStore.setStoreNo(Integer.parseInt(result[0] + ""));
 		List<BranchStore> selectBranchStoreList = branchStoreSerivce.selectBranchStoreList(branchStore);
 		// brandId=100&shopCode=SHOP001&invoiceNo=000-003553&invoiceAmount=1250&netAmound=1150&pax=3&orderType=1&paymentMethod=2&itemCodeQuantity=FOOD001%3A2%2CFOOD342%3A4%2CFOOD323%3A2&transactionDatetime=201504151759
 		//8;818;1052000;201903151520
-		accountFlow.setBranchStoreId(getValueByKey("brandId",info));
+		accountFlow.setBranchStoreId(selectBranchStoreList.get(0).getId()+"");
 		BranchStore selectBranchStoreById = selectBranchStoreList.size() == 0 ? null
 				: selectBranchStoreList.get(0);
 		if (selectBranchStoreById != null) {
 			accountFlow
 					.setBranchStoreName(selectBranchStoreById.getStoreName());
 		}
-		accountFlow.setInvoiceAmount(new BigDecimal(getValueByKey("invoiceAmount",info)));
-		accountFlow.setMoney(new BigDecimal(getValueByKey("netAmount",info)));
-		accountFlow.setCreateDate(new Date());
-		accountFlow.setTranDes("掃描二維碼積分");
-		accountFlow.setTranType(2);
-		accountFlow.setMenuId(loginUser.getId());
-		accountFlow.setMenuAccNo(loginUser.getCode());
-		accountFlow.setNetAmount(new BigDecimal(getValueByKey("netAmount",info)));
-		accountFlowService.insertAccountFlow(accountFlow);
+		selectAccountFlowList2.get(0).setTranType(3);
+		accountFlowService.updateAccountFlow(selectAccountFlowList2.get(0));
 		ScoreHis scoreHis = new ScoreHis();
 		// 查詢積分規則
 		log.info("submitRedemption 3:计算积分 ");
@@ -500,13 +495,13 @@ public class MembersServiceImpl implements IMembersService {
 			log.info("submitRedemption 3.1:積分規則爲空,本次交易沒計算積分 ");
 		} else {
 			Double score = byRole.getScoreValue()
-					* Double.parseDouble(loginUser.getMembersType() + "");
+					* Double.parseDouble(selectAccountFlowList2.get(0).getNetAmount() + "");
 			// 記錄積分
 
-			scoreHis.setDescribes("pos機消費積分:" + score);
+			scoreHis.setDescribes("扫描二维码积分:" + score);
 			scoreHis.setMembersId(loginUser.getId());
-			scoreHis.setOlbScore(0);
-			scoreHis.setNewScore(score.intValue());
+			scoreHis.setOlbScore(selectMembersById.getScore());
+			scoreHis.setNewScore(selectMembersById.getScore()+score.intValue());
 			ScoreHis hisByUserId = scoreHisService
 					.selectScoreHisByUserId(loginUser.getId());
 			if (hisByUserId != null) {
@@ -561,10 +556,13 @@ public class MembersServiceImpl implements IMembersService {
 		try {
 			return AjaxResult.success(0, "掃碼儲存積分成功!",
 					ServiceUtil.tokenByUser(loginUser));
+			
 		} catch (JsonProcessingException | IllegalArgumentException
 				| JWTCreationException | UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return AjaxResult.success("掃碼儲存積分成功!");
+		}finally {
+			lock.unlock();
 		}
 	}
 
@@ -583,7 +581,7 @@ public class MembersServiceImpl implements IMembersService {
 		return null;
 	}
 	public static void main(String[] args) {
-		String transactionDatetime="201504151759";
-		System.out.println(transactionDatetime.substring(0, 8));
+		String transactionDatetime[]="8;818;1052000;201903151520".split(";");
+		System.out.println(transactionDatetime[2]);
 	}
 }

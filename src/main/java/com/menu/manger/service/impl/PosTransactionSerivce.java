@@ -189,7 +189,7 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 			c.setOffType(0);
 			c.setNetOff(5);
 			itemCode = new ArrayList<>();
-			c.setExpiry(coupon.getTakeEffectDate());
+			c.setExpiry(coupon.getInvalidDate());
 			c.setDescription(coupon.getRemark());
 			itemCode.add("0000"+coupon.getSpareField1());
 			c.setItemCode(itemCode);
@@ -283,52 +283,68 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 			String netAmount, String pax, String coupons, String memberID,
 			String t, String h) {
 		CloseTransactionResponse response =new CloseTransactionResponse();
-		if(StringUtils.isEmpty(coupons) || StringUtils.isEmpty(memberID)) {
+		/*if(StringUtils.isEmpty(coupons) || StringUtils.isEmpty(memberID)) {
 			response.setResult(1);
 			response.setErrCode(2);;
 			response.setErrMsg("關鍵信息不能為空!");;
 			return response;
-		}
-		log.info("begin request submitRedemption ,brandID ={},transactionDatetime ={},invoiceNo ={},invoiceAmount ={},netAmount ={},memberID ={}",brandID,transactionDatetime,shopCode,invoiceNo,invoiceAmount,netAmount,pax,coupons,memberID);
+		}*/
+		log.info("begin request closeTransaction ,brandID ={},transactionDatetime ={},invoiceNo ={},invoiceAmount ={},netAmount ={},memberID ={}",brandID,transactionDatetime,shopCode,invoiceNo,invoiceAmount,netAmount,pax,coupons,memberID);
+		List<Members> selectMembersList =null;
 		Members members =new Members();
-		members.setCode(memberID);
-		List<Members> selectMembersList = memBersMapper.selectMembersList(members);
+		if(!StringUtils.isEmpty(memberID)) {
+			members.setCode(memberID);
+			selectMembersList = memBersMapper.selectMembersList(members);
+			log.info("closeTransaction 1: query members By code ={} ",selectMembersList);
+			if(selectMembersList ==null || selectMembersList.size() ==0){
+				response.setResult(1);
+				response.setErrCode(2);;
+				response.setErrMsg("根據賬號未查到會員信息");;
+				response.setStatus(1);
+				return response;
+			}
+			members=selectMembersList.get(0);
+		}
 		Lock lock =new ReentrantLock();
 		lock.lock();
-		log.info("submitRedemption 1: query members By code ={} ",selectMembersList);
-		if(selectMembersList ==null || selectMembersList.size() ==0){
-			response.setResult(1);
-			response.setErrCode(2);;
-			response.setErrMsg("根據賬號未查到會員信息");;
-			return response;
-		}
-		List<MenuFoodExchange> selectMenuFoodExchangeByIds = memuFoodExchange.selectMenuFoodExchangeByIds(coupons);
-		log.info("submitRedemption 2: 查詢優惠券={selectMenuFoodExchangeByIds} ",selectMenuFoodExchangeByIds);
-		if(selectMenuFoodExchangeByIds ==null || selectMenuFoodExchangeByIds.size() ==0){
-			response.setResult(1);
-			response.setErrCode(2);;
-			response.setErrMsg("優惠券ID有誤!");;
-			return response;
-		}
-		for (MenuFoodExchange foodExchange : selectMenuFoodExchangeByIds) {
-			if(foodExchange ==null || !foodExchange.getIsVaild().equals("no") ||foodExchange.getExchangeStatus() != 1){
+		if(!StringUtils.isEmpty(coupons)) {
+			List<MenuFoodExchange> selectMenuFoodExchangeByIds = memuFoodExchange.selectMenuFoodExchangeByIds(coupons);
+			log.info("closeTransaction 2: 查詢優惠券={} ",selectMenuFoodExchangeByIds);
+			if(selectMenuFoodExchangeByIds ==null || selectMenuFoodExchangeByIds.size() ==0){
 				response.setResult(1);
-				  response.setErrCode(2);;
-				  response.setErrMsg("優惠券狀態已經不可以消費!");;
-				  return response;
-			  }
-			
-			if(DateUtils.dateTime("yyyy-MM-dd HH:mm:ss",foodExchange.getTakeEffectDate()).before(new Date())){
-				response.setResult(1);
-				  response.setErrCode(2);;
-				  response.setErrMsg("該優惠券已經過期,優惠券代碼:0000"+foodExchange.getSpareField1());;
-				  return response;
+				response.setErrCode(2);;
+				response.setErrMsg("優惠券ID有誤!");;
+				response.setStatus(1);
+				return response;
 			}
-			noticeInfoService.insertNoticeInfo("优惠券使用通知", members.getId(), foodExchange.getId().intValue(), "MenuFoodExchange", foodExchange.getMenuFoodPic());
+			for (MenuFoodExchange foodExchange : selectMenuFoodExchangeByIds) {
+				if(foodExchange ==null || !foodExchange.getIsVaild().equals("no") ||foodExchange.getExchangeStatus() != 1){
+					response.setResult(1);
+					  response.setErrCode(2);;
+					  response.setErrMsg("優惠券狀態已經不可以消費!");;
+					  response.setStatus(1);
+					  return response;
+				  }
+				
+				if(DateUtils.dateTime("yyyy-MM-dd HH:mm:ss",foodExchange.getInvalidDate()).before(new Date())){
+					response.setResult(1);
+					  response.setErrCode(2);;
+					  response.setErrMsg("該優惠券已經過期,優惠券代碼:0000"+foodExchange.getSpareField1());;
+					  return response;
+				}
+				if(StringUtils.isEmpty(memberID)) {
+				  noticeInfoService.insertNoticeInfo("您在pos机消费了一张优惠券", members.getId(), foodExchange.getId().intValue(), "MenuFoodExchange", foodExchange.getMenuFoodPic());
+				}
+			}
 		}
-		log.info("submitRedemption 3:填写账户流水 ");
+		log.info("closeTransaction 3:填写账户流水 ");
+		
 	    AccountFlow accountFlow =new AccountFlow();
-	    accountFlow.setAccNo(memberID);
+	    if(!StringUtils.isEmpty(memberID)) {
+	        accountFlow.setAccNo(memberID);
+	        accountFlow.setMenuId(selectMembersList.get(0).getId());
+	    	accountFlow.setMenuAccNo(selectMembersList.get(0).getCode());
+	    }
 	    
 		BranchStore branchStore =new BranchStore();
 		branchStore.setStoreNo(Integer.parseInt(brandID));
@@ -344,67 +360,68 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 	    accountFlow.setCreateDate(new Date());
 	    accountFlow.setTranDes("pos機消費");
 	    accountFlow.setTranType(2);
-	    accountFlow.setMenuId(selectMembersList.get(0).getId());
-	    accountFlow.setMenuAccNo(selectMembersList.get(0).getCode());
 	    accountFlow.setNetAmount(new BigDecimal(netAmount));
 	    accountFlow.setCouponCode(coupons);
 	    
 		accountFlowService.insertAccountFlow(accountFlow);
-		ScoreHis scoreHis =new ScoreHis();
-		//查詢積分規則
-		log.info("submitRedemption 3:计算积分 ");
-		IntegralRole byRole = roleService.selectByRole(selectMembersList.get(0).getMembersType());
-		if(byRole ==null){
-			log.info("submitRedemption 3.1:積分規則爲空,本次交易沒計算積分 ");
-		}else{
-			Double score= byRole.getScoreValue() *Double.parseDouble(invoiceAmount);		
-			//記錄積分
-			
-			scoreHis.setDescribes("pos機消費積分:"+score);
-			scoreHis.setMembersId(selectMembersList.get(0).getId());
-			scoreHis.setOlbScore(0);
-			scoreHis.setNewScore(score.intValue());
-			ScoreHis hisByUserId = scoreHisService.selectScoreHisByUserId(selectMembersList.get(0).getId());
-			if(hisByUserId !=null){
-				scoreHis.setOlbScore(hisByUserId.getNewScore());
-				scoreHis.setNewScore(scoreHis.getNewScore() +hisByUserId.getNewScore());	
-			}
-			scoreHis.setCreatedDate(new Date());
-			scoreHis.setBusiId(invoiceNo);
-			scoreHisService.insertScoreHis(scoreHis);
-			//判斷用戶消費，是否滿足自動升級會員
-			String queryCigKey =HttpConstants.autoUpgradingMoney;
-			if(selectMembersList.get(0).getMembersType() ==HttpConstants.EmmbersType_1){
-				queryCigKey =HttpConstants.autoUpgradingMoneyVIP;
-			}
-			SysConfig selectByKey = sysConfigService.selectByKey(queryCigKey);
-			int moneyByMemId = accountFlowService.selectAccountMoneyByMemId(selectMembersList.get(0).getId());
-			if(moneyByMemId >= Integer.parseInt(selectByKey.getConfigValue())){
-				//如果是會員
-				Date vipDateEnd =new Date();
-				if(selectMembersList.get(0).getMembersType() ==HttpConstants.EmmbersType_1){
-					Date dateTime = DateUtils.dateTime("yyyyMMdd",selectMembersList.get(0).getVipDate());
-					if(dateTime.after(new Date())){
-						//如果會員沒有過期，則過期時間 +1年  20191230 + 1 =20201230
-						vipDateEnd =DateUtils.addYears(dateTime, 1);
-					}
-					selectMembersList.get(0).setUpgradeDate(DateUtils.parseDateToStr("yyyyMMdd", new Date()));
-					selectMembersList.get(0).setVipDate(DateUtils.parseDateToStr("yyyyMMdd", vipDateEnd));
+		if(StringUtils.isEmpty(memberID)) {
+			ScoreHis scoreHis =new ScoreHis();
+			//查詢積分規則
+			log.info("closeTransaction 3:计算积分 ");
+			IntegralRole byRole = roleService.selectByRole(selectMembersList.get(0).getMembersType());
+			if(byRole ==null){
+				log.info("closeTransaction 3.1:積分規則爲空,本次交易沒計算積分 ");
+			}else{
+				Double score= byRole.getScoreValue() *Double.parseDouble(invoiceAmount);		
+				//記錄積分
+				
+				scoreHis.setDescribes("pos機消費積分:"+score);
+				scoreHis.setMembersId(selectMembersList.get(0).getId());
+				scoreHis.setOlbScore(0);
+				scoreHis.setNewScore(score.intValue());
+				ScoreHis hisByUserId = scoreHisService.selectScoreHisByUserId(selectMembersList.get(0).getId());
+				if(hisByUserId !=null){
+					scoreHis.setOlbScore(hisByUserId.getNewScore());
+					scoreHis.setNewScore(scoreHis.getNewScore() +hisByUserId.getNewScore());	
 				}
-				noticeInfoService.insertNoticeInfo("消費金額滿"+selectByKey.getConfigValue()+" 積分自動升級通知", members.getId(), 0, "noticeType", "恭喜您：本年度"+DateUtils.dateTime()+", 消費金額滿"+selectByKey.getConfigValue()+" 積分自動升級,享受VIP優惠,該優惠于："+selectMembersList.get(0).getVipDate()+"失效.");
+				scoreHis.setCreatedDate(new Date());
+				scoreHis.setBusiId(invoiceNo);
+				scoreHisService.insertScoreHis(scoreHis);
+				//判斷用戶消費，是否滿足自動升級會員
+				String queryCigKey =HttpConstants.autoUpgradingMoney;
+				if(selectMembersList.get(0).getMembersType() ==HttpConstants.EmmbersType_1){
+					queryCigKey =HttpConstants.autoUpgradingMoneyVIP;
+				}
+				SysConfig selectByKey = sysConfigService.selectByKey(queryCigKey);
+				int moneyByMemId = accountFlowService.selectAccountMoneyByMemId(selectMembersList.get(0).getId());
+				if(moneyByMemId >= Integer.parseInt(selectByKey.getConfigValue())){
+					//如果是會員
+					Date vipDateEnd =new Date();
+					if(selectMembersList.get(0).getMembersType() ==HttpConstants.EmmbersType_1){
+						Date dateTime = DateUtils.dateTime("yyyyMMdd",selectMembersList.get(0).getVipDate());
+						if(dateTime.after(new Date())){
+							//如果會員沒有過期，則過期時間 +1年  20191230 + 1 =20201230
+							vipDateEnd =DateUtils.addYears(dateTime, 1);
+						}
+						selectMembersList.get(0).setUpgradeDate(DateUtils.parseDateToStr("yyyyMMdd", new Date()));
+						selectMembersList.get(0).setVipDate(DateUtils.parseDateToStr("yyyyMMdd", vipDateEnd));
+					}
+					noticeInfoService.insertNoticeInfo("消費金額滿"+selectByKey.getConfigValue()+" 積分自動升級通知", members.getId(), 0, "noticeType", "恭喜您：本年度"+DateUtils.dateTime()+", 消費金額滿"+selectByKey.getConfigValue()+" 積分自動升級,享受VIP優惠,該優惠于："+selectMembersList.get(0).getVipDate()+"失效.");
+				}
+				
+				AcctBalance selectAcctBalanceById = accBalanceService.selectAcctBalanceById(1);
+				selectAcctBalanceById.setCanBalance(selectAcctBalanceById.getCanBalance().add(accountFlow.getMoney()));
+				accBalanceService.updateAcctBalance(selectAcctBalanceById);
+				//修改用户积分
+				selectMembersList.get(0).setScore(selectMembersList.get(0).getScore() +scoreHis.getNewScore());
+				memBersMapper.updateMembers(selectMembersList.get(0));
 			}
-			
-			AcctBalance selectAcctBalanceById = accBalanceService.selectAcctBalanceById(1);
-			selectAcctBalanceById.setCanBalance(selectAcctBalanceById.getCanBalance().add(accountFlow.getMoney()));
-			accBalanceService.updateAcctBalance(selectAcctBalanceById);
-			//修改用户积分
-			selectMembersList.get(0).setScore(selectMembersList.get(0).getScore() +scoreHis.getNewScore());
-			memBersMapper.updateMembers(selectMembersList.get(0));
+			noticeInfoService.insertNoticeInfo("消費積分通知", members.getId(), 0, "noticeType", "尊敬的會員,您本次消費積分:"+scoreHis.getNewScore()+",纍計積分為:"+selectMembersList.get(0).getScore());
 		}
-		noticeInfoService.insertNoticeInfo("消費積分通知", members.getId(), 0, "noticeType", "尊敬的會員,您本次消費積分:"+scoreHis.getNewScore()+",纍計積分為:"+selectMembersList.get(0).getScore());
-		log.info("submitRedemption end ,result ={} ",response);
+		log.info("closeTransaction end ,result ={} ",response);
 		lock.unlock();
 		response.setResult(0);
+		response.setStatus(0);
 		return response;
 	}
 
@@ -471,7 +488,7 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 			throw new Exception("優惠券ID有誤!");
 		}
 		for (MenuFoodExchange foodExchange : selectMenuFoodExchangeByIds) {
-			if(DateUtils.dateTime(foodExchange.getTakeEffectDate(),"yyyyMMdd").before(new Date())){
+			if(DateUtils.dateTime(foodExchange.getInvalidDate(),"yyyyMMdd").before(new Date())){
 				throw new Exception("该優惠券已经过期!");
 			}
 			if(foodExchange.getExchangeStatus() ==0){

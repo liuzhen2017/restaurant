@@ -52,16 +52,18 @@ public class BranchStoreServiceImpl implements IBranchStoreService
 	public List<BranchStore> selectBranchStoreList(BranchStore branchStore)
 	{
 		List<BranchStore> list = branchStoreMapper.selectBranchStoreList(branchStore);
-		for (BranchStore branchStore2 : list) {
-			MyCollection myCollection =new MyCollection();
-			myCollection.setResourceId(branchStore2.getId());
-			myCollection.setResourceTable("myShop");
-			Members mem =(Members)ThreadLocalUtil.getUserInfo();
-			myCollection.setMemuId(mem.getId());
-			List<MyCollection> selectMyCollectionList = myCollerctMapper.selectMyCollectionList(myCollection);
-			branchStore2.setIsColle("no");
-			if(selectMyCollectionList !=null && selectMyCollectionList.size() >0){
-				branchStore2.setIsColle("yes");
+		Members mem =(Members)ThreadLocalUtil.getUserInfo();
+		if(mem !=null ) {
+			for (BranchStore branchStore2 : list) {
+				MyCollection myCollection =new MyCollection();
+				myCollection.setResourceId(branchStore2.getId());
+				myCollection.setResourceTable("myShop");
+				myCollection.setMemuId(mem.getId());
+				List<MyCollection> selectMyCollectionList = myCollerctMapper.selectMyCollectionList(myCollection);
+				branchStore2.setIsColle("no");
+				if(selectMyCollectionList !=null && selectMyCollectionList.size() >0){
+					branchStore2.setIsColle("yes");
+				}
 			}
 		}
 		return list;
