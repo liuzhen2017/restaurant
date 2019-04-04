@@ -64,11 +64,10 @@ public class JsonWebTokenUtil {
 	 * @throws JWTCreationException
 	 * @throws UnsupportedEncodingException
 	 */
-	public static<T> String sign(T obj,long maxAge) throws JsonProcessingException, IllegalArgumentException, JWTCreationException, UnsupportedEncodingException {
+	public static<T> String sign(T obj,long maxAge,Date iatDate) throws JsonProcessingException, IllegalArgumentException, JWTCreationException, UnsupportedEncodingException {
 		Builder builder =JWT.create();
 		builder.withHeader(createHead()) //header
 		.withSubject(mapper.writeValueAsString(obj)); //payload
-		Date iatDate = new Date(); // expire time 
 		Calendar nowTime = Calendar.getInstance();
 		nowTime.add(calendarField, calendarInterval); 
 		Date expiresDate = nowTime.getTime();
@@ -94,8 +93,8 @@ public class JsonWebTokenUtil {
 	 * @throws JWTCreationException
 	 * @throws UnsupportedEncodingException
 	 */
-	public static<T> String sign(T obj) throws JsonProcessingException, IllegalArgumentException, JWTCreationException, UnsupportedEncodingException {
-		return sign(obj,60*1000*60*24*7);
+	public static<T> String sign(T obj,Date dt) throws JsonProcessingException, IllegalArgumentException, JWTCreationException, UnsupportedEncodingException {
+		return sign(obj,60*1000*60*24*7,dt);
 	}
 	/**
 	 * 解密token

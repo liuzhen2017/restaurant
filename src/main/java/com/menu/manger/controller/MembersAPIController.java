@@ -31,7 +31,6 @@ import com.menu.manger.service.IMembersService;
 import com.menu.manger.service.IMenuFoodService;
 import com.menu.manger.util.AESUtil;
 import com.menu.manger.util.AjaxResult;
-import com.menu.manger.util.JsonWebTokenUtil;
 import com.menu.manger.util.QrCodeCreateUtil;
 
 
@@ -86,7 +85,6 @@ public class MembersAPIController extends BaseController
 		    mem.setPwd(null);
 		    mem.setSalt(null);
 		    Map<String, Object> data = new HashMap<String, Object>();
-			data.put("webToken", JsonWebTokenUtil.sign(mem));
 			data.put("membersInfo", mem);
 			data.put("myscorp", mem.getScore());
 		    return AjaxResult.success(0,"",data);

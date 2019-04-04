@@ -27,7 +27,6 @@ public class ServiceUtil {
 	 */
 	public static Map<String, Object> tokenByUser(Members member) throws JsonProcessingException, IllegalArgumentException, JWTCreationException, UnsupportedEncodingException{
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("webToken", JsonWebTokenUtil.sign(member));
 		data.put("membersInfo", member);
 		data.put("myscorp", member.getScore());
 		return data;

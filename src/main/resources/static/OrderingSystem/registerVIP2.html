@@ -168,7 +168,6 @@ function requestService(email,tokenId,amount){
          success: function(data){
 			if(data.code ==0){
                msg(data.msg);
-               localStorage.setItem("token",data.data.webToken);
 			   window.location.href="registerVIP3.html";
 			}else{
 				msg(data.msg);

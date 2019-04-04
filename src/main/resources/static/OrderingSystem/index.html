@@ -54,24 +54,7 @@
     <!--尾部 End-->
 </div>
 <!--彈窗 start-->
-<div class="index-filter modal filter-bg" style="display: none">
-    <!--彈窗壹-->
-    <div class="modal-dialog" style="display: none">
-        <div class="modal-con qgqw-member-filter">
-            <div class="modal-text qgqw-member-con">
-                <p class="pb22">請您確認您的點郵是：</p>
-                <p class=""></p>
-            </div>
-            <div class="modal-btn">
-                <table class="btn-table" cellpadding="0" cellspacing="0">
-                    <tr>
-                        <td><a class="" href="#">更改</a></td>
-                        <td><a class="" href="#">確定</a></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </div>
+<div class="index-filter modal filter-bg" id="showVip" style="display: none">
     <!--彈窗三 start-->
     <div class="shen-gaoji modal-dialog" style="display: none">
         <div class="modal-con super-vipFilter">
@@ -85,7 +68,13 @@
             </div>
         </div>
     </div>
+</div>
+<div class="index-filter modal filter-bg" id="showAdvDiv" style="display: none">
     <!--彈窗三 end-->
+	<div class="modal-ad" id="showAdv" style="display: none;">
+		 <img class="close-img"  src="imgs/close-gray.png">
+		 <span id="showImg"></span>
+	</div>
 </div>
 <!-- JS -->
     <script type="text/javascript" src="./js/comm.js"></script>
@@ -110,7 +99,8 @@
 	    	$("#score").html(user.score);
 	    	if(user.membersType ==0 && window.localStorage.isTis !="false"){
 	    		$(".shen-gaoji").css("z-index","99");
-	            $(".index-filter,.shen-gaoji").css("display","block");	
+	            $(".index-filter,.shen-gaoji").css("display","block");
+	            $("#showVip").show();
 	    	}
 	    	localStorage.setItem("isTis","false");
 	    	if(!window.localStorage.showScode){
@@ -135,7 +125,6 @@
     			url : pathUrl + "/api/banner/list",
     			data : {token:window.localStorage.token,pageNum:1,pageSize:10},
     			type : "post",
-    			async: false,
     			jsonpCallback:'cd',
     			success : function(result) {
     				var str ='';
@@ -163,7 +152,6 @@
     		}
     		$.ajax({
     			method : "POST",
-    			async:false,
     			url : pathUrl + "/api/menuFood/getFoodByScose.do",
     			data : {token:window.localStorage.token,isHot:"yes",pageNum:1,pageSize:10},
     			type : "post",
@@ -211,13 +199,21 @@
     			url : pathUrl + "/system/showAdve/list",
     			data : {pageNum:1,pageSize:10},
     			type : "post",
-    			async: false,
     			jsonpCallback:'cd',
     			success : function(result) {
     				var str ='';
     				var url;
     				if (result.code =='0') {
-    					//document.writeln("<div id=\"leftDiv1\" ><a href='http://www.xiameneye.org.cn/special/zhengji/' target=_blank><img src='"+result.rows[0].picUrl+"' border=0></a><div class='divclose1'><span onclick=\"$('#leftDiv1').remove()\">关闭X</span></div></div>");
+    					var obj =result.rows[0];
+    					if(!obj){
+    						return false;
+    					}
+    					if(!window.localStorage.showAdv || window.localStorage.showAdv != obj.id+""){
+    						$("#showImg").html('<a href="'+obj.linkUrl+'"><img class="ad-img" src="'+obj.picUrl+'"></a>');
+    						$("#showAdv").show();
+    						$("#showAdvDiv").show();
+    						localStorage.setItem("showAdv",obj.id);
+    					}
     				}
     			},
     			error : function(error) {

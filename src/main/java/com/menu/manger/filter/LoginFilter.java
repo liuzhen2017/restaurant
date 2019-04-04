@@ -2,6 +2,8 @@ package com.menu.manger.filter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -13,14 +15,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSONObject;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.auth0.jwt.interfaces.Verification;
 import com.menu.manger.constants.HttpConstants;
 import com.menu.manger.dto.Members;
 import com.menu.manger.dto.SysConfig;
+import com.menu.manger.mapper.MembersMapper;
 import com.menu.manger.mapper.SysConfigMapper;
 import com.menu.manger.util.AjaxResult;
 import com.menu.manger.util.JsonWebTokenUtil;
@@ -68,12 +77,26 @@ public class LoginFilter implements Filter {
 						4444, "請求口令錯誤!")));
 				return false;
 			}
-
+			MembersMapper membersMapper = ApplicationContextHelper.getBean(MembersMapper.class);
 			if (!StringUtils.isEmpty(token)) {
 				userInfo = JsonWebTokenUtil.unsign(token, Members.class);
 				if (userInfo != null) {
+					Members dbMember = membersMapper.selectMembersById(userInfo.getId());
+					Verification verifier =JWT.require(Algorithm.HMAC256("SEjCwRETt"));
+					DecodedJWT jwt= verifier.build().verify(token);
+					Date issueDT =jwt.getIssuedAt();
+					String issueAt =new SimpleDateFormat("yyyyMMdd HH:mm:ss").format(issueDT);
+					if(!dbMember.getSaveToken().contains(issueAt)  && !noNeedLogin.contains(requestUrl)){
+						sendMessage(response, JSONObject.toJSONString(AjaxResult.error(
+								5555, "此帳戶正於其他裝置登入,請確認密碼是否被盜!")));
+						return false;
+					}
 					ThreadLocalUtil.set(HttpConstants.SERVICE_CACHE_USER,
 							userInfo);
+				}else{
+					sendMessage(response, JSONObject.toJSONString(AjaxResult.error(
+							4444, "登錄已經過期,請重新登陸!")));
+					return false;
 				}
 			}
 		} catch (Exception e) {

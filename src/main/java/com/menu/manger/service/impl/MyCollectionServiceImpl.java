@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.menu.manger.dto.BranchStore;
 import com.menu.manger.dto.MenuFood;
 import com.menu.manger.dto.MyCollection;
-import com.menu.manger.dto.MyCoupon;
 import com.menu.manger.mapper.MyCollectionMapper;
 import com.menu.manger.service.IMyCollectionService;
 import com.menu.manger.util.Convert;

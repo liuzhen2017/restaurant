@@ -12,7 +12,6 @@ import com.menu.manger.dto.Members;
 import com.menu.manger.dto.MyCollection;
 import com.menu.manger.mapper.BranchStoreMapper;
 import com.menu.manger.mapper.MyCollectionMapper;
-import com.menu.manger.mapper.MyCouponMapper;
 import com.menu.manger.service.IBranchStoreService;
 import com.menu.manger.util.Convert;
 import com.menu.manger.util.ThreadLocalUtil;

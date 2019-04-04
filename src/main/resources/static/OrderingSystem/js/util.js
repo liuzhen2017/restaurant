@@ -1,6 +1,6 @@
 //var pathUrl ="http://localhost:8089/";
-//var pathUrl ="http://flqd.majiangyun.com:8899/";
-var pathUrl ='';
+var pathUrl ="http://flqd.majiangyun.com:8899/";
+//var pathUrl ='';
 // 上传图片
 function uploadFile() {
 	var fileUrl;
@@ -258,7 +258,6 @@ function getMembersInfo(){
 			success : function(result) {
 				if (result.code =='0') {
 					userInfo= result.data.membersInfo;
-					localStorage.setItem("token",result.data.webToken);
 					$('.showScord').html(userInfo.score);
 				}
 			},

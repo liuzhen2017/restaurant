@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -170,12 +171,16 @@ public class MembersServiceImpl implements IMembersService {
 							dbMem.getSalt()).equals(dbMem.getPwd())) {
 				return AjaxResult.error("密碼錯誤!");
 			}
-
-			dbMem.setPwd(null);
+			Members backMem =dbMem;
+			backMem.setPwd(null);
+			Date dt =new Date();
+			String token =JsonWebTokenUtil.sign(backMem,dt);
 			Map<String, Object> data = new HashMap<String, Object>();
-			data.put("webToken", JsonWebTokenUtil.sign(dbMem));
-			data.put("membersInfo", dbMem);
-			data.put("myscorp", dbMem.getScore());
+			data.put("tokent", token);
+			data.put("membersInfo", backMem);
+			data.put("myscorp", backMem.getScore());
+			dbMem.setSaveToken(new SimpleDateFormat("yyyyMMdd HH:mm:ss:SSS").format(dt));
+			membersMapper.updateMembers(dbMem);
 			return AjaxResult.success("登陸成功!", data);
 		}
 		return AjaxResult.error("該賬號不存在!");
@@ -233,7 +238,7 @@ public class MembersServiceImpl implements IMembersService {
 		}
 		members.setScore(0);
 		members.setCode(memCode + "");
-		membersMapper.insertMembers(members);
+		
 		// 查找待領取的優惠券信息
 		MenuFoodExchange menuFoodExchange = new MenuFoodExchange();
 		menuFoodExchange.setMembersId(Long.valueOf(members.getPhone()
@@ -253,12 +258,17 @@ public class MembersServiceImpl implements IMembersService {
 		}
 		//
 
-		lock.unlock();
-		members.setPwd(null);
+		Members backMem = members;
+		backMem.setPwd(null);
+		Date dt =new Date();
+		String token =JsonWebTokenUtil.sign(backMem,dt);
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("webToken", JsonWebTokenUtil.sign(members));
-		data.put("membersInfo", members);
-		data.put("myscorp", members.getScore());
+		data.put("tokent", token);
+		data.put("membersInfo", backMem);
+		data.put("myscorp", backMem.getScore());
+		members.setSaveToken(new SimpleDateFormat("yyyyMMdd HH:mm:ss:SSS").format(dt));
+		membersMapper.insertMembers(members);
+		lock.unlock();
 		return AjaxResult.success("恭喜您,註冊成功!", data);
 	}
 
@@ -274,7 +284,7 @@ public class MembersServiceImpl implements IMembersService {
 		sendEm.setSendTo(byEmail.getEmail());
 		sendEm.setTitle(jb.getString("send_title"));
 		try {
-			String token = JsonWebTokenUtil.sign(byEmail, 1000 * 60 * 60 * 2);
+			String token = JsonWebTokenUtil.sign(byEmail, 1000 * 60 * 60 * 2,new Date());
 			sendEm.setSendContent(jb.getString("send_content") + "<a href='"
 					+ jb.getString("retrieve_url") + "?token=" + token
 					+ "'>找回密碼</a>");
@@ -294,7 +304,7 @@ public class MembersServiceImpl implements IMembersService {
 			return AjaxResult.error("郵件已經過期,請重新發送郵件");
 		}
 		return AjaxResult.success(null,
-				JsonWebTokenUtil.sign(members, 60 * 20 * 60));
+				JsonWebTokenUtil.sign(members, 60 * 20 * 60,new Date()));
 	}
 
 	@Override

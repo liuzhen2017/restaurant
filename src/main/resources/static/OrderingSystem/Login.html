@@ -63,7 +63,8 @@ function loginApi(){
 				msg(result.msg);
 				if (result.code =='0') {
 					//記錄token
-					localStorage.setItem("token",result.data.webToken);
+					debugger;
+					localStorage.setItem("token",result.data.tokent);
 					window.location.href="index.html";
 				}
 			},

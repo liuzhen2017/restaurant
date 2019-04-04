@@ -27,7 +27,27 @@ public class CommonExceptionHandler {
      * @param e
      * @return
      */
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(Throwable
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		.class)
     @ResponseBody
     public String exceptionHandler(Exception e){
     	if(e instanceof HttpRequestMethodNotSupportedException){

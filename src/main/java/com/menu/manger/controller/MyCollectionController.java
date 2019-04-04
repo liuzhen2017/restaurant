@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.menu.manger.dto.BranchStore;
-import com.menu.manger.dto.MenuFood;
 import com.menu.manger.dto.MyCollection;
 import com.menu.manger.page.TableDataInfo;
 import com.menu.manger.service.IMyCollectionService;

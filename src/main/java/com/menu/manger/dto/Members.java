@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * 会员管理表 members
  * 
  * @author liuzhen
- * @date 2019-03-05
+ * @date 2019-04-03
  */
 public class Members extends BaseEntity
 {
@@ -49,6 +49,24 @@ public class Members extends BaseEntity
 	private String isSend;
 	/** 是否推送了消息 */
 	private String isTis;
+	/** 登陆token,通过这个来判断是否登陆,如果不匹配这个字段,则踢出去 */
+	private String saveToken;
+	/** 备用字段 */
+	private String spareField1;
+	/** 备用字段 */
+	private String spareField2;
+	/** 备用字段 */
+	private String spareField3;
+	/** 备用字段 */
+	private String spareField4;
+	/** 备用字段 */
+	private String spareField5;
+	/** 备用字段 */
+	private String spareField6;
+	/** 备用字段 */
+	private String spareField7;
+	/** 备用字段 */
+	private String spareField8;
 
 	public void setId(Integer id) 
 	{
@@ -212,6 +230,87 @@ public class Members extends BaseEntity
 	{
 		return isTis;
 	}
+	public void setSaveToken(String saveToken) 
+	{
+		this.saveToken = saveToken;
+	}
+
+	public String getSaveToken() 
+	{
+		return saveToken;
+	}
+	public void setSpareField1(String spareField1) 
+	{
+		this.spareField1 = spareField1;
+	}
+
+	public String getSpareField1() 
+	{
+		return spareField1;
+	}
+	public void setSpareField2(String spareField2) 
+	{
+		this.spareField2 = spareField2;
+	}
+
+	public String getSpareField2() 
+	{
+		return spareField2;
+	}
+	public void setSpareField3(String spareField3) 
+	{
+		this.spareField3 = spareField3;
+	}
+
+	public String getSpareField3() 
+	{
+		return spareField3;
+	}
+	public void setSpareField4(String spareField4) 
+	{
+		this.spareField4 = spareField4;
+	}
+
+	public String getSpareField4() 
+	{
+		return spareField4;
+	}
+	public void setSpareField5(String spareField5) 
+	{
+		this.spareField5 = spareField5;
+	}
+
+	public String getSpareField5() 
+	{
+		return spareField5;
+	}
+	public void setSpareField6(String spareField6) 
+	{
+		this.spareField6 = spareField6;
+	}
+
+	public String getSpareField6() 
+	{
+		return spareField6;
+	}
+	public void setSpareField7(String spareField7) 
+	{
+		this.spareField7 = spareField7;
+	}
+
+	public String getSpareField7() 
+	{
+		return spareField7;
+	}
+	public void setSpareField8(String spareField8) 
+	{
+		this.spareField8 = spareField8;
+	}
+
+	public String getSpareField8() 
+	{
+		return spareField8;
+	}
 
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -233,6 +332,15 @@ public class Members extends BaseEntity
             .append("code", getCode())
             .append("isSend", getIsSend())
             .append("isTis", getIsTis())
+            .append("saveToken", getSaveToken())
+            .append("spareField1", getSpareField1())
+            .append("spareField2", getSpareField2())
+            .append("spareField3", getSpareField3())
+            .append("spareField4", getSpareField4())
+            .append("spareField5", getSpareField5())
+            .append("spareField6", getSpareField6())
+            .append("spareField7", getSpareField7())
+            .append("spareField8", getSpareField8())
             .toString();
     }
 }

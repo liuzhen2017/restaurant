@@ -26,10 +26,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="code"    column="code"    />
         <result property="isSend"    column="is_send"    />
         <result property="isTis"    column="is_tis"    />
+        <result property="saveToken"    column="save_token"    />
+        <result property="spareField1"    column="spare_field1"    />
+        <result property="spareField2"    column="spare_field2"    />
+        <result property="spareField3"    column="spare_field3"    />
+        <result property="spareField4"    column="spare_field4"    />
+        <result property="spareField5"    column="spare_field5"    />
+        <result property="spareField6"    column="spare_field6"    />
+        <result property="spareField7"    column="spare_field7"    />
+        <result property="spareField8"    column="spare_field8"    />
     </resultMap>
 	
 	<sql id="selectMembersVo">
-        select id, email, pwd, name, region, sex, birthday, score, is_vaild, create_date, members_type, upgrade_date, vip_date, salt, phone, code, is_send, is_tis from members
+        select id, email, pwd, name, region, sex, birthday, score, is_vaild, create_date, members_type, upgrade_date, vip_date, salt, phone, code, is_send, is_tis, save_token, spare_field1, spare_field2, spare_field3, spare_field4, spare_field5, spare_field6, spare_field7, spare_field8 from members
     </sql>
 	
     <select id="selectMembersList" parameterType="Members" resultMap="MembersResult">
@@ -53,8 +62,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="code != null  and code != '' "> and code = #{code}</if>
              <if test="isSend != null  and isSend != '' "> and is_send = #{isSend}</if>
              <if test="isTis != null  and isTis != '' "> and is_tis = #{isTis}</if>
+             <if test="saveToken != null  and saveToken != '' "> and save_token = #{saveToken}</if>
+             <if test="spareField1 != null  and spareField1 != '' "> and spare_field1 = #{spareField1}</if>
+             <if test="spareField2 != null  and spareField2 != '' "> and spare_field2 = #{spareField2}</if>
+             <if test="spareField3 != null  and spareField3 != '' "> and spare_field3 = #{spareField3}</if>
+             <if test="spareField4 != null  and spareField4 != '' "> and spare_field4 = #{spareField4}</if>
+             <if test="spareField5 != null  and spareField5 != '' "> and spare_field5 = #{spareField5}</if>
+             <if test="spareField6 != null  and spareField6 != '' "> and spare_field6 = #{spareField6}</if>
+             <if test="spareField7 != null  and spareField7 != '' "> and spare_field7 = #{spareField7}</if>
+             <if test="spareField8 != null  and spareField8 != '' "> and spare_field8 = #{spareField8}</if>
          </where>
-		  order by id desc
     </select>
     
     <select id="selectMembersById" parameterType="Integer" resultMap="MembersResult">
@@ -82,6 +99,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="code != null  and code != ''  ">code,</if>
 			<if test="isSend != null  and isSend != ''  ">is_send,</if>
 			<if test="isTis != null  and isTis != ''  ">is_tis,</if>
+			<if test="saveToken != null  and saveToken != ''  ">save_token,</if>
+			<if test="spareField1 != null  and spareField1 != ''  ">spare_field1,</if>
+			<if test="spareField2 != null  and spareField2 != ''  ">spare_field2,</if>
+			<if test="spareField3 != null  and spareField3 != ''  ">spare_field3,</if>
+			<if test="spareField4 != null  and spareField4 != ''  ">spare_field4,</if>
+			<if test="spareField5 != null  and spareField5 != ''  ">spare_field5,</if>
+			<if test="spareField6 != null  and spareField6 != ''  ">spare_field6,</if>
+			<if test="spareField7 != null  and spareField7 != ''  ">spare_field7,</if>
+			<if test="spareField8 != null  and spareField8 != ''  ">spare_field8,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="email != null  and email != ''  ">#{email},</if>
@@ -101,6 +127,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="code != null  and code != ''  ">#{code},</if>
 			<if test="isSend != null  and isSend != ''  ">#{isSend},</if>
 			<if test="isTis != null  and isTis != ''  ">#{isTis},</if>
+			<if test="saveToken != null  and saveToken != ''  ">#{saveToken},</if>
+			<if test="spareField1 != null  and spareField1 != ''  ">#{spareField1},</if>
+			<if test="spareField2 != null  and spareField2 != ''  ">#{spareField2},</if>
+			<if test="spareField3 != null  and spareField3 != ''  ">#{spareField3},</if>
+			<if test="spareField4 != null  and spareField4 != ''  ">#{spareField4},</if>
+			<if test="spareField5 != null  and spareField5 != ''  ">#{spareField5},</if>
+			<if test="spareField6 != null  and spareField6 != ''  ">#{spareField6},</if>
+			<if test="spareField7 != null  and spareField7 != ''  ">#{spareField7},</if>
+			<if test="spareField8 != null  and spareField8 != ''  ">#{spareField8},</if>
          </trim>
     </insert>
 	 
@@ -124,6 +159,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="code != null  and code != ''  ">code = #{code},</if>
             <if test="isSend != null  and isSend != ''  ">is_send = #{isSend},</if>
             <if test="isTis != null  and isTis != ''  ">is_tis = #{isTis},</if>
+            <if test="saveToken != null  and saveToken != ''  ">save_token = #{saveToken},</if>
+            <if test="spareField1 != null  and spareField1 != ''  ">spare_field1 = #{spareField1},</if>
+            <if test="spareField2 != null  and spareField2 != ''  ">spare_field2 = #{spareField2},</if>
+            <if test="spareField3 != null  and spareField3 != ''  ">spare_field3 = #{spareField3},</if>
+            <if test="spareField4 != null  and spareField4 != ''  ">spare_field4 = #{spareField4},</if>
+            <if test="spareField5 != null  and spareField5 != ''  ">spare_field5 = #{spareField5},</if>
+            <if test="spareField6 != null  and spareField6 != ''  ">spare_field6 = #{spareField6},</if>
+            <if test="spareField7 != null  and spareField7 != ''  ">spare_field7 = #{spareField7},</if>
+            <if test="spareField8 != null  and spareField8 != ''  ">spare_field8 = #{spareField8},</if>
         </trim>
         where id = #{id}
     </update>
@@ -138,6 +182,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+    
 	<!-- append Begin -->
 	 <select id="selectGrantList" parameterType="Members" resultMap="MembersResult">
        select m.id, m.email, m.pwd, m.name, m.region, m.sex, m.birthday, m.score, m.is_vaild, m.create_date, m.members_type, m.upgrade_date, m.vip_date,m.salt,m.code 
