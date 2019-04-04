@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <meta name="format-detection" content="telephone=no, email=no" />
+    <title>首頁</title>
+
+    <!-- Css -->
+    <link rel="stylesheet" type="text/css" href="./lib/swiper/swiper.min.css" />
+    <link rel="stylesheet" type="text/css" href="./css/wap.css">
+
+    <link rel="stylesheet" type="text/css" href="./js/layer.mobile-v2.0/layer_mobile/need/layer.css">
+<link rel="stylesheet" type="text/css" href="./js/laydate/theme/default/laydate.css">
+</head>
+<body style="background-color: #f5f5f5;">
+<div class="container top-aifix">
+    <!--頭部 start-->
+    <div class="header">
+        <p class="menu-con"><img src="imgs/header-left-icon.png"></p>
+        <p class="tlt"><img src="imgs/header-img.png" width="100%"></p>
+        <p class="rt-btn"><img src="imgs/header-right-icon.png"><span class="number" id="message"></span></p>
+    </div>
+    <!--頭部 End-->
+</div>
+<div class="container">
+    <!--swiper start-->
+    <div class="swiper-container" id="swiper">
+        <div class="swiper-wrapper" id="showBalan">
+        </div>
+        <!-- add pagination -->
+        <div class="swiper-pagination"></div>
+    </div>
+    <!--swiper end-->
+    <!--積分 start-->
+    <div class="integral-container" id="showMyCoupon">
+
+       
+       
+    </div>
+        <div id="score_butt" class="score" style="display: none"><span class="span1"><label class="name">我的積分：</label><br><label class="number" id="score"></label></span></div>
+    <!--積分  start-->
+    <!--尾部 start-->
+    <div class="footer">
+        <ul class="tab-menu">
+            <li class="active"><a href="./index.html" class="basic">主頁</a></li>
+            <li><a href="#tab-2" class="mum">掃QR碼</a></li>
+            <li class="cenBut"><a href="./vipCenter.html" class="magic">會員中心</a></li>
+            <li class=""><a href="./shopLocation.html" class="address">店鋪位置</a></li>
+            <li><a href="./canPai.html" class="canPai">餐牌</a></li>
+        </ul>
+    </div>
+    <!--尾部 End-->
+</div>
+<!--彈窗 start-->
+<div class="index-filter modal filter-bg" style="display: none">
+    <!--彈窗壹-->
+    <div class="modal-dialog" style="display: none">
+        <div class="modal-con qgqw-member-filter">
+            <div class="modal-text qgqw-member-con">
+                <p class="pb22">請您確認您的點郵是：</p>
+                <p class=""></p>
+            </div>
+            <div class="modal-btn">
+                <table class="btn-table" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td><a class="" href="#">更改</a></td>
+                        <td><a class="" href="#">確定</a></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!--彈窗三 start-->
+    <div class="shen-gaoji modal-dialog" style="display: none">
+        <div class="modal-con super-vipFilter">
+            <div class="modal-text super-vip-cont">
+                <p class="p01">您還差壹步<br>就可以升級爲<br><span>高級會員</span></p>
+                <p class=""><img src="imgs/filter-img02.png"></p>
+            </div>
+            <div class="modal-btn super-vip-btn">
+                <a class="btn-a" onclick="">稍後</a>
+                <a class="btn-a active" href="register_vip.html">立即升級</a>
+            </div>
+        </div>
+    </div>
+    <!--彈窗三 end-->
+</div>
+<!-- JS -->
+    <script type="text/javascript" src="./js/comm.js"></script>
+    <script type="text/javascript" src="./js/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="./lib/swiper/swiper.min.js"></script>
+    <script type="text/javascript" src="js/util.js"></script>
+    <script type="text/javascript" src="js/layer.mobile-v2.0/layer_mobile/layer.js"></script>
+<script type="text/javascript" src="js/laydate/laydate.js"></script>
+<script>
+    $(function() {
+        var swiper = new Swiper('#swiper', {
+            loop: true,
+            pagination: '.swiper-pagination',
+            paginationClickable: true,
+            autoplay: 3000
+        });
+    });
+    window.onload = function(){
+    	if(localStorage.getItem('token') || localStorage.getItem('token') != undefined){
+    	var user =getMembersInfo();
+    	if(user && user != null){
+	    	$("#score").html(user.score);
+	    	if(user.membersType ==0 && window.localStorage.isTis !="false"){
+	    		$(".shen-gaoji").css("z-index","99");
+	            $(".index-filter,.shen-gaoji").css("display","block");	
+	    	}
+	    	localStorage.setItem("isTis","false");
+	    	if(!window.localStorage.showScode){
+	    	}
+    		  $("#score_butt").show();
+    	}
+    	}
+    	loadScord();
+    	function loadScord(){
+    		$('#score_butt').trigger("click");
+    	}
+    	//加载弹窗
+    	getShowAdve();
+    	//加载消息
+    	getNotiInfo();
+    	//加載滾動條
+    	getBanlan();
+    	function getBanlan(){
+    		$.ajax({
+    			method : "POST",
+    			async:false,
+    			url : pathUrl + "/api/banner/list",
+    			data : {token:window.localStorage.token,pageNum:1,pageSize:10},
+    			type : "post",
+    			async: false,
+    			jsonpCallback:'cd',
+    			success : function(result) {
+    				var str ='';
+    				var url;
+    				if (result.code =='0') {
+    					for(var i=0;i<result.rows.length;i++){
+    					 str +='<div class="swiper-slide">'
+    						 +'<a href="BannerDetail.html?id='+result.rows[i].id+'"><img src="'+getUrlParmat(result.rows[i].picUrl)+'" /></a>'
+    							 +'</div>';
+    					}
+    					$("#showBalan").html(str);
+    				}
+    			},
+    			error : function(error) {
+    				msg("網絡連接錯誤!"+JSON.stringify(error));
+
+    			}
+    		});
+    }
+    	//加載滾動條
+    	getFoodByScose();
+    	function getFoodByScose(){
+    		if(!window.localStorage.token || window.localStorage.token =='undefined'){
+    			return null;
+    		}
+    		$.ajax({
+    			method : "POST",
+    			async:false,
+    			url : pathUrl + "/api/menuFood/getFoodByScose.do",
+    			data : {token:window.localStorage.token,isHot:"yes",pageNum:1,pageSize:10},
+    			type : "post",
+    			async: false,
+    			jsonpCallback:'cd',
+    			success : function(result) {
+    				var str ='';
+    				if (result.code =='0') {
+    						var str ="";
+    						var msg ='積分就快消費滿 '+result.data.exchangePointsScord+' 分，就免費獲贈';
+    						if(parseInt($("#score").html()) >=result.data.exchangePointsScord){
+    							msg ='積分已滿 '+result.data.exchangePointsScord+' 分，趕快領取贈品吧';
+    						}
+    						str +='<div class="month-con">'
+    							+'<p class="tips-p">'+msg+'</p>'
+    							+'<div class="g-con1">'
+
+    							+'<span id="irow" class="triangle_border_down ft-32"></span>'
+    							+'</div>'
+    							+'<div class="g-con2">'
+    							+'<span class="free-member ft-32"><label>'+result.data.exchangePointsScord+'</label></span>'
+    							+'<div id="consumption_amount2" class="gobal-bar" style="width:0%"></div>'
+    							+'</div>'
+    							+'<div class="mon-txt">'
+    							+'<p>剩余：'+$("#score").html()+'積分</p>'
+    							+ '<a href="changeThings.html?id='+result.data.id +'" class="btn-change">換取産品</a>'
+    				             <!-- <span>76%</span>-->
+    				             +'</div>'
+    				             +'</div>'
+    				             +'<div class="demo-img"><img src="'+getUrlParmat(result.data.picUrl) +'"></div>';
+    					$("#showMyCoupon").html(str);
+    				}
+    			},
+    			error : function(error) {
+    				msg("網絡連接錯誤!"+JSON.stringify(error));
+
+    			}
+    		});
+    }
+    	
+    	function getShowAdve(){
+    		$.ajax({
+    			method : "POST",
+    			async:false,
+    			url : pathUrl + "/system/showAdve/list",
+    			data : {pageNum:1,pageSize:10},
+    			type : "post",
+    			async: false,
+    			jsonpCallback:'cd',
+    			success : function(result) {
+    				var str ='';
+    				var url;
+    				if (result.code =='0') {
+    					//document.writeln("<div id=\"leftDiv1\" ><a href='http://www.xiameneye.org.cn/special/zhengji/' target=_blank><img src='"+result.rows[0].picUrl+"' border=0></a><div class='divclose1'><span onclick=\"$('#leftDiv1').remove()\">关闭X</span></div></div>");
+    				}
+    			},
+    			error : function(error) {
+    				msg("網絡連接錯誤!"+JSON.stringify(error));
+
+    			}
+    		});
+    }
+    	 
+    }
+</script>
+<script type="text/javascript" src="./js/ce.js"></script>
+<script type="text/javascript" src="./js/index.js"></script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+	name="viewport" />
+<meta name="format-detection" content="telephone=no, email=no" />
+<title>優惠券詳情可用券</title>
+<!-- Css -->
+<style type="text/css">
+ .showInput
+        {
+            height:32px;
+            border-radius:5px;
+            outline:none;
+            border-top-style: groove;
+            border-right-style: groove;
+            border-bottom-style: groove;
+            border-left-style: groove;
+            border:1px solid #a1a1a1;
+        }
+        .layui-m-layer1 .layui-m-layerchild{width: 90%;position: fixed;top: 20%;}
+        .layui-m-layermain .layui-m-layersection {
+            display:  flex;
+            vertical-align: middle;
+            text-align: inherit;
+            margin-left: 5%;
+        }
+        .layui-m-layerchild h3{ text-overflow: inherit;
+            height: auto;
+            overflow: hidden;
+            white-space: normal;
+            line-height: 120%;
+            padding: 30px 10px 14px;}
+        .layui-m-layerbtn span{
+            text-overflow: inherit;
+            height: auto;
+            overflow: hidden;
+            white-space: normal;
+            line-height: 120%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+       .layui-m-layerbtn {margin-top: 14px;}
+</style>
+<link rel="stylesheet" type="text/css" href="./css/wap.css">
+<link rel="stylesheet" type="text/css"
+	href="./js/layer.mobile-v2.0/layer_mobile/need/layer.css">
+<link rel="stylesheet" type="text/css"
+	href="./js/laydate/theme/default/laydate.css">
+
+<!-- JS -->
+<script type="text/javascript" src="./js/comm.js"></script>
+<script type="text/javascript" src="./js/jquery-1.8.2.min.js"></script>
+</head>
+<body style="background-color: #f5f5f5;">
+	<div class="container top-aifix">
+		<!--頭部 start-->
+		<div class="header">
+			<a class="return-con"></a>
+			<h4>優惠券詳情</h4>
+		</div>
+		<!--頭部 End-->
+	</div>
+	<div class="banner-pic">
+		<a href="#"><img id="showImg" src="" /></a>
+	</div>
+	<div class="container couponDetail-wrap">
+		<div class="content-list">
+			<div class="title-divBox" style="border-bottom: none;">
+				<p class="p-01">
+					<span id="showTitle"></span></span><span class="gray-span"><a
+						class="share-a" id="sendEmail">送給朋友</a></span>
+				</p>
+				<p class="p-02 ft-32" id="showInvaildDate"></p>
+			</div>
+			<div class="couponDetail-qrCode">
+				<div class="item">
+					<p class="tlt">
+						<img src="imgs/shaom-icon.png">向店員出示優惠券
+					</p>
+					<p class="vip-number">
+						會員編號：<span id="showMemuId"></span>
+					</p>
+					<p class="qrCode-img">
+						<img id="showQC" src="imgs/qrCode-img.png">
+					</p>
+					<p class="vip-number">
+						優惠券編號：<span id="spareField1"></span>
+					</p>
+					<!-- <p class="save-number">
+						<img src="imgs/save-icon.png">安全碼：&nbsp;<span
+							id="showCoupon"></span>
+					</p> -->
+				</div>
+			</div>
+		</div>
+		<div class="couponDetail-rule-list">
+			<div class="title">條款及細則</div>
+			<div class="item" id="showContent"></div>
+		</div>
+	</div>
+	<!--彈窗 start-->
+	<div class="couponDetail02-filter modal filter-bg detail-filter"
+		style="display: none">
+		<div class="filter-content-02">
+		    請輸入好友郵箱進行贈送(如果該用戶沒有注冊,將發郵箱通知)
+			<p><input type="text" id="userNo" name="userNo" class="loginInput" autofocus="autofocus" required="required" autocomplete="off" placeholder=" 請輸入好友郵箱" value="" /></p>
+			<div class="cancel-Box">
+				<a class="btn-cancel" href="#">立即贈送</a>
+				<a class="btn-cancel" href="#">稍後贈送</a>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="./js/index.js"></script>
+	<script type="text/javascript"
+		src="js/layer.mobile-v2.0/layer_mobile/layer.js"></script>
+	<!-- <script type="text/javascript" src="js/layui/layui.js"></script> -->
+	<script type="text/javascript" src="./js/util.js"></script>
+	<script type="text/javascript">
+		showMessage();
+		function showMessage() {
+			$.ajax({
+				method : "POST",
+				async : false,
+				url : pathUrl + "/api/menuFoodExchange/selectById.do?id="
+						+ GetUrlParam('id'),
+				type : "post",
+				async : false,
+				jsonpCallback : 'cd',
+				success : function(result) {
+					var data = result.data;
+					if (result.code == '0') {
+						var user = getMembersInfo();
+						$("#showQC").attr(
+								'src',
+								"/api/myCoupon/queryQC.do?code="
+										+ GetUrlParam('id') + "&tokent="
+										+ window.localStorage.token);
+						$("#showTitle").html(data.menuFoodName);
+						$("#showInvaildDate").html(
+								"有效期:" + typeTime(data.takeEffectDate) + " - "
+										+ typeTime(data.invalidDate));
+						$("#showMemuId").html(user.code);
+						$("#showCoupon").html(user.salt);
+						$("#showContent").html(data.spareField3);
+						$("#spareField1").html(data.spareField1);
+						
+						//$("#showImg").attr('src',getUrlParmat(data.picUrl));
+					} else {
+						msg(result.msg);
+					}
+				},
+				error : function(error) {
+					msg("網絡連接錯誤!" + JSON.stringify(error));
+
+				}
+			});
+		}
+		$("#sendEmail").on('click', function() {
+			layer.open({
+			    id:1,
+			        type: 1,
+			        title:'請輸入朋友手機進行贈送(贈送后,贈送者將立即不能使用該優惠券)',
+			        skin:'layui-layer-rim',
+			        area:['450px', 'auto'],
+			        content: ' <div class="row" style="width: 420px;  margin-left:7px; margin-top:10px;">'
+			            +'<div class="col-sm-12">'
+			            +'<div class="input-group">'
+			            +'<span class="input-group-addon"> 赠送手機   :</span>'
+			            +'<input id="phone" type="text" class="showInput" >'
+			            +'<p>備注:如果該沒有注冊app,將會發送短信提醒用戶,如果已經注冊,將會有系統消息和郵件通知</p>'
+			            +'</div>'
+			            +'</div>'
+			              +'</div>'
+			        ,
+			        btn:['立即赠送','稍後贈送'],
+			        yes: function (index,layero) {
+			        	$.ajax({
+							method : "POST",
+							async : false,
+							url : pathUrl + "/api/menuFood/giveAway.do?id="+ GetUrlParam('id')+"&phone="+$("#phone").val(),
+							type : "post",
+							async : false,
+							jsonpCallback : 'cd',
+							success : function(result) {
+								var data = result.data;
+									msg(result.msg);
+								if (result.code == '0') {
+									window.location.href="vipCenter.html";
+									layer.close(index);
+								}
+							},
+							error : function(error) {
+								msg("網絡連接錯誤!" + JSON.stringify(error));
+
+							}
+						});
+			        },
+			        no:function (index,layero) {
+			        	msg("您選擇了取消贈送");
+			            layer.close(index);
+			        }
+			 
+			    });
+		});
+	</script>
+
+</body>
+</html>

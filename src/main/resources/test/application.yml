@@ -1,0 +1,107 @@
+﻿
+# 开发环境配置
+server:
+  # 服务端口
+  port: 8899
+  servlet:
+    context-path: 
+  tomcat:
+    # tomcat的URI编码
+    uri-encoding: UTF-8
+    # tomcat最大线程数，默认为200
+    max-threads: 800
+    # Tomcat启动初始化的线程数，默认值25
+    min-spare-threads: 30
+ 
+
+# 日志配置
+logging:
+  level:
+       org.springframework: WARN
+       org.spring.springboot.dao: info
+       logging.path: /usr/local/springBootAppProject/log
+       logging.file: springboot.log
+       #logging.pattern.console: %d{yyyy/MM/dd-HH:mm:ss} [%thread] %-5level %logger- %msg%n 
+       #logging.pattern.file: %d{yyyy/MM/dd-HH:mm} [%thread] %-5level %logger- %msg%n
+       org:
+           hibernate:
+                     sql:  DEBUG
+       com.menu.manger.mapper: debug           
+# Spring配置
+spring:
+  # 文件上传
+  servlet:
+     multipart:
+       max-file-size:  30MB
+       max-request-size:  30MB
+  datasource:
+     driver-class-name: com.mysql.cj.jdbc.Driver
+     url: jdbc:mysql://dsr.majiangyun.cn/shopManger?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+     username: root
+     password: root@123.c0M
+
+     # 初始化大小，最小，最大
+     initialSize: 5
+     minIdle: 10
+     maxActive: 1000
+     #配置获取连接等待超时的时间
+     maxWait: 60000
+     #配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+     timeBetweenEvictionRunsMillis: 60000
+     #配置一个连接在池中最小生存的时间，单位是毫秒
+     minEvictableIdleTimeMillis: 300000
+     #验证连接是否有效。此参数必须设置为非空字符串，下面三项设置成true才能生效
+     validationQuery: SELECT 1
+     #指明连接是否被空闲连接回收器(如果有)进行检验.如果检测失败,则连接将被从池中去除.
+     testWhileIdle: true
+     #指明是否在从池中取出连接前进行检验,如果检验失败,则从池中去除连接并尝试取出另一个
+     testOnBorrow: true
+     #指明是否在归还到池中前进行检验
+     testOnReturn: false
+     #打开PSCache，并且指定每个连接上PSCache的大小
+     poolPreparedStatements: true
+     maxPoolPreparedStatementPerConnectionSize: 20
+     #配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+     filters: stat,wall,log4j
+     #通过connectProperties属性来打开mergeSql功能；慢SQL记录
+     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=1000;druid.stat.logSlowSql=true
+     #合并多个DruidDataSource的监控数据
+     useGlobalDataSourceStat: true
+#      WebStatFilter:
+#        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+#      stat-view-servlet:
+#       login-username: admin
+#       login-password: admin
+
+# MyBatis
+mybatis:
+    # 搜索指定包别名
+    typeAliasesPackage: com.menu.manger
+    # 配置mapper的扫描，找到所有的mapper.xml映射文件
+    mapperLocations: classpath*:mapper/**/*Mapper.xml
+    # 加载全局的配置文件
+    configLocation: classpath:mybatis-config.xml
+
+# PageHelper分页插件
+pagehelper: 
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql 
+
+
+# 防止XSS攻击
+xss: 
+  # 过滤开关
+  enabled: true
+  # 排除链接（多个用逗号分隔）
+  excludes: /system/notice/*
+  # 匹配链接
+  urlPatterns: /system/*,/monitor/*,/tool/*
+
+profile:   /usr/local/springBootAppProject/profile/
+serviceUrl: http://localhost:8899/
+ 
+     
+  
+    

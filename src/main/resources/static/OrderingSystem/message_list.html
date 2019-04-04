@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <meta name="format-detection" content="telephone=no, email=no" />
+    <title>最新消息列表</title>
+    <!-- Css -->
+    <link rel="stylesheet" type="text/css" href="./css/wap.css">
+    <link rel="stylesheet" type="text/css" href="./js/layer.mobile-v2.0/layer_mobile/need/layer.css">
+<link rel="stylesheet" type="text/css" href="./js/laydate/theme/default/laydate.css">
+    <!-- JS -->
+    <script type="text/javascript" src="./js/comm.js"></script>
+    <script type="text/javascript" src="./js/jquery-1.8.2.min.js"></script>
+</head>
+<body style="background-color: #fff;">
+<div class="container top-aifix">
+    <!--頭部 start-->
+    <div class="header">
+        <p class="return-con"></p>
+        <p class="tlt">消息</p>
+        <!-- <p class="rt-btn"><img src="imgs/header-right-icon.png"><span class="number" id="message" ></span></p> -->
+    </div>
+    <!--頭部 End-->
+</div>
+<div class="container">
+    <div class="message-listDiv" id="showMessage">
+    </div>
+    </div>
+</div>
+<script type="text/javascript" src="./js/index.js"></script>
+<script type="text/javascript" src="./js/util.js"></script>
+<script type="text/javascript" src="js/layer.mobile-v2.0/layer_mobile/layer.js"></script>
+<script type="text/javascript" src="js/laydate/laydate.js"></script>
+<script type="text/javascript">
+//加載用戶收藏信息
+checkLogin();
+showMessage()
+function showMessage(){
+	var page =1;
+	var size =10;
+	 		
+				$.ajax({
+					method : "POST",
+					async:false,
+					url : pathUrl + "/api/noticeInfo/list.do",
+					data : {token:window.localStorage.token,pageNum:page,pageSize:size},
+					type : "post",
+					async: false,
+					jsonpCallback:'cd',
+					success : function(result) {
+						if (result.code =='0') {
+								var str ='';
+								var obj =null;
+								var date =null;
+								var isSee="";
+								for(var i=0;i<result.rows.length;i++){
+									isSee="";
+									obj =result.rows[i];
+						            if(obj.isSee =='no'){
+						            	isSee=' <p  style="color: red">(新)</p>'
+						            }
+									str +='<a href="detail.html?resourceId='+obj.id+'"><div class="item-box">';
+										if(obj.picUrl ==null || obj.resourceTable =='noticeType'){
+											str +='<div class="div1"><img src="imgs/header-right-icon.png"></div>';
+										}else{
+											str +='<div class="div1"><img src="'+getUrlParmat(obj.picUrl)+'"></div>';
+										}
+										str +='<div class="div2">'
+							            +'  <p class="p01">'+obj.title+'</p>'
+							              +'  <p class="p02">'+obj.createDate.substring(0,10)+''+isSee+'</p>'
+							            +'</div>'
+							            +'</div></a>';
+								}
+								$("#showMessage").html(str).show();
+							
+						}
+					},
+					error : function(error) {
+						msg("網絡連接錯誤!"+JSON.stringify(error));
+
+					}
+				});
+}
+
+
+
+
+
+
+</script>
+</body>
+</html>

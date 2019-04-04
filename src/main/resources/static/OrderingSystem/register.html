@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+	name="viewport" />
+<meta name="format-detection" content="telephone=no, email=no" />
+
+<!-- Css -->
+<link rel="stylesheet" type="text/css" href="./css/wap.css">
+<link rel="stylesheet" type="text/css" href="./js/layer.mobile-v2.0/layer_mobile/need/layer.css">
+<link rel="stylesheet" type="text/css" href="./js/laydate/theme/default/laydate.css">
+
+
+<!-- JS -->
+<script type="text/javascript" src="./js/comm.js"></script>
+</head>
+<body style="background-color: #ffffff;">
+	<div class="container top-aifix">
+		<!--頭部 start-->
+		<div class="header">
+			<a class="return-con"></a>
+			<h4>註冊</h4>
+		</div>
+		<!--頭部 End-->
+	</div>
+	<!--註冊step start-->
+	<div class="container">
+		<!--註冊step End-->
+		<!--content-->
+		<div class="register-list">
+			<form name="formData" id="formData">
+				<ul class="item-ul-01">
+					<li>
+						<p>
+							電<span>郵<label>*</label></span>
+						</p> <input class="input-text01" type="email" required autofocus
+						name="email" id="email" placeholder="請輸入您的電子郵箱">
+					</li>
+					<li>
+						<p>
+							電<span>話<label>*</label></span>
+						</p> <input  class="input-text01" type="tel" name="phone"
+						pattern="^1[3458]{1}[0-9]{9}$" id="phone" placeholder="請輸入您的手機號">
+					</li>
+					<li>
+						<p>
+							密<span>碼<label>*</label></span>
+						</p> <input  class="input-text01" type="password" name="pwd"
+						placeholder="請輸入密碼" id="pwd">
+					</li>
+					<li>
+						<p>
+							再次確認密碼<label>*</label>
+						</p> <input  class="input-text01" type="password" name="pwd1"
+						placeholder="請再次確認密碼" id="pwd1">
+					</li>
+					<li>
+						<p>
+							稱<span>呼<label>*</label></span>
+						</p> <input class="input-text01" type="text"
+						pattern="^[\u4e00-\u9fa5]*$" required name="name"
+						placeholder="請輸入您的姓名" id="name">
+					</li>
+				</ul>
+				<ul class="item-ul-02">
+					<li>
+						<p>
+							地<span>區</span>
+						</p> <select class="select-text" name="region" id="region">
+							<option>請選擇</option>
+							<option value="1">荃湾区</option>
+							<option value="2">灣仔區</option>
+							<option value="3">東區</option>
+							<option value="4">南區</option>
+							<option value="5">油尖旺區</option>
+							<option value="6">深水埗區</option>
+							<option value="7">九龍城區</option>
+							<option value="8">中西區</option>
+							<option value="9">觀塘區</option>
+							<option value="10">離島區</option>
+							<option value="11">屯门区</option>
+							<option value="12">元朗區</option>
+							<option value="13">北區</option>
+							<option value="14">大埔區</option>
+							<option value="15">西貢區</option>
+							<option value="16">沙田區</option>
+							<option value="17">葵青區</option>
+							<option value="18">黃大仙區</option>
+					</select>
+					</li>
+					<li>
+						<p>
+							生<span>日<label>*</label></span>
+						</p>
+						 <select  class="select-text"  name="birthday">
+						 	<option value="1">一月</option>
+						 	<option value="2">二月</option>
+						 	<option value="3">三月</option>
+						 	<option value="4">四月</option>
+						 	<option value="5">五月</option>
+						 	<option value="6">六月</option>
+						 	<option value="7">七月</option>
+						 	<option value="8">八月</option>
+						 	<option value="9">九月</option>
+						 	<option value="10">十月</option>
+						 	<option value="11">十一月</option>
+						 	<option value="12">十二月</option>
+						 </select>
+					</li>
+					<li>
+						<p>
+							性<span>別</span>
+						</p> <select class="select-text" name="sex" id="sex">
+							<option value="2" selected="selected">保密</option>
+							<option value="0">男性</option>
+							<option value="1">女性</option>
+					</select>
+					</li>
+				</ul>
+				<div class="tips-p">
+					<label>*</label>為必填選項
+				</div>
+				<div class="yzm-btn-box">
+					<input class="input-yzm" id="code" name="code" type="text" placeholder="請輸入驗證碼"> <button class="input-a gray yellow" type="button" id="getSMS" onclick="sendSMS()" > 獲取驗證碼</button>
+				</div>
+				<div class="select-checkbox">
+					<p>Check me out 1</p>
+					<p>Check me out 2</p>
+					<p>Check me out 3</p>
+				</div>
+			</form>
+			<div class="bottom-next-btnBox">
+				<a class="btn-next" onclick="check()">下壹頁</a>
+			</div>
+		</div>
+		<!--content end-->
+	</div>
+	<!--彈窗 start-->
+	<div  class="confirmEmail modal filter-bg" style="display: none">
+		<div class="confirmEmail modal-dialog" style="display: none">
+			<div class="modal-con qgqw-member-filter">
+				<div class="modal-text qgqw-member-con">
+					<p class="pb22">請您確認您的點郵是：</p>
+					<p class="" id="confirmEmailP"></p>
+				</div>
+				<div class="modal-btn">
+					<table class="btn-table" cellpadding="0" cellspacing="0">
+						<tr>
+							<td><a class="" href="#">更改</a></td>
+							<td><a onclick="regist()" class="" href="#">確定</a></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="./js/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/index.js"></script>
+	<script type="text/javascript" src="js/layer.mobile-v2.0/layer_mobile/layer.js"></script>
+	<script src="./js/md5.js"></script>
+	<script type="text/javascript" src="js/util.js"></script>
+	<script type="text/javascript" src="js/jquery.serialize-object.min.js"></script>
+	<script type="text/javascript">
+	  
+		function check(){
+			let email = $("#email").val();
+			let phone = $("#phone").val();
+			let pwd1 = hex_md5($("#pwd1").val());
+			let pwd = hex_md5($("#pwd").val());
+			if(pwd != pwd1 || !pwd || !pwd1){
+				msg("兩次密碼不一致,請重新輸入..");
+				return '';
+			}
+			let name = $("#name").val();
+			let region = $("#region").val();
+			let sex = $("#sex").val();
+			let date = $("#birthday").val();
+			let obj = {
+				email 	: email,
+				pwd  	: pwd,
+				name	: name,
+				region	: region,
+				sex 	: sex,
+				birthday: date,
+				phone	: phone,
+			}
+			if(email == '' || email == null){
+				msg("请输入邮箱地址");
+			}else if(phone == '' || phone == null){
+				msg("请输入电话");
+			}else if(pwd == '' || pwd == null){
+				msg("请输入密码");
+			}else if(name == '' || name == null){
+				msg("请输入称呼");
+			}else{
+ 			 if(vaildSMS()){
+ 				 $("#confirmEmailP").html(email);
+				 $(".confirmEmail").css("display","block");
+				}else{
+					msg('驗證碼錯誤!');
+				} 
+ 			}
+			
+		}
+		function regist(){
+			var pwd =hex_md5($("#pwd").val());
+			$("#pwd").val(pwd);
+			var formData = $('#formData').serializeJSON();
+				$.ajax({
+					method : "POST",
+					async:false,
+					url : pathUrl + "/api/members/regist.do",
+					data : {members:JSON.stringify(formData)},
+					type : "post",
+					async: false,
+					jsonpCallback:'cd',
+					success : function(result) {
+						msg(result.msg);
+						if (result.code =='0') {
+							localStorage.setItem("token",result.data.webToken);
+							window.location.href="registerSucc.html";
+						}
+					},
+					error : function(error) {
+						msg("網絡連接錯誤!"+JSON.stringify(error));
+
+					}
+				});
+		}
+	
+	</script>
+</body>
+</html>

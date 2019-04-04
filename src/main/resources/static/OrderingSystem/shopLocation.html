@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <meta name="format-detection" content="telephone=no, email=no" />
+    <title>店鋪位置</title>
+    <!-- Css -->
+    <link rel="stylesheet" type="text/css" href="./css/wap.css">
+    <!-- JS -->
+    <script type="text/javascript" src="./js/comm.js"></script>
+    <script type="text/javascript" src="./js/jquery-1.8.2.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="./js/layer.mobile-v2.0/layer_mobile/need/layer.css">
+    <link rel="stylesheet" type="text/css" href="./js/laydate/theme/default/laydate.css">
+</head>
+<body style="background-color: #f5f5f5;">
+<div class="container top-aifix">
+    <!--頭部 start-->
+    <div class="header">
+        <p class="menu-con"><img src="imgs/header-left-icon.png"></p>
+        <p class="tlt">店鋪位置</p>
+        <p class="rt-btn"><img src="imgs/header-right-icon.png"><span class="number" id="message"></span></p>
+    </div>
+    <!--頭部 End-->
+</div>
+<!-- <div class="container top-aifix02">
+    <div class="top-menu">
+        <div class="address-selectTop">
+            <img class="address-icon" src="imgs/address-icon02.png" />
+            <a href="#" onclick="openMap()" class="">尋找附近餐廳</a>
+        </div>
+    </div>
+</div> -->
+<div class="container">
+    <div class="location-pic" id="loadLocalhot">
+        
+    </div>
+
+    <!--尾部 start-->
+    <div class="footer">
+        <ul class="tab-menu">
+            <li class=""><a href="./index.html" class="basic">主頁</a></li>
+            <li><a href="#tab-2" class="mum">掃QR碼</a></li>
+            <li class="cenBut"><a href="./vipCenter.html" class="magic">會員中心</a></li>
+            <li class="active"><a href="./shopLocation.html" class="address">店鋪位置</a></li>
+            <li><a href="./canPai.html" class="canPai">餐牌</a></li>
+        </ul>
+    </div>
+    <!--尾部 End-->
+</div>
+<!--彈窗 start-->
+<!-- <div class="shopLocation-filter modal filter-bg detail-filter" style="display: none">
+    <div class="filter-content-02">
+        <ul class="pup-number-ul">
+        </ul>
+        <div class="cancel-Box"><a class="btn-cancel" href="#">Cancel</a></div>
+    </div>
+</div> -->
+<script type="text/javascript" src="./js/ce.js"></script>
+<script type="text/javascript" src="./js/index.js"></script>
+<script type="text/javascript" src="./js/util.js"></script>
+<script type="text/javascript" src="js/layer.mobile-v2.0/layer_mobile/layer.js"></script>
+<script type="text/javascript" src="js/laydate/laydate.js"></script>
+<!-- <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+<script type="text/javascript" src="http://code.google.com/apis/gears/gears_init.js"></script> -->
+<script type="text/javascript">
+  $(function(){
+	  getNotiInfo();
+	  //加载地区
+	  loadShopLocation();
+		function loadShopLocation(){
+			$.ajax({
+				method : "POST",
+				async:false,
+				url : pathUrl + "/api/branchStoreRegion/list.do",
+				data : {token:window.localStorage.token},
+				type : "post",
+				async: false,
+				jsonpCallback:'cd',
+				success : function(result) {
+					var str='';
+					if (result.code =='0') {
+						for(var i=0;i<result.rows.length; i++){
+							str+='<div class="location-store-pic"><a href="canting_list.html?regionId='+result.rows[i].id+'">'
+				            +'<img src='+getUrlParmat(result.rows[i].picUrl)+' /><span class="location-store-name">'+result.rows[i].name+'</span></a>'
+				            +'</div>';
+						}
+						$("#loadLocalhot").html(str);
+					}
+				},
+				error : function(error) {
+					msg("網絡連接錯誤!"+JSON.stringify(error));
+
+				}
+			});
+	}
+  })
+</script>
+</body>
+</html>

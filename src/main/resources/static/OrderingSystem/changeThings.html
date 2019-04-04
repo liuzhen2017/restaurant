@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <meta name="format-detection" content="telephone=no, email=no" />
+    <title>兌換商品</title>
+    <!-- Css -->
+    <link rel="stylesheet" type="text/css" href="./css/wap.css">
+        <link rel="stylesheet" type="text/css" href="./js/layer.mobile-v2.0/layer_mobile/need/layer.css">
+<link rel="stylesheet" type="text/css" href="./js/laydate/theme/default/laydate.css">
+    
+    <!-- JS -->
+    <script type="text/javascript" src="./js/comm.js"></script>
+    <script type="text/javascript" src="./js/jquery-1.8.2.min.js"></script>
+</head>
+<body style="background-color: #fff;">
+<div class="container top-aifix">
+    <!--頭部 start-->
+    <div class="header">
+        <a class="return-con"></a>
+        <p class="color-333">兌換积分商品</p>
+    </div>
+    <!--頭部 End-->
+</div>
+<div class="banner-pic">
+    <a href="#"><img id="showImg"  /></a>
+</div>
+<div class="container changeThings-wrap">
+    <div class="content-list">
+        <div class="title" id="showTitle"></div>
+        <div class="rule-tlt">详细介绍:</div>
+        <div class="rule-content" id="rule-content">
+           
+        </div>
+    </div>
+    <div class="yhm-div add-box">
+        <div class="div-input">
+            <span>優惠代碼：</span><input class="" id="code" type="text" placeholder="" onkeyup="value=value.replace(/[\W]/g,'') " >
+        </div>
+        <div class="rule-add" id="add">
+            <span class="minbox" onclick="changeDel()">-</span>
+            <input class="text_box form-input" id="num"  type="text" value="1" onfocus="this.blur()" min="1" max="10">
+            <span class="addbox" onclick="changeAdd()">+</span>
+        </div>
+    </div>
+</div>
+<div class="bottom-btnBox">
+    <table class="bottom-table">
+        <tr>
+            <input id="scord" hidden="hidden">
+            <td>所需積分：<span class="span-01" id="showScord"></span></td>
+            <td><a class="ljbl-btn" id="isPass" onclick="requestExchege()">兌換</a></td>
+        </tr>
+    </table>
+    <span class="fr llckh-ljbl-btn" onclick="requestExchege()">立即辦理</span>
+</div>
+<!--彈窗 start-->
+<div class="chanSuc score-box modal filter-bg showScesscc"  style="display: none">
+    <div class="chanSuc score-box  modal-dialog showScesscc" class="" style="display: none">
+        <div class="chanSuc modal-con change-success-filter showScesscc" style="display: none;">
+            <div class="div-top">
+                <img src="imgs/change-success-icon.png">
+                <p class="tlt">兌換成功</p>
+            </div>
+            <div class="btn-box">
+                <p><a class="btn btn-a shaohou-yong" href="index.html">稍後使用,返回主頁</a></p>
+                <p><a class="btn btn-a" id="showCoupDatail" >到會員中心使用</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="./js/index.js"></script>
+<script type="text/javascript" src="js/layer.mobile-v2.0/layer_mobile/layer.js"></script>
+<script type="text/javascript" src="js/laydate/laydate.js"></script>
+<script type="text/javascript" src="js/util.js"></script>
+<script type="text/javascript">
+$(function(){
+	
+	
+	//加載滾動條
+	exchange();
+	function exchange(){
+		$.ajax({
+			method : "POST",
+			async:false,
+			url : pathUrl + "/api/menuFood/selectById.do",
+			data : {token:window.localStorage.token,id:GetUrlParam("id")},
+			type : "post",
+			async: false,
+			jsonpCallback:'cd',
+			success : function(result) {
+				var str ='';
+				if (result.code =='0') {
+					if(result.data){
+						var user =getMembersInfo();
+							if(result.data.spareField5 && result.data.spareField5 == 1 && user.membersType != 1){
+								$("#isPass").html('該菜品僅限於VIP會員兌換').removeAttr("onclick").attr('disabled',true);
+							}
+						$("#showImg").attr('src',getUrlParmat(result.data.picUrl));
+						$("#showTitle").html(result.data.title);
+						$("#rule-content").html(result.data.describes);
+						$("#showScord").html(result.data.exchangePointsScord);
+						$("#scord").val(result.data.exchangePointsScord);
+					}
+				}
+			},
+			error : function(error) {
+				msg("網絡連接錯誤!"+JSON.stringify(error));
+
+			}
+		});
+}
+	 
+	
+})
+function changeAdd(){
+	    if(Number($("#num").val()) > 10){
+	    	$("#num").val(10);
+	    	msg('最大不能超過10份..請分多次兌換');
+	    }
+		$("#showScord").html($("#scord").val() * (Number($("#num").val())+1));
+}
+function changeDel(){
+	if(Number($("#num").val()) <= 1){
+    	$("#num").val(1);
+    	msg('最小等於1份');
+    }
+	$("#showScord").html($("#scord").val() * (Number($("#num").val())-1));
+}
+	
+//执行兑换
+	function requestExchege(){
+	  var num =Number($("#num").val());
+	  if(num <=0){
+		  msg('最小等於1份');
+		  return null;
+	  }else if(num >10){
+		  msg('最大不能超過10份..請分多次兌換');
+		  return null;
+	  }
+		$.ajax({
+			method : "POST",
+			async:false,
+			url : pathUrl + "/api/menuFood/requestExchege.do",
+			data : {token:window.localStorage.token,id:GetUrlParam("id"),num:$("#num").val(),code:$("#code").val()},
+			type : "post",
+			async: false,
+			jsonpCallback:'cd',
+			success : function(result) {
+				var str ='';
+				msg(result.msg);
+				if (result.code =='0') {
+					$(".showScesscc").show();
+					$("#showCoupDatail").attr("href","vipCenter.html?loadType=coupon");
+				}
+			},
+			error : function(error) {
+				msg("網絡連接錯誤!"+JSON.stringify(error));
+
+			}
+		});
+	}
+
+</script>
+</body>
+</html>

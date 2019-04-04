@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <meta name="format-detection" content="telephone=no, email=no" />
+    <title>餐廳列表</title>
+    <!-- Css -->
+    <link rel="stylesheet" type="text/css" href="./css/wap.css">
+    <link rel="stylesheet" type="text/css" href="./js/layui/css/layui.css">
+    
+    <!-- JS -->
+    <script type="text/javascript" src="./js/comm.js"></script>
+    <script type="text/javascript" src="./js/jquery-1.8.2.min.js"></script>
+</head>
+<body style="background-color: #f5f5f5;">
+<div class="container top-aifix">
+    <!--頭部 start-->
+    <div class="header">
+        <p class="return-con"></p>
+        <p class="tlt"><img src="imgs/header-img.png" width="100%"></p>
+        <p class="rt-btn"><img src="imgs/header-right-icon.png"><span class="number" id="message"></span></p>
+    </div>
+    <!--頭部 End-->
+</div>
+<div class="container top-aifix02">
+    <div class="top-menu">
+        <ul class="list-ul">
+            <li class="active"><a href="#" class="" onclick="myCollection(1)">店鋪（<span id="myShopNum">0</span>）</a></li>
+            <li><a href="#" class="" onclick="myCollection(2)">優惠券商品（<span id="myCouponNum">0</span>）</a></li>
+        </ul>
+    </div>
+</div>
+<div class="container">
+    <div class="restaurant-list-box pic" id="MyshopDiv">
+    </div>
+    <div class="restaurant-list-box pic" id="myCouponDiv" style="display: none">
+    </div>
+    
+   <div class="nothing">
+        <!-- 沒有更多了... -->
+    </div>
+</div>
+<script type="text/javascript" src="./js/index.js"></script>
+<script type="text/javascript" src="./js/util.js"></script>
+<script type="text/javascript" src="./js/layui/layui.js"></script>
+<script type="text/javascript" src="js/layer.mobile-v2.0/layer_mobile/layer.js"></script>
+<script type="text/javascript">
+	
+	 //加載用戶收藏信息
+	 myCollection(1);
+	 myCollection(2,1,10,true);
+	 function myCollection(type,page,size,isInit){
+		 if(!window.localStorage.token){
+			 layer.open({
+				    content: '用戶沒有登陸,請登錄后再操作'
+				    ,btn: ['登陸', '稍後自己登陸']
+				    ,yes: function(index){
+				    	 window.location.href = "Login.html";
+				      layer.close(index);
+				    },no:function(index){
+				    	 window.location.href = "index.html";
+				    }
+				  });
+		 }else{
+		 		if(! page ){
+		 			page =1;
+		 		}
+		 		if(! size ){
+		 			size =10;
+		 		}
+					$.ajax({
+						method : "POST",
+						async:false,
+						url : pathUrl + "/api/myCollection/list.do",
+						data : {type:type,pageNum:page,pageSize:size},
+						type : "post",
+						async: false,
+						jsonpCallback:'cd',
+						success : function(result) {
+							if (result.code =='0') {
+								if(type==1){
+									var str ='';
+									var obj =null;
+									for(var i=0;i<result.rows.length;i++){
+										obj =result.rows[i];
+										if(i % 2==0 || i==0){
+										   str+='<div class="pic-row">';
+										}
+										str +=' <div class="store-pic"><a href="restaurant_Detail.html?id='+obj.id+'"><img src="'+getUrlParmat(obj.picUrl)+'" />'
+                                            +'<span class="store-name">'+obj.storeName+'</span></a>'
+                                            +'<span class="zan-pic"><a onclick="addOrRemove('+obj.id+','+1+',\''+obj.picUrl+'\')" href="#"><img src="imgs/choice.png" /></a></span>'
+                                            +' </div>';
+                                        
+                                        i++;
+                                        obj =result.rows[i];
+                                        if(obj){
+                                        	str +=' <div class="store-pic"><a href="restaurant_Detail.html?id='+obj.id+'"><img src="'+getUrlParmat(obj.picUrl)+'" />'
+                                            +'<span class="store-name">'+obj.storeName+'</span></a>'
+                                            +'<span class="zan-pic"><a onclick="addOrRemove('+obj.id+','+1+',\''+obj.picUrl+'\')" href="#"><img src="imgs/choice.png" /></a></span>'
+                                            +' </div>';
+                                        }
+                                        if(i !=0 &&  (i+1) % 2 ==0 || (i ==result.rows.length && (i+1) % 2 !=0)){
+										   str+='</div>';
+                                        }
+									}
+									$("#MyshopDiv").html(str).show();
+									$("#myShopNum").html(result.total);
+									$('#myCouponDiv').hide();
+								}else{
+									var str ='';
+									var obj =null;
+									if(isInit){
+										$("#myCouponNum").html(result.total)
+										return;
+									}
+									for(var i=0;i<result.rows.length;i++){
+										obj =result.rows[i];
+										if(i % 2==0 || i==0){
+											   str+='<div class="pic-row">';
+											}
+										str +=' <div class="store-pic"><a href="changeThings.html?id='+obj.id+'"><img src="'+getUrlParmat(obj.picUrl)+'" />'
+                                            +'<span class="store-name">'+obj.title+'</span></a>'
+                                            +'<span class="zan-pic" ><a onclick="addOrRemove('+obj.id+','+2+',\''+obj.picUrl+'\')" href="#"><img src="imgs/choice.png" /></a></span>'
+                                            +' </div>';
+                                            
+                                         i++;
+                                         obj =result.rows[i];
+                                         if(obj){
+                                        	 str +=' <div class="store-pic"><a href="changeThings.html?id='+obj.id+'"><img src="'+getUrlParmat(obj.picUrl)+'" />'
+                                             +'<span class="store-name">'+obj.title+'</span></a>'
+                                             +'<span class="zan-pic"><a onclick="addOrRemove('+obj.id+','+2+',\''+obj.picUrl+'\')" href="#"><img src="imgs/choice.png" /></a></span>'
+                                             +' </div>';
+                                         }
+                                            if(i !=0 &&  (i+1) % 2 ==0 || (i ==result.rows.length && (i+1) % 2 !=0)){
+											   str+='</div>';
+											}
+									}
+									$("#myCouponNum").html(result.total)
+								   $('#myCouponDiv').html(str).show();
+									$('#MyshopDiv').hide();
+								}
+								
+								//顯示加載數據
+								if(result.pageNum * result.pageSize >= result.total){
+									$(".nothing").html("沒有更多了...");
+								}else{
+									$(".nothing").html("<a href='#' onclick='myCollection("+type+","+(result.pageNum+1)+")'>加載更多...</a>");
+								}
+							}
+						},
+						error : function(error) {
+							msg("網絡連接錯誤!"+JSON.stringify(error));
+
+						}
+					});
+		 }
+	 }
+	 getNotiInfo();
+	 
+</script>
+</body>
+</html>

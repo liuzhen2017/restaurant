@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <meta name="format-detection" content="telephone=no, email=no" />
+    <title>詳情介紹</title>
+    <!-- Css -->
+    <link rel="stylesheet" type="text/css" href="./css/wap.css">
+    <!-- JS -->
+    <script type="text/javascript" src="./js/comm.js"></script>
+    <script type="text/javascript" src="./js/jquery-1.8.2.min.js"></script>
+</head>
+<body style="background-color: #fff;">
+<div class="container top-aifix">
+    <!--頭部 start-->
+    <div class="header">
+        <p class="return-con"></p>
+        <p class="tlt">詳情介紹</p>
+        <p class="rt-btn"><img src="imgs/header-right-icon.png"><span class="number">2</span></p>
+    </div>
+    <!--頭部 End-->
+</div>
+<div class="container">
+    <div class="detail_pic">
+        <a href="javasrcipt:void(0)"><img  id="showImg" /></a>
+    </div>
+    <div class="detail_con" >
+        <div class="detail_title" id="showTitle"></div>
+        <div class="detail_content" id="showcontent" ></div>
+       
+    </div>
+</div>
+<script type="text/javascript" src="./js/index.js"></script>
+<script type="text/javascript" src="./js/index.js"></script>
+<script type="text/javascript" src="./js/util.js"></script>
+<script type="text/javascript">
+//加載用戶收藏信息
+showMessage()
+getNotiInfo();
+function showMessage(){
+				$.ajax({
+					method : "POST",
+					async:false,
+					url : pathUrl + "/api/banner/list?id="+GetUrlParam('id'),
+					data : {token:window.localStorage.token,pageNum:1,pageSize:10},
+					type : "post",
+					async: false,
+					jsonpCallback:'cd',
+					success : function(result) {
+						if (result.code =='0') {
+							$("#showImg").attr('src',getUrlParmat(result.rows[0].picUrl));
+							$("#showTitle").html(result.rows[0].title);
+							$("#showcontent").html(result.rows[0].describes);
+						}
+					},
+					error : function(error) {
+						msg("網絡連接錯誤!"+JSON.stringify(error));
+
+					}
+				});
+}
+
+</script>
+</body>
+</html>

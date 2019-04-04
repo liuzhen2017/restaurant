@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.menu.manger.mapper.MyCollectionMapper">
+    
+    <resultMap type="MyCollection" id="MyCollectionResult">
+        <result property="id"    column="id"    />
+        <result property="type"    column="type"    />
+        <result property="resourceTable"    column="resource_table"    />
+        <result property="resourceId"    column="resource_id"    />
+        <result property="memuId"    column="memu_id"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="picUrl"    column="pic_url"    />
+    </resultMap>
+	
+	<sql id="selectMyCollectionVo">
+        select id, type, resource_table, resource_id, memu_id, create_date,pic_url from my_collection
+    </sql>
+	
+    <select id="selectMyCollectionList" parameterType="MyCollection" resultMap="MyCollectionResult">
+        <include refid="selectMyCollectionVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="type != null "> and type = #{type}</if>
+             <if test="resourceTable != null  and resourceTable != '' "> and resource_table = #{resourceTable}</if>
+             <if test="resourceId != null "> and resource_id = #{resourceId}</if>
+             <if test="memuId != null "> and memu_id = #{memuId}</if>
+             <if test="createDate != null "> and create_date = #{createDate}</if>
+             
+         </where>
+         order by id desc
+    </select>
+    
+    
+      <select id="selectMyShop" parameterType="MyCollection" resultMap="com.menu.manger.mapper.BranchStoreMapper.BranchStoreResult">
+        select b.* from branch_store b,my_collection m
+        where m.memu_id = #{memuId}
+        and m.resource_table='myShop'
+        and m.resource_id =b.id
+        and m.type =1
+        order by m.create_date desc
+    </select>
+    
+       <select id="selectMyCoup" parameterType="MyCollection" resultMap="com.menu.manger.mapper.MenuFoodMapper.MenuFoodResult">
+        select c.* from menu_food c,my_collection m
+        where m.memu_id = #{memuId}
+        and m.resource_table='myCoupon'
+        and m.resource_id =c.id
+        and m.type =2
+        order by m.create_date desc
+    </select>
+    
+    
+    <select id="selectMyCollectionById" parameterType="Integer" resultMap="MyCollectionResult">
+        <include refid="selectMyCollectionVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMyCollection" parameterType="MyCollection" useGeneratedKeys="true" keyProperty="id">
+        insert into my_collection
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="type != null  ">type,</if>
+			<if test="resourceTable != null  and resourceTable != ''  ">resource_table,</if>
+			<if test="resourceId != null  ">resource_id,</if>
+			<if test="memuId != null  ">memu_id,</if>
+			<if test="createDate != null  ">create_date,</if>
+			<if test="picUrl != null  and picUrl != '' ">pic_url ,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="type != null  ">#{type},</if>
+			<if test="resourceTable != null  and resourceTable != ''  ">#{resourceTable},</if>
+			<if test="resourceId != null  ">#{resourceId},</if>
+			<if test="memuId != null  ">#{memuId},</if>
+			<if test="createDate != null  ">#{createDate},</if>
+			<if test="picUrl != null  and picUrl != '' ">#{picUrl}</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateMyCollection" parameterType="MyCollection">
+        update my_collection
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="type != null  ">type = #{type},</if>
+            <if test="resourceTable != null  and resourceTable != ''  ">resource_table = #{resourceTable},</if>
+            <if test="resourceId != null  ">resource_id = #{resourceId},</if>
+            <if test="memuId != null  ">memu_id = #{memuId},</if>
+            <if test="createDate != null  ">create_date = #{createDate},</if>
+            <if test="picUrl != null  and picUrl != '' "> #{picUrl}</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteMyCollectionById" parameterType="Integer">
+        delete from my_collection where id = #{id}
+    </delete>
+	
+    <delete id="deleteMyCollectionByIds" parameterType="String">
+        delete from my_collection where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

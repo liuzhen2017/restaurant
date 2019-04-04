@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <meta name="format-detection" content="telephone=no, email=no" />
+    <title>找回郵箱</title>
+    <!-- Css -->
+    <link rel="stylesheet" type="text/css" href="./css/wap.css">
+        <link rel="stylesheet" type="text/css" href="./js/layer.mobile-v2.0/layer_mobile/need/layer.css">
+<link rel="stylesheet" type="text/css" href="./js/laydate/theme/default/laydate.css">
+    <!-- JS -->
+    <script type="text/javascript" src="./js/comm.js"></script>
+    <script type="text/javascript" src="./js/jquery-1.8.2.min.js"></script>
+</head>
+<body style="background-color: #ffffff;">
+<div class="container top-aifix">
+    <div class="header">
+        <a class="return-con"></a>
+        <p class="tlt">找回郵箱</p>
+    </div>
+</div>
+<div class="container">
+    <div class="getBackPassword-wrap">
+        <div class="tips-con">請輸入手機號碼:</div>
+        <div class="div-inputBox">
+            <input class="email-input" type="text" id="phone" >
+            <!-- <input class="btn-login" type="button" id="getSMS" onclick="sendSMS()" value="發送驗證碼 "> -->
+            <button class="yzm-login" type="button" id="getSMS" onclick="sendSMS()" ">發送驗證碼</button>
+        </div>
+         <div class="tips-con">請輸入手機號驗證碼:</div>
+        <div class="div-inputBox">
+            <input class="email-input" type="text" id="code" >
+        </div>
+        <div class="btn-divBox">
+            <a class="btn-login" href="#" onclick="findEmail()">找回電郵</a>
+        </div>
+        <div class="tips-con" id="showEmail" style="display: none">找回郵箱成功!郵箱賬號為:<input style="color: red;" class="email-input" type="text" id="email" ></div>
+    </div>
+</div>
+<script type="text/javascript" src="./js/index.js"></script>
+<script type="text/javascript" src="./js/util.js"></script>
+<script type="text/javascript" src="js/layer.mobile-v2.0/layer_mobile/layer.js"></script>
+<script type="text/javascript" src="js/laydate/laydate.js"></script>
+
+<script type="text/javascript">
+   function findEmail(){
+			var	phone= $("#phone").val();
+			
+			var	code= $("#code").val();
+			
+			if(!phone && !code){
+				msg("手機號和驗證碼不能爲空!");
+				return false;
+			}
+			var success=false;
+			$.ajax({
+				type : "POST",
+				async:false,
+				url : pathUrl + "/api/members/findEmail.do",
+				data : {phone:phone,code:code},
+				async: false,
+				success : function(result) {
+					if (result.code =='0') {
+						msg('找回密碼成功');
+						$("#showEmail").show();
+						$("#email").val(result.data);
+					} else {
+						msg(result.msg);
+					}
+				},
+				error : function(error) {
+					msg("網絡連接錯誤!");
+
+				}
+			});
+   }
+</script>
+</body>
+</html>

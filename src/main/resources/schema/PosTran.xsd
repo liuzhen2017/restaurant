@@ -1,0 +1,152 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://soap.manger.menu.com/ws" targetNamespace="http://soap.manger.menu.com/"
+	elementFormDefault="qualified">
+	<xs:element name="queryMemberByIdRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="name" type="xs:string" />
+				<xs:element name="phone" type="xs:string" />
+				<xs:element name="brandID" type="xs:string" />
+				<xs:element name="t" type="xs:string" />
+				<xs:element name="h" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="queryMemberByIdResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="result" type="xs:string" />
+			<xs:element name="errCode" type="xs:string" />
+			<xs:element name="capital" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- <xs:complexType name="soapresult">
+		<xs:sequence>
+			<xs:element name="result" type="xs:string" />
+			<xs:element name="errCode" type="xs:string" />
+			<xs:element name="capital" type="xs:string" />
+			<xs:element name="accTransactionAmount" type="xs:string" />
+			<xs:element name="lastTransactionDatetime" type="xs:string" />
+			<xs:element name="disCount" type="tns:discount" />
+			<xs:element name="coupon" type="tns:coupon" />
+			<xs:element name="members" type="tns:members" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="members">
+		<xs:sequence>
+				<xs:element name="id" type="xs:string" />
+				<xs:element name="email" type="xs:string" />
+				<xs:element name="name" type="xs:string" />
+				<xs:element name="region" type="xs:string" />
+				<xs:element name="sex" type="xs:string" />
+				<xs:element name="birthday" type="xs:string" />
+				<xs:element name="score" type="xs:string" />
+				<xs:element name="isVaild" type="xs:string" />
+				<xs:element name="membersType" type="xs:string" />
+				<xs:element name="upgradeDate" type="xs:string" />
+				<xs:element name="vipDate" type="xs:string" />
+		</xs:sequence>
+	</xs:simpleType>
+	<xs:simpleType name="discount">
+		<xs:sequence>
+				<xs:element name="amount" type="xs:double" />
+				<xs:element name="name" type="xs:string" />
+				<xs:element name="expiry" type="xs:date" />
+		</xs:sequence>
+	</xs:simpleType>
+	<xs:simpleType name="coupon">
+		<xs:sequence>
+				<xs:element name="id" type="xs:int" />
+				<xs:element name="type" type="xs:string" />
+				<xs:element name="name" type="xs:string" />
+				<xs:element name="nefOff" type="xs:string" />
+				<xs:element name="itemCode" type="xs:string" />
+				<xs:element name="description" type="xs:string" />
+		</xs:sequence>
+	</xs:simpleType>
+	 -->
+	<!-- 兑换 -->
+	<xs:element name="submitRedemptionRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="memberID" type="xs:string" />
+				<xs:element name="brandID" type="xs:string" />
+				<xs:element name="shopCode" type="xs:string" />
+				<xs:element name="redeemDatetime" type="xs:string" />
+				<xs:element name="couponID" type="xs:string" />
+				<xs:element name="serialNo" type="xs:string" />
+				<xs:element name="couponStatus" type="xs:string" />
+				<xs:element name="t" type="xs:string" />
+				<xs:element name="h" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="submitRedemptionResponse">
+		<xs:complexType>
+			<xs:sequence>
+					<xs:element name="result" type="xs:string" />
+			<xs:element name="errCode" type="xs:string" />
+			<xs:element name="capital" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<!-- 提交交易 -->
+	<xs:element name="closeTransactionRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="brandID" type="xs:string" />
+				<xs:element name="transactionDatetime" type="xs:string" />
+				<xs:element name="shopCode" type="xs:string" />
+				<xs:element name="invoiceNo" type="xs:string" />
+				<xs:element name="invoiceAmount" type="xs:string" />
+				<xs:element name="netAmount" type="xs:string" />
+				<xs:element name="pax" type="xs:string" />
+				<xs:element name="coupons" type="xs:string" />
+				<xs:element name="memberID" type="xs:string" />
+				<xs:element name="t" type="xs:string" />
+				<xs:element name="h" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="closeTransactionResponse">
+		<xs:complexType>
+			<xs:sequence>
+					<xs:element name="result" type="xs:string" />
+			<xs:element name="errCode" type="xs:string" />
+			<xs:element name="capital" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<!-- 撤销交易 -->
+	<xs:element name="backTransactionRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="brandID" type="xs:string" />
+				<xs:element name="transactionDatetime" type="xs:string" />
+				<xs:element name="invoiceNo" type="xs:string" />
+				<xs:element name="t" type="xs:string" />
+				<xs:element name="h" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="backTransactionResponse">
+		<xs:complexType>
+			<xs:sequence>
+					<xs:element name="result" type="xs:string" />
+			<xs:element name="errCode" type="xs:string" />
+			<xs:element name="capital" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

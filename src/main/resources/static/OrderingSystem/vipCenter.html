@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+	name="viewport" />
+<meta name="format-detection" content="telephone=no, email=no" />
+<title>會員中心</title>
+<!-- Css -->
+<link rel="stylesheet" type="text/css"
+	href="./lib/swiper/swiper.min.css" />
+<link rel="stylesheet" type="text/css"
+	href="./js/layer.mobile-v2.0/layer_mobile/need/layer.css">
+<link rel="stylesheet" type="text/css"
+	href="./js/laydate/theme/default/laydate.css">
+<link rel="stylesheet" type="text/css" href="./css/wap.css">
+<!-- JS -->
+<script type="text/javascript" src="./js/comm.js"></script>
+<script type="text/javascript" src="./js/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="./lib/swiper/swiper.min.js"></script>
+</head>
+<body style="background-color: #f5f5f5;">
+	<div class="container top-aifix">
+		<!--頭部 start-->
+		<div class="header">
+			<p class="menu-con">
+				<img src="imgs/header-left-icon.png">
+			</p>
+			<p class="tlt">
+				<img src="imgs/header-img.png" width="100%">
+			</p>
+			<p class="rt-btn">
+				<img src="imgs/header-right-icon.png"><span class="number"
+					id="message"></span>
+			</p>
+		</div>
+		<!--頭部 End-->
+	</div>
+	<div class="container top-aifix">
+		<!--頭部菜單 start-->
+		<div class="top-menu">
+			<ul class="list-ul">
+				<li class="active" id="duihuan"><a href="#" class="">兌換產品</a></li>
+				<li><a href="#" id="xiaofeiJilu" class="">消費記錄</a></li>
+				<li id="queryKeyong"><a href="#" id="keyongquan" class="">可用券</a></li>
+				<li><a href="#" id="guoqi" class="">已用/過期券</a></li>
+			</ul>
+		</div>
+		<!--頭部菜單 End-->
+	</div>
+	<div class="container changeProduct">
+		<!--兌換產品 start-->
+		<div class="change-product tab" style="display: block">
+			<!--swiper start-->
+			<div class="swiper-container swiper-product-box" id="swiper">
+				<div class="swiper-wrapper" id="showProject"></div>
+			</div>
+			<!-- add pagination -->
+			<div class="swiper-pagination"></div>
+		</div>
+		<!--swiper end-->
+		<!--精選商品 start-->
+		<div class="jxsp-content" id="jinxuan"></div>
+		<!--精選商品 End-->
+	</div>
+	<!--兌換產品 End-->
+	<!--消費記錄 start-->
+	<div class="consumption-record tab" style="display: none;">
+		<div class="month-con">
+			<p class="tips-p">
+				<span id="endMoney"></span>已消費
+			</p>
+		</div>
+		<div class="record-item">
+			<div class="record-tab-menu">
+				<span>日期</span><span>分店</span><span>消費</span>
+			</div>
+			<div id="showHistList">
+			
+			</div>
+			
+		</div>
+	</div>
+	<!--消費記錄 End-->
+	<!--可用券 start-->
+	<div class="kyq-list tab" style="display: none" id="showKeyong">
+		
+		
+	</div>
+	<!--可用券 End--->
+	<!--已用過的券 start-->
+	<div class="kyq-list yyq-list tab" style="display: none;" id="guoqi">
+		
+	</div>
+	<!--已用過的券 End--->
+	<!--積分 start-->
+	<div id="score_butt"  class="score">
+		<span class="span1"><label class="name">我的積分：</label><br>
+			<label class="number" id="scord"></label></span>
+	</div>
+	<!--積分  start-->
+	<!--尾部 start-->
+	<div class="footer">
+		<ul class="tab-menu">
+			<li class=""><a href="./index.html" class="basic">主頁</a></li>
+			<li><a href="#tab-2" class="mum">掃QR碼</a></li>
+			<li class="active cenBut"><a href="./vipCenter.html"
+				class="magic">會員中心</a></li>
+			<li class=""><a href="./shopLocation.html" class="address">店鋪位置</a></li>
+			<li><a href="./canPai.html" class="canPai">餐牌</a></li>
+		</ul>
+	</div>
+	<!--尾部 End-->
+	<script type="text/javascript"
+		src="js/layer.mobile-v2.0/layer_mobile/layer.js"></script>
+	<script type="text/javascript" src="js/laydate/laydate.js"></script>
+	<script type="text/javascript" src="./js/util.js"></script>
+	<script type="text/javascript" src="./js/jquery-1.8.2.min.js"></script>
+	<script>
+    $(function() {
+        var swiper = new Swiper('#swiper', {
+            loop: true,
+            pagination: '.swiper-pagination',
+            paginationClickable: true,
+            autoplay: 3000
+        });
+        $(".score").on('click',function(){
+	        var user =getMembersInfo();
+	    	if(user && user != null){
+		    	$("#scord").html(user.score);
+	    	  }
+        })
+        if(!localStorage.getItem("hideScore")){
+        	 var user =getMembersInfo();
+ 	    	if(user && user != null){
+ 		    	$("#scord").html(user.score);
+    	     }
+   		   localStorage.setItem("hideScore",true);
+        }else{
+        	$("#score_butt").trigger("click");;
+        }
+        
+        //加载兑换商品
+      //加載用戶收藏信息
+      
+        $("#duihuan").on('click',function(){
+        	showProject();
+        	showJinxuan();
+        	$(".consumption-record,.kyq-list,.yyq-list").hide();
+        	$(".changeProduct").show();
+        });
+        
+        
+        function showProject(){
+        	var page =1;
+        	var size =24;
+        	var data =new Object();
+            data.pageNum=page;
+            data.pageSize=size;
+            data.isExchange='yes';
+            data.invalidDate='yes';
+        				$.ajax({
+        					method : "POST",
+        					url : pathUrl + "/api/menuFoodType/queryByType.do",
+        					data : {'json':JSON.stringify(data)},
+        					type : "post",
+        					jsonpCallback:'cd',
+        					success : function(result) {
+        						if (result.code =='0') {
+        								var str ='';
+        								var obj =null;
+        								var date =null;
+        								var divHeard ='<div class="swiper-slide">'
+        				                    +'<ul class="swiper-product-ul">';
+        				                var divFood ='</ul></div>';    
+        								for(var i=0;i<result.rows.length;i++){
+        									obj =result.rows[i];
+        									if(i ==0 || i % 6 ==0){
+        										str=divHeard;
+        									}
+        									str+=' <li><a href="barbecueProducts.html?id='+obj.id+'&typeName='+obj.typeName+'"><img src="'+getUrlParmat(obj.picUrl)+'"><br><span>'+obj.typeName+'</span></a></li>'
+        									if(i !=0 &&  i % 6 ==0){
+        										str+=divFood;	
+        									}
+        								}
+        				                 if(result.rows.length !=0 && result.rows.length %6 !=0){
+        				                	 str+=divFood;	
+        				                 }
+        								$("#showProject").html(str).show();
+        							
+        						}
+        					},
+        					error : function(error) {
+        						msg("網絡連接錯誤!"+JSON.stringify(error));
+
+        					}
+        				});
+        }
+    showJinxuan();
+    function showJinxuan(){
+    	$(".changeProduct").show();
+    	var page =1;
+    	var size =24;
+    	var data =new Object();
+        data.pageNum=page;
+        data.pageSize=size;
+        data.isHot =3;
+        data.invalidDate='yes';
+    				$.ajax({
+    					method : "POST",
+    					url : pathUrl + "/api/menuFood/getListByType.do",
+    					data : {'json':JSON.stringify(data)},
+    					type : "post",
+    					jsonpCallback:'cd',
+    					success : function(result) {
+    						
+    						if (result.code =='0') {
+    								var str ='<p class="tlt">-精選商品-</p>';
+    								var obj =null;
+    								var date =null;
+    								var divHeard ='<ul class="jxsp-product-ul">';
+    				                var divFood ='</ul>';    
+    								for(var i=0;i<result.rows.length;i++){
+    									obj =result.rows[i];
+    									if(i ==0 || i % 6 ==0){
+    										str+=divHeard;
+    									}
+    									str+='<li><img src="'+getUrlParmat(obj.picUrl)+'"><br><span>'+obj.title+'</span></li>'
+    									if(i !=0 &&  i % 6 ==0){
+    										str+=divFood;	
+    									}
+    								}
+    				                 if(result.rows.length !=0 && result.rows.length %6 !=0){
+    				                	 str+=divFood;	
+    				                 }
+    								$("#jinxuan").html(str).show();
+    							
+    						}
+    					},
+    					error : function(error) {
+    						msg("網絡連接錯誤!"+JSON.stringify(error));
+
+    					}
+    				});
+    }
+    
+    //消费记录
+    $("#xiaofeiJilu").on('click',function(){
+    	$(".changeProduct").hide();
+    	checkLogin();
+    	$("#endMoney").html(getMembersInfo());
+    	var page =1;
+    	var size =100;
+    				$.ajax({
+    					method : "POST",
+    					url : pathUrl + "/api/accountFlow/list.do",
+    					data : {pageNum:page,pageSize:size},
+    					type : "post",
+    					jsonpCallback:'cd',
+    					success : function(result) {
+    						if (result.code =='0') {
+    								var str ='';
+    								var obj =null;
+    								var date =null;
+    								for(var i=0;i<result.rows.length;i++){
+    									obj =result.rows[i];
+    									var date =obj.createDate;
+    									if(date){
+    										date=getyyyyMMdd(new Date(date));
+    									}
+    									str+='<div class="list-div">'
+    									+'<p class="p01">'+date+'</p>'
+    									+'<p class="p02">'+obj.branchStoreName+'</p>'
+    									+'<p class="p03">$'+obj.netAmount+'</p>'
+    									+'</div>';
+    								}
+    								$("#showHistList").html(str).show();
+    							
+    						}
+    					},
+    					error : function(error) {
+    						msg("網絡連接錯誤!"+JSON.stringify(error));
+
+    					}
+    				});
+    });
+    
+    
+    //可用券
+    $("#keyongquan").on('click',function(){
+    	$(".changeProduct").hide();
+    	checkLogin();
+    	var page =1;
+    	var size =24;
+    				$.ajax({
+    					method : "POST",
+    					url : pathUrl + "/api/myCoupon/isVaild.do",
+    					data : {token:window.localStorage.token,pageNum:page,pageSize:size,isVaild:'yes'},
+    					type : "post",
+    					jsonpCallback:'cd',
+    					success : function(result) {
+    						if (result.code =='0') {
+    								var str ='';
+    								var obj =null;
+    								var date =null;
+    								var type;
+    								for(var i=0;i<result.rows.length;i++){
+    									obj =result.rows[i];
+    									if(obj.table =='menufood'){
+    										str +='<a href="couponDetail02.html?id='+obj.id+'"><div class="item-box">';
+    									}else{
+    								        str +='<a href="showMyCuopDetail.html?id='+obj.id+'"><div class="item-box">';
+    									}
+    									str+='<div class="div1">'
+    									+'	<img src="imgs/quan-img.png">'
+    									+'</div>'
+    									+'<div class="div2">'
+    								 	+'<p class="p02">'+obj.name+'</p>'
+    									/* +'<p class="p01">'+obj.title+'</p>' */
+    									+'<p class="p03">來源：'+obj.source+'</p>'
+    									+'<p class="p03">類型：'+(obj.table =='MyCoupon'? "優惠代碼":"兌換商品")+'</p>'
+    									+'<p class="p04">到期日：'+typeTime(obj.effectiveTimeEnd)+'</p>'
+    									+'</div>'
+    									+'<div class="number-div">'
+    									+'<span>1</span>'
+    									+'</div>'
+    									+'</div></a>';
+    								}
+    								$("#showKeyong").html(str).show();
+    							
+    						}
+    					},
+    					error : function(error) {
+    						msg("網絡連接錯誤!"+JSON.stringify(error));
+
+    					}
+    				});
+    });
+    //已过期
+    $("#guoqi").on('click',function(){
+    	$(".changeProduct").hide();
+    	checkLogin();
+    	var page =1;
+    	var size =24;
+    				$.ajax({
+    					method : "POST",
+    					url : pathUrl + "/api/myCoupon/isVaild.do",
+    					data : {token:window.localStorage.token,pageNum:page,pageSize:size,isVaild:'no'},
+    					type : "post",
+    					jsonpCallback:'cd',
+    					success : function(result) {
+    						if (result.code =='0') {
+    							var str ='';
+								var obj =null;
+								var date =null;
+								var type;
+    							for(var i=0;i<result.rows.length;i++){
+    							obj =result.rows[i];
+								if(obj.table =='menufood'){
+									str +='<a href="couponDetail02.html?id='+obj.id+'"><div class="item-box">';
+								}else{
+							        str +='<a href="showMyCuopDetail.html?id='+obj.id+'"><div class="item-box">';
+								}
+								str+='<div class="div1">'
+								+'	<img src="imgs/quan-img.png">'
+								+'</div>'
+								+'<div class="div2">'
+							 	+'<p class="p02">'+obj.name+'</p>'
+								+'<p class="p03">來源：'+obj.source+'</p>'
+								+'<p class="p03">類型：'+(obj.table =='MyCoupon'? "優惠代碼":"兌換商品")+'</p>'
+								+'<p class="p04">狀態：'+obj.status+'</p>'
+								+'</div>'
+								+'<div class="number-div">'
+								+'<span>1</span>'
+								+'</div>'
+								+'</div></a>';
+    						}
+    								$("#showKeyong").html(str).show();
+    						}
+    					},
+    					error : function(error) {
+    						msg("網絡連接錯誤!"+JSON.stringify(error));
+
+    					}
+    				});
+    });
+    
+    
+    var type =GetUrlParam("loadType");
+    if(type && type == 'coupon'){
+    	$("#keyongquan").trigger("click");;
+    	$("#duihuan").attr("class","");
+    	$("#queryKeyong").attr("class","active")
+    }else{
+    	  showProject()
+          getNotiInfo();
+    }
+    });
+    
+</script>
+	<script type="text/javascript" src="./js/ce.js"></script>
+	<script type="text/javascript" src="./js/index.js"></script>
+</body>
+</html>
