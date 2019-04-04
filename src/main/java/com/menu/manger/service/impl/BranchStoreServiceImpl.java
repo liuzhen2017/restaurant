@@ -52,7 +52,7 @@ public class BranchStoreServiceImpl implements IBranchStoreService
 	public List<BranchStore> selectBranchStoreList(BranchStore branchStore)
 	{
 		List<BranchStore> list = branchStoreMapper.selectBranchStoreList(branchStore);
-		Members mem =(Members)ThreadLocalUtil.getUserInfo();
+		Members mem =ThreadLocalUtil.getUserInfo()==null? null:(Members)ThreadLocalUtil.getUserInfo();
 		if(mem !=null ) {
 			for (BranchStore branchStore2 : list) {
 				MyCollection myCollection =new MyCollection();

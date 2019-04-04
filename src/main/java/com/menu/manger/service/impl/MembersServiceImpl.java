@@ -2,7 +2,6 @@ package com.menu.manger.service.impl;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -443,7 +442,6 @@ public class MembersServiceImpl implements IMembersService {
 		if(StringUtils.isEmpty(info)){
 			return AjaxResult.error("解析二維碼錯誤!");
 		}
-//		info = info.replace("&", "%%%%%%%%%%%%%%%");
 		String [] result =info.split(";");
 		
 		AccountFlow accountFlow =new AccountFlow();
@@ -453,21 +451,20 @@ public class MembersServiceImpl implements IMembersService {
 		if(selectAccountFlowList2 ==null || selectAccountFlowList2.size() ==0) {
 			return AjaxResult.error("很抱歉,该账单没有同步到系统里面");
 		}
-		if(selectAccountFlowList2.get(0).getTranType() != 2) {
+		if(selectAccountFlowList2.get(0).getMenuId() != null) {
 			return AjaxResult.error("该二维码已经积分过了,不允许重复积分");
 		}
-		
 		SysConfig invaildDay = sysConfigService.selectByKey(HttpConstants.qcSaveDate);
-		String transactionDatetime =getValueByKey("transactionDatetime",result[3]);
+		String transactionDatetime =result[3];
 		transactionDatetime =transactionDatetime.substring(0, 8);
 		Date tranctionDate= DateUtils.addDays(DateUtils.parseDate(transactionDatetime, "yyyyMMdd"),Integer.parseInt(invaildDay.getConfigValue()));
 		if(tranctionDate.before(new Date())){
 			return AjaxResult.error("很抱歉，該交易已經過了積分有效期,交易時間:"+transactionDatetime+",有效天數:"+invaildDay.getConfigValue());
 		}
 		
-		
-		
-		Members loginUser = (Members) ThreadLocalUtil.getUserInfo();
+		Members loginUser =  (Members) ThreadLocalUtil.getUserInfo();
+		loginUser.setId(7);
+		loginUser.setMembersType(1);
 		Members selectMembersById = membersMapper.selectMembersById(loginUser.getId());
 		log.info("submitRedemption 3:填写账户流水 ");
 		
@@ -475,16 +472,14 @@ public class MembersServiceImpl implements IMembersService {
 		BranchStore branchStore = new BranchStore();
 		branchStore.setStoreNo(Integer.parseInt(result[0] + ""));
 		List<BranchStore> selectBranchStoreList = branchStoreSerivce.selectBranchStoreList(branchStore);
-		// brandId=100&shopCode=SHOP001&invoiceNo=000-003553&invoiceAmount=1250&netAmound=1150&pax=3&orderType=1&paymentMethod=2&itemCodeQuantity=FOOD001%3A2%2CFOOD342%3A4%2CFOOD323%3A2&transactionDatetime=201504151759
-		//8;818;1052000;201903151520
-		accountFlow.setBranchStoreId(selectBranchStoreList.get(0).getId()+"");
+		accountFlow.setBranchStoreId(result[0]+"");
 		BranchStore selectBranchStoreById = selectBranchStoreList.size() == 0 ? null
 				: selectBranchStoreList.get(0);
 		if (selectBranchStoreById != null) {
 			accountFlow
 					.setBranchStoreName(selectBranchStoreById.getStoreName());
 		}
-		selectAccountFlowList2.get(0).setTranType(3);
+		selectAccountFlowList2.get(0).setMenuId(loginUser.getId());;
 		accountFlowService.updateAccountFlow(selectAccountFlowList2.get(0));
 		ScoreHis scoreHis = new ScoreHis();
 		// 查詢積分規則
@@ -502,13 +497,6 @@ public class MembersServiceImpl implements IMembersService {
 			scoreHis.setMembersId(loginUser.getId());
 			scoreHis.setOlbScore(selectMembersById.getScore());
 			scoreHis.setNewScore(selectMembersById.getScore()+score.intValue());
-			ScoreHis hisByUserId = scoreHisService
-					.selectScoreHisByUserId(loginUser.getId());
-			if (hisByUserId != null) {
-				scoreHis.setOlbScore(hisByUserId.getNewScore());
-				scoreHis.setNewScore(scoreHis.getNewScore()
-						+ hisByUserId.getNewScore());
-			}
 			scoreHis.setCreatedDate(new Date());
 			scoreHis.setBusiId(loginUser.getId() + "");
 			scoreHisService.insertScoreHis(scoreHis);
@@ -547,7 +535,7 @@ public class MembersServiceImpl implements IMembersService {
 			}
 
 			// 修改用户积分
-			loginUser.setScore(loginUser.getScore() + scoreHis.getNewScore());
+			loginUser.setScore(scoreHis.getNewScore());
 			membersMapper.updateMembers(loginUser);
 		}
 		noticeInfoService.insertNoticeInfo("掃碼儲存積分通知", loginUser.getId(), 0,
@@ -566,20 +554,6 @@ public class MembersServiceImpl implements IMembersService {
 		}
 	}
 
-	public static String getValueByKey(String key, String str) {
-		// 按指定模式在字符串查找
-		String pattern = key + "=(.*?)%%%%%%%%%%%%%%%";
-
-		// 创建 Pattern 对象
-		Pattern r = Pattern.compile(pattern);
-
-		// 现在创建 matcher 对象
-		Matcher m = r.matcher(str);
-		if (m.find()) {
-			return m.group(1);
-		}
-		return null;
-	}
 	public static void main(String[] args) {
 		String transactionDatetime[]="8;818;1052000;201903151520".split(";");
 		System.out.println(transactionDatetime[2]);

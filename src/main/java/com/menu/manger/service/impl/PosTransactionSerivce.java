@@ -289,7 +289,7 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 			response.setErrMsg("關鍵信息不能為空!");;
 			return response;
 		}*/
-		log.info("begin request closeTransaction ,brandID ={},transactionDatetime ={},invoiceNo ={},invoiceAmount ={},netAmount ={},memberID ={}",brandID,transactionDatetime,shopCode,invoiceNo,invoiceAmount,netAmount,pax,coupons,memberID);
+		log.info("begin request closeTransaction ,brandID ={},transactionDatetime ={},shopCode={},invoiceNo ={},invoiceAmount ={},netAmount ={},coupons={},memberID ={}",brandID,transactionDatetime,shopCode,invoiceNo,invoiceAmount,netAmount,coupons,memberID);
 		List<Members> selectMembersList =null;
 		Members members =new Members();
 		if(!StringUtils.isEmpty(memberID)) {
@@ -332,7 +332,7 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 					  response.setErrMsg("該優惠券已經過期,優惠券代碼:0000"+foodExchange.getSpareField1());;
 					  return response;
 				}
-				if(StringUtils.isEmpty(memberID)) {
+				if(!StringUtils.isEmpty(memberID)) {
 				  noticeInfoService.insertNoticeInfo("您在pos机消费了一张优惠券", members.getId(), foodExchange.getId().intValue(), "MenuFoodExchange", foodExchange.getMenuFoodPic());
 				}
 			}
@@ -364,7 +364,7 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 	    accountFlow.setCouponCode(coupons);
 	    
 		accountFlowService.insertAccountFlow(accountFlow);
-		if(StringUtils.isEmpty(memberID)) {
+		if(!StringUtils.isEmpty(memberID)) {
 			ScoreHis scoreHis =new ScoreHis();
 			//查詢積分規則
 			log.info("closeTransaction 3:计算积分 ");
@@ -379,11 +379,9 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 				scoreHis.setMembersId(selectMembersList.get(0).getId());
 				scoreHis.setOlbScore(0);
 				scoreHis.setNewScore(score.intValue());
-				ScoreHis hisByUserId = scoreHisService.selectScoreHisByUserId(selectMembersList.get(0).getId());
-				if(hisByUserId !=null){
-					scoreHis.setOlbScore(hisByUserId.getNewScore());
-					scoreHis.setNewScore(scoreHis.getNewScore() +hisByUserId.getNewScore());	
-				}
+				//ScoreHis hisByUserId = scoreHisService.selectScoreHisByUserId(selectMembersList.get(0).getId());
+				scoreHis.setOlbScore(members.getScore());
+				scoreHis.setNewScore(scoreHis.getNewScore() +members.getScore());	
 				scoreHis.setCreatedDate(new Date());
 				scoreHis.setBusiId(invoiceNo);
 				scoreHisService.insertScoreHis(scoreHis);

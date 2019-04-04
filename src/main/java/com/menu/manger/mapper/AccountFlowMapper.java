@@ -3,6 +3,7 @@ package com.menu.manger.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.menu.manger.dto.AccountFlow;
 
@@ -67,6 +68,6 @@ public interface AccountFlowMapper
 	 * @param id
 	 * @return
 	 */
-	public int selectAccountMoneyByMemId(Integer menuId);
+	public int selectAccountMoneyByMemId(@Param("menuId")Integer menuId);
 	
 }

@@ -342,14 +342,20 @@ public class MembersAPIController extends BaseController
 			return AjaxResult.error("無法識別該二維碼!");
 		}
     	logger.info("解析二维码: {}",str);
+    	//扫描獲取優惠代碼 積分
     	if(!StringUtils.isEmpty(str) && str.contains("http://www.storellet.com/a/qrCode/s=")){
     		return	membersService.saveIntegral(str);
     	}
+    	if(!str.contains("https://www.mrokbang.com.hk=")){
+    		return AjaxResult.error("很抱歉,二維碼掃錯了!請核對...");
+    	}
+    	str =str.replace("https://www.mrokbang.com.hk=","");
     	str =AESUtil.AES_CBC_Decrypt(str);
-    	//扫描二维码怎共
+    	//扫描二维码獲取食品
     	if(!StringUtils.isEmpty(str) && str.contains("type=menuFood;")){
     		return	menuFoodService.qcMenuFood(str);
     	}
+    	//扫描獲取優惠代碼
     	return   couponService.selectCouponMangerByCouponCode(str);
     }
 	/**
