@@ -222,7 +222,7 @@ function vaildSMS(phone,code){
  * 檢查登錄
  */
 function checkLogin(){
-	if(!window.localStorage.token){
+	if(!window.localStorage.token || window.localStorage.token == 'undefined'){
     layer.open({
         content: '用戶沒有登陸,請登錄后再操作'
         ,btn: ['登陸', '稍後自己登陸']
@@ -233,6 +233,7 @@ function checkLogin(){
              window.location.href = "index.html";
         }
       });
+    	return false;
 	}else{
 		return true;
 	}

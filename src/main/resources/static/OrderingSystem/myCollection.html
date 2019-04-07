@@ -52,17 +52,7 @@
 	 myCollection(1);
 	 myCollection(2,1,10,true);
 	 function myCollection(type,page,size,isInit){
-		 if(!window.localStorage.token){
-			 layer.open({
-				    content: '用戶沒有登陸,請登錄后再操作'
-				    ,btn: ['登陸', '稍後自己登陸']
-				    ,yes: function(index){
-				    	 window.location.href = "Login.html";
-				      layer.close(index);
-				    },no:function(index){
-				    	 window.location.href = "index.html";
-				    }
-				  });
+		 if(!checkLogin()){
 		 }else{
 		 		if(! page ){
 		 			page =1;

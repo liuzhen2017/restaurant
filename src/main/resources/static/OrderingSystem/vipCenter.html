@@ -249,7 +249,10 @@
     //消费记录
     $("#xiaofeiJilu").on('click',function(){
     	$(".changeProduct").hide();
-    	checkLogin();
+    	debugger;
+    	if(!checkLogin()){
+    		return null;
+    	}
     	$("#endMoney").html(getMembersInfo());
     	var page =1;
     	var size =100;

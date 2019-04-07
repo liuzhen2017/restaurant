@@ -209,7 +209,7 @@
     						return false;
     					}
     					if(!window.localStorage.showAdv || window.localStorage.showAdv != obj.id+""){
-    						$("#showImg").html('<a href="'+obj.linkUrl+'"><img class="ad-img" src="'+obj.picUrl+'"></a>');
+    						$("#showImg").html('<a href="'+obj.linkUrl+'"><img class="ad-img" src="'+getUrlParmat(obj.picUrl)+'"></a>');
     						$("#showAdv").show();
     						$("#showAdvDiv").show();
     						localStorage.setItem("showAdv",obj.id);

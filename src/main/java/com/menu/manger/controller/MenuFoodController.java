@@ -64,11 +64,13 @@ public class MenuFoodController extends BaseController
 			myCollection.setResourceId(menuFood2.getId());
 			myCollection.setResourceTable("myCoupon");
 			Members mem =(Members)ThreadLocalUtil.getUserInfo();
-			myCollection.setMemuId(mem.getId());
-			List<MyCollection> selectMyCollectionList = myCollerctMapper.selectMyCollectionList(myCollection);
-			menuFood2.setIsColle("no");
-			if(selectMyCollectionList !=null && selectMyCollectionList.size() >0){
-				menuFood2.setIsColle("yes");
+			if(mem !=null ){
+				myCollection.setMemuId(mem.getId());
+				List<MyCollection> selectMyCollectionList = myCollerctMapper.selectMyCollectionList(myCollection);
+				menuFood2.setIsColle("no");
+				if(selectMyCollectionList !=null && selectMyCollectionList.size() >0){
+					menuFood2.setIsColle("yes");
+				}
 			}
 		}
 		return getDataTable(list);
