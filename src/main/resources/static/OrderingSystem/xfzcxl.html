@@ -79,7 +79,7 @@
   			if (result.code =='0') {
   				for(var i=0;i<result.rows.length;i++){
 	  				str+='<div class="swiper-slide">'
-	  	            +'<a href="showFood.html?id='+result.rows[i].id+'"><img src="'+result.rows[i].picUrl+'" /></a>'
+	  	            +'<a href="showFood.html?id='+result.rows[i].id+'"><img src="'+getUrlParmat(result.rows[i].picUrl)+'" /></a>'
 	  	            +'</div>';
   				}
   				if(str && !name){

@@ -36,9 +36,9 @@ spring:
        max-request-size:  30MB
   datasource:
      driver-class-name: com.mysql.cj.jdbc.Driver
-     url: jdbc:mysql://dsr.majiangyun.cn/shopManger?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+     url: jdbc:mysql://localhost/shopManger?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
      username: root
-     password: root@123.c0M
+     password: Paic#234
 
      # 初始化大小，最小，最大
      initialSize: 5
@@ -101,7 +101,4 @@ xss:
 
 profile:   /usr/local/springBootAppProject/profile/
 serviceUrl: http://localhost:8899/
- 
-     
-  
     

@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -312,7 +311,7 @@ public class ScoreHisServiceImpl implements IScoreHisService
 				menuFoodExchange.setMenuFoodName(menuFood2.getTitle());
 				menuFoodExchange.setMenuFoodPic(menuFood2.getPicUrl());
 				menuFoodExchange.setSpareField1(menuFood2.getSpareField1());
-				menuFoodExchange.setSpareField2("升級VIP贈送");
+				menuFoodExchange.setSpareField2("獲贈VIP迎新電子劵！");
 				menuFoodExchange.setSpareField3(menuFood2.getTitle());
 				exchangeMapper.insertMenuFoodExchange(menuFoodExchange);
 				if(menuFood2.getUsedNums() != null){
@@ -322,7 +321,7 @@ public class ScoreHisServiceImpl implements IScoreHisService
 						menuFood2.setIsValid("no");
 					}
 				}
-				noticeInfoService.insertNoticeInfo("购买VIP赠送优惠券", members.getId(), menuFood2.getId(), "MenuFood", menuFood2.getPicUrl());
+				noticeInfoService.insertNoticeInfo("獲贈VIP迎新電子劵！", members.getId(), menuFood2.getId(), "MenuFood", menuFood2.getPicUrl());
 				foodMapper.updateMenuFood(menuFood2);
 			}
 		}

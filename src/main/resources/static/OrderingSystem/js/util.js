@@ -1,5 +1,5 @@
 //var pathUrl ="http://localhost:8089/";
-var pathUrl ="http://flqd.majiangyun.com:8899/";
+var pathUrl ="https://meokbang.com.hk:447/";
 //var pathUrl ='';
 // 上传图片
 function uploadFile() {

@@ -129,7 +129,7 @@ $("#btnPay").on('click',function(){
     myStripe.pay({
     	name: "購買升級VIP服務",
     	key: payUserWEb.configValue,
-        currency:'cad',
+        currency:'HKD',
         amount: payConfig.configValue,
         callback: function (payPO) {
             requestService(payPO.email,payPO.tokenId,payPO.amount);
