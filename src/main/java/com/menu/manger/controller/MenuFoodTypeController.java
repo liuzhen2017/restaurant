@@ -50,5 +50,15 @@ public class MenuFoodTypeController extends BaseController
         List<MenuFoodType> list = menuFoodTypeService.queryByType(menuFoodType);
 		return getDataTable(list);
 	}
-	
+	/**
+	 * 查询精选类型
+	 */
+	@RequestMapping("/queryJX.do")
+	@ResponseBody
+	public TableDataInfo queryJX(MenuFoodType menuFoodType)
+	{
+		startPage();
+        List<MenuFoodType> list = menuFoodTypeService.queryJX(menuFoodType);
+		return getDataTable(list);
+	}
 }

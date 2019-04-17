@@ -1,5 +1,5 @@
-//var pathUrl ="http://localhost:8089/";
 var pathUrl ="https://meokbang.com.hk:447/";
+var appUpload ="https://dl.pconline.com.cn/html_2/1/59/id=37973&pn=0.html";
 //var pathUrl ='';
 // 上传图片
 function uploadFile() {
@@ -151,6 +151,8 @@ function sendSMS(phone){
 function loginOut(){
 	localStorage.removeItem("token");
 	localStorage.removeItem("tokent");
+	localStorage.removeItem("showAdv");
+	window.location.href = "index.html";
 	msg('退出成功!')
 }
 /**
@@ -391,3 +393,4 @@ function openMap(){
 		 { window.location.href = "https://www.google.com/maps/dir/?api=1&origin="+startAddress+"&destination="+endAddress+"&travelmode=driving"; 
 		 }
 }
+

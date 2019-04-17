@@ -50,8 +50,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="typeName != null  and typeName != '' "> and type_name = #{typeName}</if>
              <if test="price != null "> and price = #{price}</if>
              <if test="exchangePointsScord != null "> and exchange_points_scord = #{exchangePointsScord}</if>
-             <if test="isHot != null  and isHot != '' and isHot == '88' "> and branch_store_id is not null</if>
-             <if test="isHot != null  and isHot != '' and isHot != '88' "> and is_hot = #{isHot}</if>
+             <if test='isHot != null  and isHot == "88" '> and branch_store_id is not null</if>
+             <if test='isHot != null and isHot != "88" '>and is_hot = #{isHot}</if>
              <if test="isValid != null  and isValid != '' "> and is_valid = #{isValid}</if>
              <if test="createDate != null "> and create_date = #{createDate}</if>
              <if test="isSellOut != null  and isSellOut != '' "> and is_sell_out = #{isSellOut}</if>
@@ -71,7 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="spareField6 != null  and spareField6 != '' "> and spare_field6 = #{spareField6}</if>
              <if test="spareField7 != null  and spareField7 != '' "> and spare_field7 = #{spareField7}</if>
              <if test="invalidDate != null and invalidDate != '' ">and  STR_TO_DATE(`invalid_date`,'%Y-%m-%d %H:%i:%s')>= STR_TO_DATE(now(),'%Y-%m-%d %H:%i:%s')
-                   and  STR_TO_DATE(now(),'%Y-%m-%d %H:%i:%s') >= STR_TO_DATE(`take_effect_date`,'%Y-%m-%d %H:%i:%s')  OR `invalid_date` =''  </if>
+                   and  STR_TO_DATE(now(),'%Y-%m-%d %H:%i:%s') >= STR_TO_DATE(`take_effect_date`,'%Y-%m-%d %H:%i:%s')  OR `invalid_date` is null  </if>
          </where>
     </select>
     
@@ -209,7 +209,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         AND  ( NOW() >STR_TO_DATE(take_effect_date, '%Y-%m-%d %H:%i:%S')   OR take_effect_date IS NULL)
         and is_valid ='yes'
         and  #{scord} >exchange_points_scord     
-        order by exchange_points_scord ASC limit 1 
+        order by exchange_points_scord desc limit 1 
     </select>
     
     

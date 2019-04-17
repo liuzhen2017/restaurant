@@ -371,7 +371,7 @@ public class MembersServiceImpl implements IMembersService {
 		}
 		if (sendMessagerByPhone.getSendCode().equals(code)) {
 			sendMessagerByPhone.setIsVaild("no");
-			sendMessagerMapper.updateSendMessager(sendMessagerByPhone);
+			//sendMessagerMapper.updateSendMessager(sendMessagerByPhone);
 			return AjaxResult.success("驗證成功!");
 		}
 		return AjaxResult.error("驗證碼錯誤");

@@ -131,13 +131,16 @@
 							<option value="1">女性</option>
 					</select>
 					</li>
+					</ul>
+					<ul class="item-ul-01">
 					<li>
 						<p>
 							優惠代碼
 						</p> <input  class="input-text01" type="text" id="couponCode"
 						name="couponCode" placeholder="請輸入優惠代碼">
 					</li>
-				</ul>
+					</ul>
+				
 				<div class="tips-p">
 					<label>*</label>為必填選項
 				</div>
@@ -250,6 +253,8 @@
 						{
 						 window.location.href="registerVIP2.html";
 						}
+				    	$("#pwd1").val("");
+						$("#pwd").val("");
 				    }
 				  });
 			}else{

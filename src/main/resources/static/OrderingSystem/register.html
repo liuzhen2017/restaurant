@@ -223,6 +223,8 @@
 							localStorage.setItem("token",result.data.webToken);
 							window.location.href="registerSucc.html";
 						}
+						$("#pwd1").val("");
+						$("#pwd").val("");
 					},
 					error : function(error) {
 						msg("網絡連接錯誤!"+JSON.stringify(error));

@@ -11,6 +11,15 @@
     <!-- JS -->
     <script type="text/javascript" src="./js/comm.js"></script>
     <script type="text/javascript" src="./js/jquery-1.8.2.min.js"></script>
+    <style type="text/css">
+    .pinch-zoom,.pinch-zoom img{
+	width: 100%;
+	-webkit-user-drag: none;
+	-moz-user-drag: none;
+	-ms-user-drag: none;
+	user-drag: none;
+}
+    </style>
 </head>
 <body style="background-color: #fff;">
 <div class="container top-aifix">
@@ -18,12 +27,12 @@
     <div class="header">
         <p class="return-con"></p>
         <p class="tlt">詳情介紹</p>
-        <p class="rt-btn"><img src="imgs/header-right-icon.png"><span class="number">2</span></p>
+        <p class="rt-btn"><img src="imgs/header-right-icon.png"><span class="number"></span></p>
     </div>
     <!--頭部 End-->
 </div>
 <div class="container">
-    <div class="detail_pic">
+    <div class="detail_pic pinch-zoom" style="width: 60%">
         <a href="javasrcipt:void(0)"><img  id="showImg" /></a>
     </div>
     <div class="detail_con" >
@@ -35,6 +44,7 @@
 <script type="text/javascript" src="./js/index.js"></script>
 <script type="text/javascript" src="./js/index.js"></script>
 <script type="text/javascript" src="./js/util.js"></script>
+<script type="text/javascript" src="./js/pinchzoom/pinchzoom.js"></script>
 <script type="text/javascript">
 //加載用戶收藏信息
 showMessage()
@@ -54,6 +64,11 @@ function showMessage(){
 							$("#showTitle").html(result.data.title);
 							$("#showcontent").html(result.data.describes);
 						}
+						 $(function () {
+						        $('div.pinch-zoom').each(function () {
+						            new RTP.PinchZoom($(this), {});
+						        });
+						  })
 					},
 					error : function(error) {
 						msg("網絡連接錯誤!"+JSON.stringify(error));

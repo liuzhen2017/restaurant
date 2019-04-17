@@ -30,7 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             and is_vaild = 'yes'
             and ( STR_TO_DATE(invalid_date, '%Y-%m-%d %H:%i:%S') >NOW()  OR invalid_date IS NULL )
          </where>
-         order by id,STR_TO_DATE(invalid_date, '%Y-%m-%d %H:%i:%S') desc
+         order by spare_field1 desc
          limit 1
     </select>
     

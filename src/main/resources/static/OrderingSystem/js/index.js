@@ -1,8 +1,8 @@
 /**
  * Created by Administrator on 2018/11/15.
  */
-var count = 1000;//µ÷ÓÃ½Ó¿Ú»ñÈ¡ÊıÖµ
-var COUNT_MAN = 3000;//ÉèÖÃÏû·ÑÂúµÄÖµ
+var count = 1000;//ï¿½ï¿½ï¿½Ã½Ó¿Ú»ï¿½È¡ï¿½ï¿½Öµ
+var COUNT_MAN = 3000;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
 function toPercent1(data){
     var strData = parseFloat(data)*100;
     var ret = strData.toString()+"%";
@@ -27,21 +27,21 @@ $('#score_butt').on('click',function(){
         $(".span1").hide();
     }
 });
-//²Ëµ¥ÇĞ»»
+//ï¿½Ëµï¿½ï¿½Ğ»ï¿½
 $(document).ready(function () {
     $(".list-ul li").click(function () {
         $(this).addClass("active").siblings("li").removeClass("active");
         $(".tab").eq($(this).index()).show().siblings(".tab").hide();
     });
 })
-//µ×²¿²Ëµ¥ÇĞ»»
+//ï¿½×²ï¿½ï¿½Ëµï¿½ï¿½Ğ»ï¿½
 $(document).ready(function () {
     $(".tab-menu li").click(function () {
         $(this).addClass("active").siblings("li").removeClass("active");
         $(".tab").eq($(this).index()).show().siblings(".tab").hide();
     });
 })
-//¼Ó¼õ
+//ï¿½Ó¼ï¿½
 $(".addbox").click(function() {
     var t = $(this).parent().find('input[class*=text_box]');
     t.val(parseInt(t.val()) + 1)
@@ -65,7 +65,7 @@ function setTotal() {
 }
 setTotal();
 
-//Ä£Äâselect
+//Ä£ï¿½ï¿½select
 $(document).ready(function () {
 $(".top-date-menu").click(function(){
     $(this).siblings(".date-select-ul").slideDown();
@@ -91,7 +91,7 @@ $(".yyq-list .item-box").on("click",function(){
 })
 
 
-/*Í·²¿°´Å¥ start*/
+/*Í·ï¿½ï¿½ï¿½ï¿½Å¥ start*/
 $(".return-con").on("click",function(){
     window.history.go(-1);
 });
@@ -105,7 +105,7 @@ $(".menu-con").on("click",function(){
     $(".top-menu").css("z-index","1");
     $(".date-top-select").css("z-index","9");
 });
-/*Í·²¿°´Å¥  end*/
+/*Í·ï¿½ï¿½ï¿½ï¿½Å¥  end*/
 
 
 $(".jxsp-product-ul li").on("click",function(){
@@ -115,7 +115,7 @@ $(".jxsp-product-ul li").on("click",function(){
 $(".swiper-product-ul li").on("click",function(){
     window.location.href = 'barbecueProducts.html';
 });
-/*ËùÓĞfooterµã»÷ start*/
+/*ï¿½ï¿½ï¿½ï¿½footerï¿½ï¿½ï¿½ start*/
 $(".tab-menu li").on("click",function(){
     switch ($(this).index()){
         case 0:
@@ -135,7 +135,7 @@ $(".tab-menu li").on("click",function(){
             break;
     }
 });
-/*ËùÓĞfooterµã»÷ end*/
+/*ï¿½ï¿½ï¿½ï¿½footerï¿½ï¿½ï¿½ end*/
 
 /*indexsetting start*/
 $(".filter-bg").on("click",function(){
@@ -163,20 +163,20 @@ $(".item").on("click",function(){
 //    }
 //});
 
-/*register È·ÈÏÓÊÏä*/
+/*register È·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 //$(".btn-next").on("click",function(){
 //    $(".confirmEmail").css("display","block");
 //});
 
-/*²à±ßÀ¸*/
+/*ï¿½ï¿½ï¿½ï¿½ï¿½*/
 $("#moreIco").click(function(){
 
 });
-/*²ÍÌüÁĞ±í*/
+/*ï¿½ï¿½ï¿½ï¿½ï¿½Ğ±ï¿½*/
 $(".canting-list-pic").on("click",function(){
     window.location.href = 'restaurant_Detail.html';
 });
-/*²ÍÌüÏêÇé*/
+/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 $(".canting-address").on("click",function(){
     $(".restaurant-Detail-filter").css("display","block");
 });
@@ -203,11 +203,10 @@ $(".setUp-ul .setUp-ul-li").on("click",function(){
             break;
         case 5:
         	var fakeLink = document.createElement('a');
-        	var shareUrl =encodeURIComponent('ÎÒ·ÖÏíÒ»‚€ƒ»İüc²ÍAPP');
+        	var shareUrl =encodeURIComponent('æ‚¨çš„å¥½å‹åˆ†äº«äº†ä¸€å€‹å„ªæƒ å¤š,åˆå¥½ç©çš„APP,è«‹é»æ“Šä¸‹è¼‰APP,ä¸€èµ·ä½¿ç”¨'+appUpload);
         	fakeLink.setAttribute('href', 'whatsapp://send?text='+shareUrl);
         	fakeLink.setAttribute('data-action', 'share/whatsapp/share');
         	fakeLink.click();
-        	//window.location="whatsapp://send?text="+ encodeURIComponent('ÎÒ·ÖÏíÒ»‚€ƒ»İüc²ÍAPP,  http://flqd.majiangyun.com:8899/OrderingSystem/index.html')+"&via=lopscoop";
             break;
         case 6:
             var show = $('#myBargain').css('display');
@@ -237,7 +236,7 @@ $("#myBargain li").on("click",function(){
 //    window.location.href = 'changeSuc.html';
 //});
 
-/*ÉÕ¿¾ÉÌÆ·*/
+/*ï¿½Õ¿ï¿½ï¿½ï¿½Æ·*/
 $(".bar-cai-name").on("click",function(){
     window.location.href = 'changeThings.html';
 });

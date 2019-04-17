@@ -37,7 +37,7 @@
 <!--头部 End-->
 <!--swiper start-->
 <div class="swiper-container" id="swiper">
-    <div class="swiper-wrapper" id="showDiv">
+    <div class="swiper-wrapper" id="showDiv" style="height: 65%;width: 80%">
         
     </div>
     <!-- add pagination -->
@@ -48,11 +48,12 @@
 <script>
     $(function() {
         var swiper = new Swiper('#swiper', {
-            loop: true,
+            /* loop: true,*/ //禁止跳跃滑动
             pagination: '.swiper-pagination',
-            paginationClickable: true,
-            autoplay: 3000
-        });
+            slidesPerView: 1.125,
+            spaceBetween: 30,
+            centeredSlides: true
+        })
     });
     showMenuByType();
   //加载类别餐牌
@@ -60,7 +61,7 @@
 	  var data =new Object();
       data.typess=GetUrlParam('typeId');
       data.typeName=GetUrlParam('typeName');
-      debugger;
+      
       var name =GetUrlParam('typeName');
       if(name){
     	  name = name =="individual"? "個別餐廳":"特別推薦";
@@ -80,6 +81,7 @@
   				for(var i=0;i<result.rows.length;i++){
 	  				str+='<div class="swiper-slide">'
 	  	            +'<a href="showFood.html?id='+result.rows[i].id+'"><img src="'+getUrlParmat(result.rows[i].picUrl)+'" /></a>'
+                    +'<span>'+result.rows[i].title+'</span>'	  	            		
 	  	            +'</div>';
   				}
   				if(str && !name){

@@ -61,7 +61,7 @@ function selectFoodType(){
 	$.ajax({
 		method : "POST",
 		async:false,
-		url : pathUrl + "/api/menuFoodType/list",
+		url : pathUrl + "/api/menuFoodType/list?menuFoodType=1",
 		data : {token:window.localStorage.token,pageNum:1,pageSize:10},
 		type : "post",
 		async: false,

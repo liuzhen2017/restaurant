@@ -113,7 +113,7 @@
 										});
     									$("#calTel").attr("href","tel:"+obj.phone);
     									$("#shareId").on('click',function(){
-    										whatsapp("<a href='"+ window.location.href+"'>我分享了一個好吃的的店面"+obj.storeName+",地址:"+obj.address+"</a>");
+    										whatsapp("<a href='"+ window.location.href+"'>我分享了一個有很多好吃的的店面"+obj.storeName+",地址:"+obj.address+"</a>,請點擊下載APP一起使用"+appUpload);
 										});
     									
 									}
@@ -141,12 +141,17 @@
 	       if(!page){
 	    	   page =1;
 	       }
+	       var data =new Object();
+           data.pageNum=page;
+           data.pageSize=size;
+           data.invalidDate='yes';
+           data.isHot='2';
 	 	   var size =10;
 				$.ajax({
 					method : "POST",
 					async:false,
 					url : pathUrl + "/api/menuFood/getListByType.do",
-					data : {token:window.localStorage.token,pageNum:page,pageSize:size,isHot:'2'},
+					data : {'json':JSON.stringify(data)},
 					type : "post",
 					async: false,
 					jsonpCallback:'cd',
@@ -158,7 +163,7 @@
 								for(var i=0;i<result.rows.length;i++){
 									obj =result.rows[i];
 									str +='<li>'
-					                +'<img src="'+getUrlParmat(obj.picUrl)+'">'
+					                +'<a href="showFood.html?id='+obj.id+'"><img src="'+getUrlParmat(obj.picUrl)+'"></a>'
 					                +'<p>'
 					                +'<span class="">'+obj.title+'</span><br>'
 					                +'  <span>'+obj.describes+'</span>'

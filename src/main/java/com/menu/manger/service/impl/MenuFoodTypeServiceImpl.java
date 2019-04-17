@@ -89,5 +89,13 @@ public class MenuFoodTypeServiceImpl implements IMenuFoodTypeService
 	public List<MenuFoodType> queryByType(MenuFoodType menuFoodType) {
 		return menuFoodTypeMapper.queryByType(menuFoodType);
 	}
+
+	/* (non-Javadoc)
+	 * @see com.menu.manger.service.IMenuFoodTypeService#queryJX(com.menu.manger.dto.MenuFoodType)
+	 */
+	@Override
+	public List<MenuFoodType> queryJX(MenuFoodType menuFoodType) {
+		return menuFoodTypeMapper.queryJX(menuFoodType);
+	}
 	
 }

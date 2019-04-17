@@ -57,5 +57,11 @@ public interface IMenuFoodTypeService
 	 * @return
 	 */
 	public List<MenuFoodType> queryByType(MenuFoodType menuFoodType);
+
+	/**
+	 * @param menuFoodType
+	 * @return
+	 */
+	public List<MenuFoodType> queryJX(MenuFoodType menuFoodType);
 	
 }

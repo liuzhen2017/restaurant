@@ -206,11 +206,10 @@
     	var data =new Object();
         data.pageNum=page;
         data.pageSize=size;
-        data.isHot =3;
         data.invalidDate='yes';
     				$.ajax({
     					method : "POST",
-    					url : pathUrl + "/api/menuFood/getListByType.do",
+    					url : pathUrl + "/api/menuFoodType/queryJX.do",
     					data : {'json':JSON.stringify(data)},
     					type : "post",
     					jsonpCallback:'cd',
@@ -221,14 +220,14 @@
     								var obj =null;
     								var date =null;
     								var divHeard ='<ul class="jxsp-product-ul">';
-    				                var divFood ='</ul>';    
+    				                var divFood ='</ul>';
     								for(var i=0;i<result.rows.length;i++){
     									obj =result.rows[i];
     									if(i ==0 || i % 6 ==0){
     										str+=divHeard;
     									}
-    									str+='<li><img src="'+getUrlParmat(obj.picUrl)+'"><br><span>'+obj.title+'</span></li>'
-    									if(i !=0 &&  i % 6 ==0){
+    									str+='<li><a href="barbecueProducts.html?id='+obj.id+'&typeName='+obj.typeName+'"><img src="'+getUrlParmat(obj.picUrl)+'"><br><span>'+obj.typeName+'</span></a></li>'
+    									if(i !=0 &&  (i+1) % 6 ==0){
     										str+=divFood;	
     									}
     								}
@@ -249,7 +248,7 @@
     //消费记录
     $("#xiaofeiJilu").on('click',function(){
     	$(".changeProduct").hide();
-    	debugger;
+    	
     	if(!checkLogin()){
     		return null;
     	}
@@ -317,7 +316,7 @@
     								        str +='<a href="showMyCuopDetail.html?id='+obj.id+'"><div class="item-box">';
     									}
     									str+='<div class="div1">'
-    									+'	<img src="imgs/quan-img.png">'
+    									+'	<img src='+getUrlParmat(obj.picUrl)+'>'
     									+'</div>'
     									+'<div class="div2">'
     								 	+'<p class="p02">'+obj.name+'</p>'
@@ -367,7 +366,7 @@
 							        str +='<a href="showMyCuopDetail.html?id='+obj.id+'"><div class="item-box">';
 								}
 								str+='<div class="div1">'
-								+'	<img src="imgs/quan-img.png">'
+									+'	<img src='+getUrlParmat(obj.picUrl)+'>'
 								+'</div>'
 								+'<div class="div2">'
 							 	+'<p class="p02">'+obj.name+'</p>'

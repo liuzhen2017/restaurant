@@ -34,7 +34,7 @@
     </div>
     <!--swiper end-->
     <!--積分 start-->
-    <div class="integral-container" id="showMyCoupon">
+    <div class="integral-container" id="showMyCoupon" style="display: none">
 
        
        
@@ -69,6 +69,14 @@
         </div>
     </div>
 </div>
+<div class="vip-container" style="display: none" id="noLogin">
+        <div class="tlt">做會員有咩好？</div>
+        <div class="vip-logo-img"><img src="imgs/vip-logo-img.png"></div>
+        <div class="vip-btnDiv">
+            <a class="btn" href="register_choice.html">註冊</a>
+            <a class="btn" href="login.html">登入</a>
+        </div>
+ </div>
 <div class="index-filter modal filter-bg" id="showAdvDiv" style="display: none">
     <!--彈窗三 end-->
 	<div class="modal-ad" id="showAdv" style="display: none;">
@@ -81,8 +89,9 @@
     <script type="text/javascript" src="./js/jquery-1.8.2.min.js"></script>
     <script type="text/javascript" src="./lib/swiper/swiper.min.js"></script>
     <script type="text/javascript" src="js/util.js"></script>
+    <script type="text/javascript" src="js/d3.js"></script>
     <script type="text/javascript" src="js/layer.mobile-v2.0/layer_mobile/layer.js"></script>
-<script type="text/javascript" src="js/laydate/laydate.js"></script>
+    <script type="text/javascript" src="js/laydate/laydate.js"></script>
 <script>
     $(function() {
         var swiper = new Swiper('#swiper', {
@@ -148,8 +157,11 @@
     	getFoodByScose();
     	function getFoodByScose(){
     		if(!window.localStorage.token || window.localStorage.token =='undefined'){
+    			$("#noLogin").show();
+    			$("#showMyCoupon").hide();
     			return null;
     		}
+    		$("#noLogin").hide();
     		$.ajax({
     			method : "POST",
     			url : pathUrl + "/api/menuFood/getFoodByScose.do",
@@ -171,7 +183,7 @@
 
     							+'<span id="irow" class="triangle_border_down ft-32"></span>'
     							+'</div>'
-    							+'<div class="g-con2">'
+    							+'<div class="g-con2" id="slider">'
     							+'<span class="free-member ft-32"><label>'+result.data.exchangePointsScord+'</label></span>'
     							+'<div id="consumption_amount2" class="gobal-bar" style="width:0%"></div>'
     							+'</div>'
@@ -182,7 +194,17 @@
     				             +'</div>'
     				             +'</div>'
     				             +'<div class="demo-img"><img src="'+getUrlParmat(result.data.picUrl) +'"></div>';
-    					$("#showMyCoupon").html(str);
+    							$("#showMyCoupon").show().html(str);
+    						   d3.select("#slider").transition()
+    						    .attrTween("width", function() {
+    						     var i = d3.interpolate(result.data.exchangePointsScord,$("#score").html());
+    						     var ci = d3.interpolate('#2394F5', '#BDF436');
+    						     var that = this;
+    						     return function(t) {
+    						      that.style.width = i(t) + 'px';
+    						      that.style.background = ci(t);
+    						     };
+    						    });
     				}
     			},
     			error : function(error) {
@@ -208,11 +230,26 @@
     					if(!obj){
     						return false;
     					}
-    					if(!window.localStorage.showAdv || window.localStorage.showAdv != obj.id+""){
+    					var showAdvInfo =window.localStorage.showAdv;
+    					if(showAdvInfo !=null && showAdvInfo != undefined){
+    						var info =showAdvInfo.split(";");
+    						 if(info[0] == obj.id && (new Date().getTime()-info[1])/1000/(24*60*60) >=1 ){
+	    						$("#showImg").html('<a href="'+obj.linkUrl+'"><img class="ad-img" src="'+getUrlParmat(obj.picUrl)+'"></a>');
+	    						$("#showAdv").show();
+	    						$("#showAdvDiv").show();
+	    						localStorage.setItem("showAdv",obj.id+";"+new Date().getTime());
+    						 }
+    						 if(info[0] != obj.id){
+    							 $("#showImg").html('<a href="'+obj.linkUrl+'"><img class="ad-img" src="'+getUrlParmat(obj.picUrl)+'"></a>');
+ 	    						$("#showAdv").show();
+ 	    						$("#showAdvDiv").show();
+ 	    						localStorage.setItem("showAdv",obj.id+";"+new Date().getTime());
+    						 }
+    					}else{
     						$("#showImg").html('<a href="'+obj.linkUrl+'"><img class="ad-img" src="'+getUrlParmat(obj.picUrl)+'"></a>');
     						$("#showAdv").show();
-    						$("#showAdvDiv").show();
-    						localStorage.setItem("showAdv",obj.id);
+    						$("#showAdvDiv").show()
+    						localStorage.setItem("showAdv",obj.id+";"+new Date().getTime());
     					}
     				}
     			},

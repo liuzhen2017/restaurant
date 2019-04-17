@@ -243,7 +243,7 @@ public class MenuFoodServiceImpl implements IMenuFoodService
 		if(HttpConstants.ISVAILD_NO.equals(selectMenuFoodExchangeById.getIsVaild()) || selectMenuFoodExchangeById.getExchangeStatus() !=0){
 			return AjaxResult.error("該優惠狀態不正確,不允許贈送!");
 		}
-		if(DateUtils.dateTime("yyyy-MM-dd", selectMenuFoodExchangeById.getInvalidDate()).before(new Date())){
+		if(!StringUtils.isEmpty(selectMenuFoodExchangeById.getInvalidDate()) && DateUtils.dateTime("yyyy-MM-dd", selectMenuFoodExchangeById.getInvalidDate()).before(new Date())){
 			return AjaxResult.error("該優惠狀態已經過期,不允許贈送!"); 
 		}
 		

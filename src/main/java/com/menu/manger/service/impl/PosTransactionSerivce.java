@@ -189,7 +189,9 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 			c.setOffType(0);
 			c.setNetOff(5);
 			itemCode = new ArrayList<>();
-			c.setExpiry(coupon.getInvalidDate());
+			if(StringUtils.isNoneBlank(coupon.getInvalidDate())){
+			  c.setExpiry(coupon.getInvalidDate());
+			}
 			c.setDescription(coupon.getRemark());
 			itemCode.add("0000"+coupon.getSpareField1());
 			c.setItemCode(itemCode);
@@ -326,7 +328,7 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 					  return response;
 				  }
 				
-				if(DateUtils.dateTime("yyyy-MM-dd HH:mm:ss",foodExchange.getInvalidDate()).before(new Date())){
+				if(StringUtils.isNoneBlank(foodExchange.getInvalidDate())&& DateUtils.dateTime("yyyy-MM-dd HH:mm:ss",foodExchange.getInvalidDate()).before(new Date())){
 					response.setResult(1);
 					  response.setErrCode(2);;
 					  response.setErrMsg("該優惠券已經過期,優惠券代碼:0000"+foodExchange.getSpareField1());;
@@ -486,7 +488,7 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 			throw new Exception("優惠券ID有誤!");
 		}
 		for (MenuFoodExchange foodExchange : selectMenuFoodExchangeByIds) {
-			if(DateUtils.dateTime(foodExchange.getInvalidDate(),"yyyyMMdd").before(new Date())){
+			if(StringUtils.isNoneBlank(foodExchange.getInvalidDate()) &&DateUtils.dateTime(foodExchange.getInvalidDate(),"yyyyMMdd").before(new Date())){
 				throw new Exception("该優惠券已经过期!");
 			}
 			if(foodExchange.getExchangeStatus() ==0){
