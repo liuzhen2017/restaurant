@@ -51,7 +51,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where is_valid ='yes'
         <!-- 1.时间必须是有效 -->
         and (STR_TO_DATE(end_time, '%Y-%m-%d %H:%i:%S') >NOW()  OR end_time IS NULL)
-        and ( NOW() > STR_TO_DATE(begin_time, '%Y-%m-%d %H:%i:%S')   OR begin_time IS NULL)        
+        and ( NOW() > STR_TO_DATE(begin_time, '%Y-%m-%d %H:%i:%S')   OR begin_time IS NULL)
+        <if test="integralType == null ">
+          and integral_type != '2'         
+        </if>
+        <if test="integralType == null ">
+          and integral_type = integralType         
+        </if>
         order by priority desc 
     </select>
     

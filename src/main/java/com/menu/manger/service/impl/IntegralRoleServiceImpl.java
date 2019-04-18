@@ -109,5 +109,27 @@ public class IntegralRoleServiceImpl implements IIntegralRoleService
 		 }
 		 return inteRole;
 	}
+
+	/* (non-Javadoc)
+	 * @see com.menu.manger.service.IIntegralRoleService#selectByRoleByintegralType(java.lang.Integer, java.lang.Integer)
+	 */
+	@Override
+	public IntegralRole selectByRoleByintegralType(Integer membersType,
+			Integer integralType) {
+		 List<IntegralRole> byRole = integralRoleMapper.selectByRole(membersType,integralType);
+		 IntegralRole inteRole = null;
+		 for (IntegralRole integralRole : byRole) {
+			 //如果类型匹配,获取是通用类型
+			if(integralRole.getMenmType() ==membersType || integralRole.getMenmType() ==HttpConstants.EmmbersType_2){
+				inteRole =integralRole;
+				break;
+			}
+		}
+		 //如果不匹配,并且没有通用类型,则取优先级最高的第一条
+		 if(inteRole ==null){
+			 inteRole =byRole.get(0);
+		 }
+		 return inteRole;
+	}
 	
 }

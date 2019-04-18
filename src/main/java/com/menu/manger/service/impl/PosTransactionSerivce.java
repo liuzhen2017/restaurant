@@ -388,27 +388,36 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 				scoreHis.setBusiId(invoiceNo);
 				scoreHisService.insertScoreHis(scoreHis);
 				//判斷用戶消費，是否滿足自動升級會員
-				String queryCigKey =HttpConstants.autoUpgradingMoney;
-				if(selectMembersList.get(0).getMembersType() ==HttpConstants.EmmbersType_1){
-					queryCigKey =HttpConstants.autoUpgradingMoneyVIP;
-				}
-				SysConfig selectByKey = sysConfigService.selectByKey(queryCigKey);
-				int moneyByMemId = accountFlowService.selectAccountMoneyByMemId(selectMembersList.get(0).getId());
-				if(moneyByMemId >= Integer.parseInt(selectByKey.getConfigValue())){
-					//如果是會員
-					Date vipDateEnd =new Date();
-					if(selectMembersList.get(0).getMembersType() ==HttpConstants.EmmbersType_1){
-						Date dateTime = DateUtils.dateTime("yyyyMMdd",selectMembersList.get(0).getVipDate());
-						if(dateTime.after(new Date())){
-							//如果會員沒有過期，則過期時間 +1年  20191230 + 1 =20201230
-							vipDateEnd =DateUtils.addYears(dateTime, 1);
+				//查詢是否有活動
+				if(selectMembersList.get(0).getMembersType() ==0){
+					IntegralRole selectByRoleByintegralType = roleService.selectByRoleByintegralType(selectMembersList.get(0).getMembersType(), 2);
+					int money =0;
+					if(selectByRoleByintegralType ==null){
+						String queryCigKey =HttpConstants.autoUpgradingMoney;
+						if(selectMembersList.get(0).getMembersType() ==HttpConstants.EmmbersType_1){
+							queryCigKey =HttpConstants.autoUpgradingMoneyVIP;
 						}
-						selectMembersList.get(0).setUpgradeDate(DateUtils.parseDateToStr("yyyyMMdd", new Date()));
-						selectMembersList.get(0).setVipDate(DateUtils.parseDateToStr("yyyyMMdd", vipDateEnd));
+						SysConfig selectByKey = sysConfigService.selectByKey(queryCigKey);
+						money =Integer.parseInt(selectByKey.getConfigValue());
+					}else{
+						money =(int)selectByRoleByintegralType.getScoreValue();
 					}
-					noticeInfoService.insertNoticeInfo("消費金額滿"+selectByKey.getConfigValue()+" 積分自動升級通知", members.getId(), 0, "noticeType", "恭喜您：本年度"+DateUtils.dateTime()+", 消費金額滿"+selectByKey.getConfigValue()+" 積分自動升級,享受VIP優惠,該優惠于："+selectMembersList.get(0).getVipDate()+"失效.");
-				}
-				
+					int moneyByMemId = accountFlowService.selectAccountMoneyByMemId(selectMembersList.get(0).getId());
+					if(moneyByMemId >= money ){
+						//如果是會員
+						Date vipDateEnd =new Date();
+						if(selectMembersList.get(0).getMembersType() ==HttpConstants.EmmbersType_1){
+							Date dateTime = DateUtils.dateTime("yyyyMMdd",selectMembersList.get(0).getVipDate());
+							if(dateTime.after(new Date())){
+								//如果會員沒有過期，則過期時間 +1年  20191230 + 1 =20201230
+								vipDateEnd =DateUtils.addYears(dateTime, 1);
+							}
+							selectMembersList.get(0).setUpgradeDate(DateUtils.parseDateToStr("yyyyMMdd", new Date()));
+							selectMembersList.get(0).setVipDate(DateUtils.parseDateToStr("yyyyMMdd", vipDateEnd));
+						}
+						noticeInfoService.insertNoticeInfo("消費金額滿"+money+" 積分自動升級通知", members.getId(), 0, "noticeType", "恭喜您：本年度"+DateUtils.dateTime()+", 消費金額滿"+money+" 積分自動升級,享受VIP優惠,該優惠于："+selectMembersList.get(0).getVipDate()+"失效.");
+					}
+				  }
 				AcctBalance selectAcctBalanceById = accBalanceService.selectAcctBalanceById(1);
 				selectAcctBalanceById.setCanBalance(selectAcctBalanceById.getCanBalance().add(accountFlow.getMoney()));
 				accBalanceService.updateAcctBalance(selectAcctBalanceById);

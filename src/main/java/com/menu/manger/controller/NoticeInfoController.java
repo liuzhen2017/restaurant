@@ -51,7 +51,7 @@ public class NoticeInfoController extends BaseController
 		NoticeInfo noticeInfo =new NoticeInfo();
 		noticeInfo.setMemId(getUserInfo().getId());
 		noticeInfo.setIsSee("no");
-		return AjaxResult.success("", noticeInfoService.selectNoticeInfoList(noticeInfo).size());
+		return AjaxResult.success("", noticeInfoService.selectNoticeInfoList(noticeInfo));
 	}
 	/**
 	 * 修改保存通知

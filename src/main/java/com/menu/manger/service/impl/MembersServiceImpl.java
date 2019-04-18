@@ -235,7 +235,15 @@ public class MembersServiceImpl implements IMembersService {
 			map.put("value", memCode);
 			selectMembersByKey = membersMapper.selectMembersByKey(map);
 		}
+		//查找導入積分
+		ScoreHis scoreHis =new ScoreHis();
+		scoreHis.setMembersId(-1);
+		scoreHis.setMembersName(members.getPhone());
 		members.setScore(0);
+		List<ScoreHis> selectScoreHisList = scoreHisService.selectScoreHisList(scoreHis);
+		if(selectScoreHisList !=null && selectScoreHisList.size() >0){
+			members.setScore(selectScoreHisList.get(0).getNewScore());
+		}
 		members.setCode(memCode + "");
 		
 		// 查找待領取的優惠券信息
@@ -256,7 +264,8 @@ public class MembersServiceImpl implements IMembersService {
 			}
 		}
 		//
-
+		
+		
 		Members backMem = members;
 		backMem.setPwd(null);
 		Date dt =new Date();
@@ -266,6 +275,8 @@ public class MembersServiceImpl implements IMembersService {
 		data.put("membersInfo", backMem);
 		data.put("myscorp", backMem.getScore());
 		members.setSaveToken(new SimpleDateFormat("yyyyMMdd HH:mm:ss:SSS").format(dt));
+	
+		
 		membersMapper.insertMembers(members);
 		lock.unlock();
 		return AjaxResult.success("恭喜您,註冊成功!", data);
@@ -501,39 +512,46 @@ public class MembersServiceImpl implements IMembersService {
 			scoreHis.setBusiId(loginUser.getId() + "");
 			scoreHisService.insertScoreHis(scoreHis);
 			// 判斷用戶消費，是否滿足自動升級會員
-			String queryCigKey = HttpConstants.autoUpgradingMoney;
-			if (loginUser.getMembersType() == HttpConstants.EmmbersType_1) {
-				queryCigKey = HttpConstants.autoUpgradingMoneyVIP;
-			}
-			SysConfig selectByKey = sysConfigService.selectByKey(queryCigKey);
-			int moneyByMemId = accountFlowService
-					.selectAccountMoneyByMemId(loginUser.getId());
-			if (moneyByMemId >= Integer.parseInt(selectByKey.getConfigValue())) {
-				// 如果是會員
-				Date vipDateEnd = new Date();
-				if (loginUser.getMembersType() == HttpConstants.EmmbersType_1) {
-					Date dateTime = DateUtils.dateTime("yyyyMMdd",
-							loginUser.getVipDate());
-					if (dateTime.after(new Date())) {
-						// 如果會員沒有過期，則過期時間 +1年 20191230 + 1 =20201230
-						vipDateEnd = DateUtils.addYears(dateTime, 1);
+			if(selectMembersById.getMembersType() ==0){
+				IntegralRole selectByRoleByintegralType = roleService.selectByRoleByintegralType(selectMembersById.getMembersType(), 2);
+				int money =0;
+				if(selectByRoleByintegralType ==null){
+					String queryCigKey =HttpConstants.autoUpgradingMoney;
+					if(selectMembersById.getMembersType() ==HttpConstants.EmmbersType_1){
+						queryCigKey =HttpConstants.autoUpgradingMoneyVIP;
 					}
-					loginUser.setUpgradeDate(DateUtils.parseDateToStr(
-							"yyyyMMdd", new Date()));
-					loginUser.setVipDate(DateUtils.parseDateToStr("yyyyMMdd",
-							vipDateEnd));
+					SysConfig selectByKey = sysConfigService.selectByKey(queryCigKey);
+					money =Integer.parseInt(selectByKey.getConfigValue());
+				}else{
+					money =(int)selectByRoleByintegralType.getScoreValue();
 				}
-				noticeInfoService.insertNoticeInfo(
-						"消費金額滿" + selectByKey.getConfigValue() + " 積分自動升級通知",
-						loginUser.getId(),
-						0,
-						"noticeType",
-						"恭喜您：本年度" + DateUtils.dateTime() + ", 消費金額滿"
-								+ selectByKey.getConfigValue()
-								+ " 積分自動升級,享受VIP優惠,該優惠于："
-								+ loginUser.getVipDate() + "失效.");
+				int moneyByMemId = accountFlowService.selectAccountMoneyByMemId(selectMembersById.getId());
+				if (moneyByMemId >= money) {
+					// 如果是會員
+					Date vipDateEnd = new Date();
+					if (loginUser.getMembersType() == HttpConstants.EmmbersType_1) {
+						Date dateTime = DateUtils.dateTime("yyyyMMdd",
+								loginUser.getVipDate());
+						if (dateTime.after(new Date())) {
+							// 如果會員沒有過期，則過期時間 +1年 20191230 + 1 =20201230
+							vipDateEnd = DateUtils.addYears(dateTime, 1);
+						}
+						loginUser.setUpgradeDate(DateUtils.parseDateToStr(
+								"yyyyMMdd", new Date()));
+						loginUser.setVipDate(DateUtils.parseDateToStr("yyyyMMdd",
+								vipDateEnd));
+					}
+					noticeInfoService.insertNoticeInfo(
+							"消費金額滿" + money + " 積分自動升級通知",
+							loginUser.getId(),
+							0,
+							"noticeType",
+							"恭喜您：本年度" + DateUtils.dateTime() + ", 消費金額滿"
+									+ money
+									+ " 積分自動升級,享受VIP優惠,該優惠于："
+									+ loginUser.getVipDate() + "失效.");
+				}
 			}
-
 			// 修改用户积分
 			loginUser.setScore(scoreHis.getNewScore());
 			membersMapper.updateMembers(loginUser);

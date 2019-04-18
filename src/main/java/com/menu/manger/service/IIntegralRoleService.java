@@ -56,5 +56,9 @@ public interface IIntegralRoleService
 	 * @param membersType
 	 */
 	public IntegralRole selectByRole(Integer membersType);
+	/**
+	 * @param membersType
+	 */
+	public IntegralRole selectByRoleByintegralType(Integer membersType,Integer integralType);
 	
 }

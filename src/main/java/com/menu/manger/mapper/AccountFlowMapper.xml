@@ -145,8 +145,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectAccountMoneyByMemId" parameterType="Integer" resultType="Integer">
     	SELECT SUM(money) FROM account_flow
     	WHERE  menu_id =#{menuId}
-    	AND tran_type =2
-    	AND  DATE_FORMAT(create_date,'%Y') = DATE_FORMAT(NOW(),'%Y');
+    	AND tran_type in(1,2)
+    	and is_vaild = 'yes'
+    	AND  DATE_FORMAT(create_date,'%Y') = DATE_FORMAT(NOW(),'%Y')
+    	order by create_date 
     </select>
     
 </mapper>

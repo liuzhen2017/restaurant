@@ -3,6 +3,7 @@ package com.menu.manger.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.menu.manger.dto.IntegralRole;
 
@@ -67,6 +68,11 @@ public interface IntegralRoleMapper
 	 * @param membersType
 	 * @return
 	 */
-	public List<IntegralRole> selectByRole(Integer membersType);
+	public List<IntegralRole> selectByRole(@Param("membersType") Integer membersType,@Param("integralType") Integer integralType);
+	/**查找积分规则
+	 * @param membersType
+	 * @return
+	 */
+	public List<IntegralRole> selectByRole(@Param("membersType") Integer membersType);
 	
 }

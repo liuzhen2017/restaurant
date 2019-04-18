@@ -129,7 +129,7 @@
         $(".score").on('click',function(){
 	        var user =getMembersInfo();
 	    	if(user && user != null){
-		    	$("#scord").html(user.score);
+	    		getNotiInfo();
 	    	  }
         })
         if(!localStorage.getItem("hideScore")){
