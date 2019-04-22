@@ -243,7 +243,7 @@ public class ScoreHisServiceImpl implements IScoreHisService
 		log.info("3.計算積分");
 		//记录积分
 		ScoreHis scoreHis =new ScoreHis();
-		IntegralRole byRole = roleService.selectByRole(1);
+		IntegralRole byRole = roleService.selectByRoleByintegralType(members.getMembersType(),null);
 		ScoreHis dbScord = iscoreHis.selectScoreHisByUserId(members.getId());
 		Double newScore= ammount;
 		if(byRole !=null){

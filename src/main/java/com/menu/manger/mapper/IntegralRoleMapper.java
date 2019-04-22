@@ -63,16 +63,10 @@ public interface IntegralRoleMapper
      * @return 结果
      */
 	public int deleteIntegralRoleByIds(String[] ids);
-
 	/**查找积分规则
 	 * @param membersType
 	 * @return
 	 */
-	public List<IntegralRole> selectByRole(@Param("membersType") Integer membersType,@Param("integralType") Integer integralType);
-	/**查找积分规则
-	 * @param membersType
-	 * @return
-	 */
-	public List<IntegralRole> selectByRole(@Param("membersType") Integer membersType);
+	public List<IntegralRole> selectByRole(@Param("integralType") Integer integralType);
 	
 }

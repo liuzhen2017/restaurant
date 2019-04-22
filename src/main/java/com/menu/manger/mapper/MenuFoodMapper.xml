@@ -70,8 +70,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="spareField5 != null  and spareField5 != '' "> and spare_field5 = #{spareField5}</if>
              <if test="spareField6 != null  and spareField6 != '' "> and spare_field6 = #{spareField6}</if>
              <if test="spareField7 != null  and spareField7 != '' "> and spare_field7 = #{spareField7}</if>
-             <if test="invalidDate != null and invalidDate != '' ">and  STR_TO_DATE(`invalid_date`,'%Y-%m-%d %H:%i:%s')>= STR_TO_DATE(now(),'%Y-%m-%d %H:%i:%s')
-                   and  STR_TO_DATE(now(),'%Y-%m-%d %H:%i:%s') >= STR_TO_DATE(`take_effect_date`,'%Y-%m-%d %H:%i:%s')  OR `invalid_date` is null  </if>
+             <if test="invalidDate != null and invalidDate != '' ">and  (STR_TO_DATE(`invalid_date`,'%Y-%m-%d %H:%i:%s')>= STR_TO_DATE(now(),'%Y-%m-%d %H:%i:%s')
+                   and  STR_TO_DATE(now(),'%Y-%m-%d %H:%i:%s') >= STR_TO_DATE(`take_effect_date`,'%Y-%m-%d %H:%i:%s')  OR `invalid_date` is null)  </if>
          </where>
     </select>
     

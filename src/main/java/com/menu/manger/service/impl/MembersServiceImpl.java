@@ -252,6 +252,7 @@ public class MembersServiceImpl implements IMembersService {
 				.replace("+", "").replace("-", "").trim()));
 		List<MenuFoodExchange> selectMenuFoodExchangeList = menuFoodExchangeMapper
 				.selectMenuFoodExchangeList(menuFoodExchange);
+		membersMapper.insertMembers(members);
 		if (selectMenuFoodExchangeList != null
 				&& selectMenuFoodExchangeList.size() > 0) {
 			for (MenuFoodExchange menuFoodExchange2 : selectMenuFoodExchangeList) {
@@ -274,10 +275,11 @@ public class MembersServiceImpl implements IMembersService {
 		data.put("tokent", token);
 		data.put("membersInfo", backMem);
 		data.put("myscorp", backMem.getScore());
-		members.setSaveToken(new SimpleDateFormat("yyyyMMdd HH:mm:ss:SSS").format(dt));
-	
 		
-		membersMapper.insertMembers(members);
+		Members selectMembersById = membersMapper.selectMembersById(members.getId());
+		selectMembersById.setSaveToken(new SimpleDateFormat("yyyyMMdd HH:mm:ss:SSS").format(dt));
+		membersMapper.updateMembers(selectMembersById);
+		
 		lock.unlock();
 		return AjaxResult.success("恭喜您,註冊成功!", data);
 	}
@@ -445,8 +447,7 @@ public class MembersServiceImpl implements IMembersService {
 		Lock lock =new ReentrantLock();
 		lock.lock();
 		log.info("request parmat ={}", info);
-		info = info.replace("http://www.storellet.com/a/qrCode/s=", "")
-				.replace("&brandId=100", "");
+		info=info.split("a/qrCode/s=")[1].replace("&brandId=100", "").replace("&pos=seito","");
 		log.info("request replace head,food ={}", info);
 		info = AESUtil.AES_CBC_Decrypt(info);
 		log.info("decrypt Info={}", info);
@@ -495,8 +496,8 @@ public class MembersServiceImpl implements IMembersService {
 		ScoreHis scoreHis = new ScoreHis();
 		// 查詢積分規則
 		log.info("submitRedemption 3:计算积分 ");
-		IntegralRole byRole = roleService.selectByRole(loginUser
-				.getMembersType());
+		IntegralRole byRole = roleService.selectByRoleByintegralType(loginUser
+				.getMembersType(),null);
 		if (byRole == null) {
 			log.info("submitRedemption 3.1:積分規則爲空,本次交易沒計算積分 ");
 		} else {
@@ -573,7 +574,8 @@ public class MembersServiceImpl implements IMembersService {
 	}
 
 	public static void main(String[] args) {
-		String transactionDatetime[]="8;818;1052000;201903151520".split(";");
-		System.out.println(transactionDatetime[2]);
+		String info="http://flqd.majiangyun.com:8899/a/qrCode/s=cMgKCuc7QsZwNTbtGeOmKecLQ+E8CrBb6cCQVkDmmO0=&pos=seito";
+		info=info.split("a/qrCode/s=")[1].replace("&brandId=100", "").replace("&pos=seito","");
+		System.out.println(info);
 	}
 }

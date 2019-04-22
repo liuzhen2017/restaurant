@@ -220,7 +220,6 @@
 					success : function(result) {
 						msg(result.msg);
 						if (result.code =='0') {
-							localStorage.setItem("token",result.data.webToken);
 							window.location.href="registerSucc.html";
 						}
 						$("#pwd1").val("");

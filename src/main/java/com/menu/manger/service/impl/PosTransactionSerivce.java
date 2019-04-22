@@ -370,7 +370,7 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 			ScoreHis scoreHis =new ScoreHis();
 			//查詢積分規則
 			log.info("closeTransaction 3:计算积分 ");
-			IntegralRole byRole = roleService.selectByRole(selectMembersList.get(0).getMembersType());
+			IntegralRole byRole = roleService.selectByRoleByintegralType(selectMembersList.get(0).getMembersType(),2);
 			if(byRole ==null){
 				log.info("closeTransaction 3.1:積分規則爲空,本次交易沒計算積分 ");
 			}else{

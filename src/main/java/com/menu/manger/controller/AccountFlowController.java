@@ -33,7 +33,7 @@ public class AccountFlowController extends BaseController
 	public TableDataInfo list(AccountFlow accountFlow)
 	{
 		startPage();
-		//accountFlow.setMenuId(getUserInfo().getId());
+		accountFlow.setMenuId(getUserInfo().getId());
 		accountFlow.setIsVaild("yes");
         List<AccountFlow> list = accountFlowService.selectAccountFlowList(accountFlow);
 		return getDataTable(list);

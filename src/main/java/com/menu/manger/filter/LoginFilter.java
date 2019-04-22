@@ -86,7 +86,7 @@ public class LoginFilter implements Filter {
 					DecodedJWT jwt= verifier.build().verify(token);
 					Date issueDT =jwt.getIssuedAt();
 					String issueAt =new SimpleDateFormat("yyyyMMdd HH:mm:ss").format(issueDT);
-					if(!dbMember.getSaveToken().contains(issueAt)  && !noNeedLogin.contains(requestUrl)){
+					if(StringUtils.isNoneBlank(dbMember.getSaveToken()) && !dbMember.getSaveToken().contains(issueAt)  && !noNeedLogin.contains(requestUrl)){
 						sendMessage(response, JSONObject.toJSONString(AjaxResult.error(
 								5555, "此帳戶正於其他裝置登入,請確認密碼是否被盜!")));
 						return false;

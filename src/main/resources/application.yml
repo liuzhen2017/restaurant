@@ -2,7 +2,7 @@
 # 开发环境配置
 server:
   # 服务端口
-  port: 8899
+  port: 8080
   servlet:
     context-path: 
   tomcat:

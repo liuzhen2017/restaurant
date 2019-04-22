@@ -195,16 +195,14 @@
     				             +'</div>'
     				             +'<div class="demo-img"><img src="'+getUrlParmat(result.data.picUrl) +'"></div>';
     							$("#showMyCoupon").show().html(str);
-    						   d3.select("#slider").transition()
-    						    .attrTween("width", function() {
-    						     var i = d3.interpolate(result.data.exchangePointsScord,$("#score").html());
-    						     var ci = d3.interpolate('#2394F5', '#BDF436');
-    						     var that = this;
-    						     return function(t) {
-    						      that.style.width = i(t) + 'px';
-    						      that.style.background = ci(t);
-    						     };
-    						    });
+    							var dis =$("#score").html()/result.data.exchangePointsScord;
+    							console.log($("#score").html());
+    							console.log(result.data.exchangePointsScord);
+    							console.log(dis);
+    							if(dis *100 >=1){
+    								dis=100;
+    							}
+  						        $("#consumption_amount2").attr("style","width:"+dis+"%");
     				}
     			},
     			error : function(error) {

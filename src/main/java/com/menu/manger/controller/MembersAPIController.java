@@ -343,7 +343,7 @@ public class MembersAPIController extends BaseController
 		}
     	logger.info("解析二维码: {}",str);
     	//扫描獲取優惠代碼 積分
-    	if(!StringUtils.isEmpty(str) && str.contains("http://www.storellet.com/a/qrCode/s=")){
+    	if(!StringUtils.isEmpty(str) && str.contains("/a/qrCode/s=")){
     		return	membersService.saveIntegral(str);
     	}
     	if(!str.contains("https://www.mrokbang.com.hk=")){

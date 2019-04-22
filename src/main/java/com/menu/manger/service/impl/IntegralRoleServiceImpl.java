@@ -94,7 +94,7 @@ public class IntegralRoleServiceImpl implements IIntegralRoleService
 	@Override
 	public IntegralRole selectByRole(Integer membersType) {
 		
-		 List<IntegralRole> byRole = integralRoleMapper.selectByRole(membersType);
+		 List<IntegralRole> byRole = integralRoleMapper.selectByRole(null);
 		 IntegralRole inteRole = null;
 		 for (IntegralRole integralRole : byRole) {
 			 //如果类型匹配,获取是通用类型
@@ -116,7 +116,7 @@ public class IntegralRoleServiceImpl implements IIntegralRoleService
 	@Override
 	public IntegralRole selectByRoleByintegralType(Integer membersType,
 			Integer integralType) {
-		 List<IntegralRole> byRole = integralRoleMapper.selectByRole(membersType,integralType);
+		 List<IntegralRole> byRole = integralRoleMapper.selectByRole(integralType);
 		 IntegralRole inteRole = null;
 		 for (IntegralRole integralRole : byRole) {
 			 //如果类型匹配,获取是通用类型

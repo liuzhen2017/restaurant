@@ -55,8 +55,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="integralType == null ">
           and integral_type != '2'         
         </if>
-        <if test="integralType == null ">
-          and integral_type = integralType         
+        <if test="integralType != null ">
+          and integral_type = #{integralType}         
         </if>
         order by priority desc 
     </select>

@@ -206,10 +206,11 @@
     	var data =new Object();
         data.pageNum=page;
         data.pageSize=size;
-        data.invalidDate='yes';
+        data.isHot=3;
+        data.isExchange='yes';
     				$.ajax({
     					method : "POST",
-    					url : pathUrl + "/api/menuFoodType/queryJX.do",
+    					url : pathUrl + "/api/menuFood/getListByType.do",
     					data : {'json':JSON.stringify(data)},
     					type : "post",
     					jsonpCallback:'cd',
@@ -226,7 +227,9 @@
     									if(i ==0 || i % 6 ==0){
     										str+=divHeard;
     									}
-    									str+='<li><a href="barbecueProducts.html?id='+obj.id+'&typeName='+obj.typeName+'"><img src="'+getUrlParmat(obj.picUrl)+'"><br><span>'+obj.typeName+'</span></a></li>'
+    									str+='<li>'
+    									+'<a href="changeThings.html?id='+obj.id+'">'
+    									+'<img src="'+getUrlParmat(obj.picUrl)+'"><br><span>'+obj.title+'</span></a></li>'
     									if(i !=0 &&  (i+1) % 6 ==0){
     										str+=divFood;	
     									}

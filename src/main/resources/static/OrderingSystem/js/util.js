@@ -1,6 +1,6 @@
-//var pathUrl ="https://meokbang.com.hk:447/";
+var pathUrl ="https://meokbang.com.hk";
 var appUpload ="https://dl.pconline.com.cn/html_2/1/59/id=37973&pn=0.html";
-var pathUrl ='';
+//var pathUrl ='';
 // 上传图片
 function uploadFile() {
 	var fileUrl;
@@ -290,7 +290,8 @@ function getNotiInfo(){
 				if (result.code =='0') {
 					$("#message").html(result.data.length);
 					for(var i=0;i <result.data.length; i++){
-						if(result.data[i].title.indexOf('積分自動升級') >-1 && result.data[i].isSee =="no"){
+						if(window.localStorage.isSee != undefined && result.data[i].title.indexOf('積分自動升級') >-1 && result.data[i].isSee =="no"){
+							window.localStorage.isSee=result.data[i].id;
 							layer.open({
 						        content: '恭喜您消費達成目標,自動升級為VIP會員!'
 						        ,btn: [ '確認，並查看VIP權益']

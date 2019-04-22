@@ -9,7 +9,7 @@ import javax.jws.WebService;
  * @author liuzhen
  * 
  */
-@WebService(targetNamespace="http://flqd.majiangyun.com:8899/storelle/api/pos")
+@WebService(targetNamespace="http://meokbang.com.hk/storelle/api/pos")
 public interface IPosTransaction {
 	/**
 	 * 根据会员ID 和手机号查询是否存在
@@ -20,7 +20,7 @@ public interface IPosTransaction {
 	 * @param h
 	 * @return
 	 */
-	@WebMethod(action="http://flqd.majiangyun.com:8899/storelle/api/pos")
+	@WebMethod(action="http://meokbang.com.hk/storelle/api/pos")
 	public MemberEnquiryResponse memberEnquiry(@WebParam(name="memberID") String memberID,@WebParam(name="phone")String phone,@WebParam(name="brandID")String brandID,@WebParam(name="t")String t,@WebParam(name="h")String h,@WebParam(name="pos") String pos);
 	
 	/**
@@ -36,7 +36,7 @@ public interface IPosTransaction {
 	 * @param h
 	 * @return
 	 */
-	@WebMethod(action="http://flqd.majiangyun.com:8899/storelle/api/pos")
+	@WebMethod(action="http://meokbang.com.hk/storelle/api/pos")
 	public SubmitRedeemptionResponse submitRedeemption(@WebParam(name="memberID") String memberID,@WebParam(name="brandID") String brandID,@WebParam(name="shopCode") String shopCode,@WebParam(name="redeemDatetime") String redeemDatetime,@WebParam(name="couponID") String couponID,
 			@WebParam(name="serialNo") String serialNo,
 			@WebParam(name="couponStatus") String couponStatus,
@@ -58,7 +58,7 @@ public interface IPosTransaction {
 	 * @param h
 	 * @return
 	 */
-	@WebMethod(action="http://flqd.majiangyun.com:8899/storelle/api/pos")
+	@WebMethod(action="http://meokbang.com.hk/storelle/api/pos")
 	public CloseTransactionResponse closeTransaction(@WebParam(name="brandID")String brandID,@WebParam(name="transactionDatetime")String transactionDatetime,@WebParam(name="shopCode")String shopCode,@WebParam(name="invoiceNo")String invoiceNo,
 			@WebParam(name="invoiceAmount")String invoiceAmount,@WebParam(name="netAmount")String netAmount,@WebParam(name="pax")String pax,@WebParam(name="coupons")String coupons,@WebParam(name="memberID")String memberID,
 			@WebParam(name="t")String t,@WebParam(name="h")String h,@WebParam(name="pos")String pos);
@@ -71,7 +71,7 @@ public interface IPosTransaction {
 	 * @param h
 	 * @return
 	 */
-	@WebMethod(action="http://flqd.majiangyun.com:8899/storelle/api/pos")
+	@WebMethod(action="http://meokbang.com.hk/storelle/api/pos")
 	public ReverseTransactionResponse reverseTransaction(@WebParam(name="brandID")String brandID,@WebParam(name="transactionDatetime")String transactionDatetime,@WebParam(name="invoiceNo")String invoiceNo,@WebParam(name="t")String t,@WebParam(name="h")String h,@WebParam(name="pos") String pos);
 	
 }

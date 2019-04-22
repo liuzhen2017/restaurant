@@ -8,20 +8,23 @@ import java.text.ParseException;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.menu.manger.service.IPosTransactionSerivce;
+import com.menu.manger.service.impl.PosTransactionSerivce;
 
 /**
  * @author liuzhen
  *
  */
-@WebService(serviceName="pos", targetNamespace="http://flqd.majiangyun.com:8899/storelle/api/pos",endpointInterface="storelle.api.pos.IPosTransaction")
+@WebService(serviceName="pos", targetNamespace="http://meokbang.com.hk/storelle/api/pos",endpointInterface="storelle.api.pos.IPosTransaction")
 @Component
 public class PosTransaction implements IPosTransaction {
 
-
+	private static final Logger log = LoggerFactory.getLogger(PosTransactionSerivce.class);
 
 	@Autowired
 	IPosTransactionSerivce posTransService;
@@ -37,6 +40,7 @@ public class PosTransaction implements IPosTransaction {
 			return   posTransService.queryMemberById(memberID, phone, brandID, t, h);
 		} catch (ParseException e) {
 			e.printStackTrace();
+			log.error("查询优惠券错误:"+e,e.getMessage(),e);
 			response.setResult(1);
 			response.setErrCode(2);
 			response.setErrMsg(e.getMessage());
@@ -53,7 +57,7 @@ public class PosTransaction implements IPosTransaction {
 		try {
 			return posTransService.submitRedemption(memberID, brandID, shopCode, redeemDatetime, couponID, serialNo, couponStatus, t, h);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("submitRedeemption:"+e,e.getMessage(),e);
 			SubmitRedeemptionResponse response =new SubmitRedeemptionResponse();
 			response.setResult(1);
 			response.setErrCode(2);;
@@ -71,7 +75,7 @@ public class PosTransaction implements IPosTransaction {
 		try {
 			return posTransService.closeTransaction(brandID, transactionDatetime, shopCode, invoiceNo, invoiceAmount, netAmount, pax, coupons, memberID, t, h);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("closeTransaction:"+e,e.getMessage(),e);
 			CloseTransactionResponse response =new CloseTransactionResponse();
 			response.setStatus(1);
 			response.setErrCode(2);;
@@ -88,7 +92,7 @@ public class PosTransaction implements IPosTransaction {
 		try {
 			return posTransService.backTransaction(brandID, transactionDatetime, invoiceNo, t, h);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("reverseTransaction:"+e,e.getMessage(),e);
 			ReverseTransactionResponse response =new ReverseTransactionResponse();
 			response.setResult(1);
 			response.setStatus(1);
