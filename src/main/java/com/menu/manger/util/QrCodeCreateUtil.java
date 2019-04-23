@@ -9,21 +9,25 @@ package com.menu.manger.util;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
 import com.google.zxing.BarcodeFormat;
+import com.google.zxing.Binarizer;
 import com.google.zxing.BinaryBitmap;
+import com.google.zxing.ChecksumException;
+import com.google.zxing.DecodeHintType;
 import com.google.zxing.EncodeHintType;
+import com.google.zxing.FormatException;
 import com.google.zxing.LuminanceSource;
-import com.google.zxing.ReaderException;
+import com.google.zxing.MultiFormatReader;
+import com.google.zxing.NotFoundException;
 import com.google.zxing.Result;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
@@ -84,8 +88,14 @@ public class QrCodeCreateUtil {
 
 	/**
 	 * 读二维码并输出携带的信息
+	 * 
+	 * @throws FormatException
+	 * @throws ChecksumException
+	 * @throws NotFoundException
 	 */
-	public static String readQrCode(InputStream inputStream) throws IOException {
+	public static String readQrCode(InputStream inputStream)
+			throws IOException, NotFoundException, ChecksumException,
+			FormatException {
 		// 从输入流中获取字符串信息
 		BufferedImage image = ImageIO.read(inputStream);
 		// 将图像转换为二进制位图源
@@ -93,29 +103,55 @@ public class QrCodeCreateUtil {
 		BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
 		QRCodeReader reader = new QRCodeReader();
 		Result result = null;
-		try {
-			result = reader.decode(bitmap);
-		} catch (ReaderException e) {
-			e.printStackTrace();
-		}
+		result = reader.decode(bitmap);
 
 		return result.getText();
 	}
-	
+
+	/**
+	 * 流图片解码
+	 * 
+	 * @param input
+	 * @return QRResult
+	 * @throws IOException
+	 * @throws NotFoundException
+	 */
+	public static String decode(InputStream input) throws IOException,
+			NotFoundException {
+		String content = null;
+        BufferedImage image;
+        try {
+            image = ImageIO.read(input);
+            LuminanceSource source = new BufferedImageLuminanceSource(image);
+            Binarizer binarizer = new HybridBinarizer(source);
+            BinaryBitmap binaryBitmap = new BinaryBitmap(binarizer);
+            Map<DecodeHintType, Object> hints = new HashMap<DecodeHintType, Object>();
+            hints.put(DecodeHintType.CHARACTER_SET, "UTF-8");
+            Result result = new MultiFormatReader().decode(binaryBitmap, hints);//解码
+            System.out.println("图片中内容：  ");
+            System.out.println("content： " + result.getText());
+            content = result.getText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+        }
+        return content;
+	}
+
 	/**
 	 * 测试代码
 	 * 
 	 * @throws WriterException
 	 */
-	public static void main(String[] args) throws IOException, WriterException {
-		String info = "AAAAAAAAAAAAAAAAAA";
-		createQrCode(new FileOutputStream(new File(
-				"C:\\Users\\123\\Desktop\\work\\测试二维码生产\\qrcode.jpg")), info,
-				900, "JPEG");
-		info = readQrCode(new FileInputStream(new File(
-				"C:\\Users\\123\\Desktop\\work\\测试二维码生产\\qrcode.jpg")));
-		info = new String(info.getBytes(), "utf-8");
-		System.out.println(info);
-	}
+	/*
+	 * public static void main(String[] args) throws IOException,
+	 * WriterException { String info = "AAAAAAAAAAAAAAAAAA"; createQrCode(new
+	 * FileOutputStream(new File(
+	 * "C:\\Users\\123\\Desktop\\work\\测试二维码生产\\qrcode.jpg")), info, 900,
+	 * "JPEG"); info = readQrCode(new FileInputStream(new File(
+	 * "C:\\Users\\123\\Desktop\\work\\测试二维码生产\\qrcode.jpg"))); info = new
+	 * String(info.getBytes(), "utf-8"); System.out.println(info); }
+	 */
 
 }

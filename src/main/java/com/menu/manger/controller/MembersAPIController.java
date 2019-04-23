@@ -336,8 +336,7 @@ public class MembersAPIController extends BaseController
     {
 		String str =null;
     	try {
-			
-    		str =QrCodeCreateUtil.readQrCode(file.getInputStream());
+    		str =QrCodeCreateUtil.decode(file.getInputStream());
 		} catch (Exception e) {
 			return AjaxResult.error("無法識別該二維碼!");
 		}
