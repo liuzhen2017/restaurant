@@ -126,7 +126,7 @@ public class IntegralRoleServiceImpl implements IIntegralRoleService
 			}
 		}
 		 //如果不匹配,并且没有通用类型,则取优先级最高的第一条
-		 if(inteRole ==null){
+		 if(inteRole ==null && byRole !=null && byRole.size() >0){
 			 inteRole =byRole.get(0);
 		 }
 		 return inteRole;

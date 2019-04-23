@@ -30,9 +30,9 @@ public class MangerwApplicationTests {
 		long beginTime =System.currentTimeMillis();
 		log.info("开始调用..");
 		String brandID ="8";
-		String transactionDatetime="201904221028";
+		String transactionDatetime="201904231707";
 		String shopCode="819";
-		String invoiceNo="0009300";
+		String invoiceNo="0010200";
 		String invoiceAmount ="5824.5";
 		String  netAmount ="5824.5";
 		String pax ="9";
@@ -49,8 +49,8 @@ public class MangerwApplicationTests {
 		long beginTime =System.currentTimeMillis();
 		log.info("开始调用..");
 	//扫描獲取優惠代碼 積分
-    String str ="http://www.storellet.com/a/qrCode/s=CIs9wzASU03LkPp58In0uTb8rmxU2X2y5IxvFhX+AmU=";		
-	if(!StringUtils.isEmpty(str) && str.contains("http://www.storellet.com/a/qrCode/s=")){
+    String str ="http://meokbang.com.hk/a/qrCode/s=zT2KolOlItBE+e3eWYAJBguf0JA2kM0eL/uazYUx6D0=&pos=seito";
+	if(!StringUtils.isEmpty(str)){
 			AjaxResult saveIntegral = membersService.saveIntegral(str);
 			System.out.println(JSONObject.toJSONString(saveIntegral));
 	}

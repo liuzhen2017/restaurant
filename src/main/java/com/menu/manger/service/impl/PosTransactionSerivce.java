@@ -418,9 +418,9 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 						noticeInfoService.insertNoticeInfo("消費金額滿"+money+" 積分自動升級通知", members.getId(), 0, "noticeType", "恭喜您：本年度"+DateUtils.dateTime()+", 消費金額滿"+money+" 積分自動升級,享受VIP優惠,該優惠于："+selectMembersList.get(0).getVipDate()+"失效.");
 					}
 				  }
-				AcctBalance selectAcctBalanceById = accBalanceService.selectAcctBalanceById(1);
-				selectAcctBalanceById.setCanBalance(selectAcctBalanceById.getCanBalance().add(accountFlow.getMoney()));
-				accBalanceService.updateAcctBalance(selectAcctBalanceById);
+//				AcctBalance selectAcctBalanceById = accBalanceService.selectAcctBalanceById(1);
+//				selectAcctBalanceById.setCanBalance(selectAcctBalanceById.getCanBalance().add(accountFlow.getMoney()));
+//				accBalanceService.updateAcctBalance(selectAcctBalanceById);
 				//修改用户积分
 				selectMembersList.get(0).setScore(selectMembersList.get(0).getScore() +scoreHis.getNewScore());
 				memBersMapper.updateMembers(selectMembersList.get(0));

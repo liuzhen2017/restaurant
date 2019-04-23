@@ -475,8 +475,7 @@ public class MembersServiceImpl implements IMembersService {
 		}
 		
 		Members loginUser =  (Members) ThreadLocalUtil.getUserInfo();
-		loginUser.setId(7);
-		loginUser.setMembersType(1);
+
 		Members selectMembersById = membersMapper.selectMembersById(loginUser.getId());
 		log.info("submitRedemption 3:填写账户流水 ");
 		
