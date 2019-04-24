@@ -242,7 +242,7 @@ public class ScoreHisServiceImpl implements IScoreHisService
 		accountFlow.setTranDes("升級VIP！");
 		log.info("3.計算積分");
 		//记录积分
-		ScoreHis scoreHis =new ScoreHis();
+		/*ScoreHis scoreHis =new ScoreHis();
 		IntegralRole byRole = roleService.selectByRoleByintegralType(members.getMembersType(),null);
 		ScoreHis dbScord = iscoreHis.selectScoreHisByUserId(members.getId());
 		Double newScore= ammount;
@@ -262,8 +262,8 @@ public class ScoreHisServiceImpl implements IScoreHisService
 		}else{
 			scoreHis.setOlbScore(0);
 			   scoreHis.setNewScore(ammount.intValue());
-		}
-		log.info("4.計算VIP年限:"+newScore);
+		}*/
+		log.info("4.計算VIP年限:");
 		Members selectMembersById = membersService.selectMembersById(members.getId());
 		selectMembersById.setScore(selectMembersById.getScore()+ammount.intValue());
 		Calendar cal = Calendar.getInstance();
@@ -280,11 +280,11 @@ public class ScoreHisServiceImpl implements IScoreHisService
 		}
 		selectMembersById.setUpgradeDate(DateUtils.parseDateToStr("yyyyMMdd", new Date()));
 		selectMembersById.setVipDate(DateUtils.parseDateToStr("yyyyMMdd", vipDateEnd));
-		selectMembersById.setScore(selectMembersById.getScore()+newScore.intValue());
+		//selectMembersById.setScore(selectMembersById.getScore()+newScore.intValue());
 		selectMembersById.setMembersType(1);
 		membersService.updateMembers(selectMembersById);
-		iscoreHis.insertScoreHis(scoreHis);
-		log.info("5.贈送菜品:"+newScore);
+		//iscoreHis.insertScoreHis(scoreHis);
+		log.info("5.贈送菜品:");
 		//贈送菜品
 		MenuFood menuFood =new MenuFood();
 		menuFood.setRulesType(1); //贈送菜品
@@ -325,6 +325,6 @@ public class ScoreHisServiceImpl implements IScoreHisService
 				foodMapper.updateMenuFood(menuFood2);
 			}
 		}
-		log.info("6.完畢:"+newScore);
+		log.info("6.完畢:");
 	}
 }

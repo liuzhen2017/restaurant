@@ -111,7 +111,7 @@ public class MenuFoodController extends BaseController
         return AjaxResult.success("", foodByScose);
 	}
 	/**
-	 * 查询餐牌列表
+	 * 执行兑换产品
 	 */
 	@RequestMapping("/requestExchege.do")
 	@ResponseBody

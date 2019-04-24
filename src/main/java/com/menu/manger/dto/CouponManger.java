@@ -14,7 +14,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class CouponManger extends BaseEntity
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**  */
 	private Integer id;
 	/**  */
@@ -47,224 +47,302 @@ public class CouponManger extends BaseEntity
 	private Integer status;
 	/** 使用説明 */
 	private String instructions;
-	private String explanation;
 	/**  */
 	private String couponCode;
 	/** 未發放數量 */
 	private Integer noGrantNum;
+	/** 图片地址 */
 	private String picUrl;
-
+	/** 优惠规则,1价值 ,2折扣 */
 	private Integer couponRole;
-	public void setId(Integer id) 
+	/**  */
+	private String explanation;
+	/** 餐牌代码 */
+	private String spareField1;
+	/**  */
+	private String spareField2;
+	/**  */
+	private String spareField3;
+	/**  */
+	private String spareField4;
+	/**  */
+	private String spareField5;
+	/**  */
+	private String spareField6;
+
+	public void setId(Integer id)
 	{
 		this.id = id;
 	}
 
-	public Integer getId() 
+	public Integer getId()
 	{
 		return id;
 	}
-	public void setTitle(String title) 
+	public void setTitle(String title)
 	{
 		this.title = title;
 	}
 
-	public String getTitle() 
+	public String getTitle()
 	{
 		return title;
 	}
-	public void setTypes(Integer types) 
+	public void setTypes(Integer types)
 	{
 		this.types = types;
 	}
 
-	public Integer getTypes() 
+	public Integer getTypes()
 	{
 		return types;
 	}
-	public void setRulesType(Integer rulesType) 
+	public void setRulesType(Integer rulesType)
 	{
 		this.rulesType = rulesType;
 	}
 
-	public Integer getRulesType() 
+	public Integer getRulesType()
 	{
 		return rulesType;
 	}
-	public void setCouponValues(Double couponValues) 
+	public void setCouponValues(Double couponValues)
 	{
 		this.couponValues = couponValues;
 	}
 
-	public Double getCouponValues() 
+	public Double getCouponValues()
 	{
 		return couponValues;
 	}
-	public void setEffectiveTimeBegin(String effectiveTimeBegin) 
+	public void setEffectiveTimeBegin(String effectiveTimeBegin)
 	{
 		this.effectiveTimeBegin = effectiveTimeBegin;
 	}
 
-	public String getEffectiveTimeBegin() 
+	public String getEffectiveTimeBegin()
 	{
 		return effectiveTimeBegin;
 	}
-	public void setEffectiveTimeEnd(String effectiveTimeEnd) 
+	public void setEffectiveTimeEnd(String effectiveTimeEnd)
 	{
 		this.effectiveTimeEnd = effectiveTimeEnd;
 	}
 
-	public String getEffectiveTimeEnd() 
+	public String getEffectiveTimeEnd()
 	{
 		return effectiveTimeEnd;
 	}
-	public void setNum(Integer num) 
+	public void setNum(Integer num)
 	{
 		this.num = num;
 	}
 
-	public Integer getNum() 
+	public Integer getNum()
 	{
 		return num;
 	}
-	public void setMembersType(Integer membersType) 
+	public void setMembersType(Integer membersType)
 	{
 		this.membersType = membersType;
 	}
 
-	public Integer getMembersType() 
+	public Integer getMembersType()
 	{
 		return membersType;
 	}
-	public void setIsVaild(String isVaild) 
+	public void setIsVaild(String isVaild)
 	{
 		this.isVaild = isVaild;
 	}
 
-	public String getIsVaild() 
+	public String getIsVaild()
 	{
 		return isVaild;
 	}
-	public void setCreateDate(Date createDate) 
+	public void setCreateDate(Date createDate)
 	{
 		this.createDate = createDate;
 	}
 
-	public Date getCreateDate() 
+	public Date getCreateDate()
 	{
 		return createDate;
 	}
-	public void setCreateBy(String createBy) 
+	public void setCreateBy(String createBy)
 	{
 		this.createBy = createBy;
 	}
 
-	public String getCreateBy() 
+	public String getCreateBy()
 	{
 		return createBy;
 	}
-	public void setUpdateDate(Date updateDate) 
+	public void setUpdateDate(Date updateDate)
 	{
 		this.updateDate = updateDate;
 	}
 
-	public Date getUpdateDate() 
+	public Date getUpdateDate()
 	{
 		return updateDate;
 	}
-	public void setUpdateBy(String updateBy) 
+	public void setUpdateBy(String updateBy)
 	{
 		this.updateBy = updateBy;
 	}
 
-	public String getUpdateBy() 
+	public String getUpdateBy()
 	{
 		return updateBy;
 	}
-	public void setStatus(Integer status) 
+	public void setStatus(Integer status)
 	{
 		this.status = status;
 	}
 
-	public Integer getStatus() 
+	public Integer getStatus()
 	{
 		return status;
 	}
-	public void setCouponCode(String couponCode) 
+	public void setInstructions(String instructions)
+	{
+		this.instructions = instructions;
+	}
+
+	public String getInstructions()
+	{
+		return instructions;
+	}
+	public void setCouponCode(String couponCode)
 	{
 		this.couponCode = couponCode;
 	}
 
-	public String getCouponCode() 
+	public String getCouponCode()
 	{
 		return couponCode;
 	}
-	public void setNoGrantNum(Integer noGrantNum) 
+	public void setNoGrantNum(Integer noGrantNum)
 	{
 		this.noGrantNum = noGrantNum;
 	}
 
-	public Integer getNoGrantNum() 
+	public Integer getNoGrantNum()
 	{
 		return noGrantNum;
 	}
-
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("title", getTitle())
-            .append("types", getTypes())
-            .append("rulesType", getRulesType())
-            .append("couponValues", getCouponValues())
-            .append("effectiveTimeBegin", getEffectiveTimeBegin())
-            .append("effectiveTimeEnd", getEffectiveTimeEnd())
-            .append("num", getNum())
-            .append("membersType", getMembersType())
-            .append("isVaild", getIsVaild())
-            .append("createDate", getCreateDate())
-            .append("createBy", getCreateBy())
-            .append("updateDate", getUpdateDate())
-            .append("updateBy", getUpdateBy())
-            .append("status", getStatus())
-            .append("instructions", getInstructions())
-            .append("couponCode", getCouponCode())
-            .append("noGrantNum", getNoGrantNum())
-            .toString();
-    }
-
-	public String getInstructions() {
-		return instructions;
-	}
-
-	public void setInstructions(String instructions) {
-		this.instructions = instructions;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	public String getPicUrl() {
-		return picUrl;
-	}
-
-	public void setPicUrl(String picUrl) {
+	public void setPicUrl(String picUrl)
+	{
 		this.picUrl = picUrl;
 	}
 
-	public Integer getCouponRole() {
-		return couponRole;
+	public String getPicUrl()
+	{
+		return picUrl;
 	}
-
-	public void setCouponRole(Integer couponRole) {
+	public void setCouponRole(Integer couponRole)
+	{
 		this.couponRole = couponRole;
 	}
 
-	public String getExplanation() {
-		return explanation;
+	public Integer getCouponRole()
+	{
+		return couponRole;
+	}
+	public void setExplanation(String explanation)
+	{
+		this.explanation = explanation;
 	}
 
-	public void setExplanation(String explanation) {
-		this.explanation = explanation;
+	public String getExplanation()
+	{
+		return explanation;
+	}
+	public void setSpareField1(String spareField1)
+	{
+		this.spareField1 = spareField1;
+	}
+
+	public String getSpareField1()
+	{
+		return spareField1;
+	}
+	public void setSpareField2(String spareField2)
+	{
+		this.spareField2 = spareField2;
+	}
+
+	public String getSpareField2()
+	{
+		return spareField2;
+	}
+	public void setSpareField3(String spareField3)
+	{
+		this.spareField3 = spareField3;
+	}
+
+	public String getSpareField3()
+	{
+		return spareField3;
+	}
+	public void setSpareField4(String spareField4)
+	{
+		this.spareField4 = spareField4;
+	}
+
+	public String getSpareField4()
+	{
+		return spareField4;
+	}
+	public void setSpareField5(String spareField5)
+	{
+		this.spareField5 = spareField5;
+	}
+
+	public String getSpareField5()
+	{
+		return spareField5;
+	}
+	public void setSpareField6(String spareField6)
+	{
+		this.spareField6 = spareField6;
+	}
+
+	public String getSpareField6()
+	{
+		return spareField6;
+	}
+
+	public String toString() {
+		return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
+				.append("id", getId())
+				.append("title", getTitle())
+				.append("types", getTypes())
+				.append("rulesType", getRulesType())
+				.append("couponValues", getCouponValues())
+				.append("effectiveTimeBegin", getEffectiveTimeBegin())
+				.append("effectiveTimeEnd", getEffectiveTimeEnd())
+				.append("num", getNum())
+				.append("membersType", getMembersType())
+				.append("isVaild", getIsVaild())
+				.append("createDate", getCreateDate())
+				.append("createBy", getCreateBy())
+				.append("updateDate", getUpdateDate())
+				.append("updateBy", getUpdateBy())
+				.append("status", getStatus())
+				.append("instructions", getInstructions())
+				.append("couponCode", getCouponCode())
+				.append("noGrantNum", getNoGrantNum())
+				.append("picUrl", getPicUrl())
+				.append("couponRole", getCouponRole())
+				.append("explanation", getExplanation())
+				.append("spareField1", getSpareField1())
+				.append("spareField2", getSpareField2())
+				.append("spareField3", getSpareField3())
+				.append("spareField4", getSpareField4())
+				.append("spareField5", getSpareField5())
+				.append("spareField6", getSpareField6())
+				.toString();
 	}
 }

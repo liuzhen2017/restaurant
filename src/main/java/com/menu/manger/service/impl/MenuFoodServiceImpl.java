@@ -165,9 +165,15 @@ public class MenuFoodServiceImpl implements IMenuFoodService
 				if(selectMenuFoodById.getExchangePointsScord() * num  * selectMyCouponById.getCouponValues() < selectMembersById.getScore()){
 					return AjaxResult.error("兌換失敗,優惠券積分不足以兌換!");
 				}
+				if(!StringUtils.isEmpty(selectMyCouponById.getSpareField2()) && selectMenuFoodById.getId() != Integer.parseInt(selectMyCouponById.getSpareField2())){
+                    return AjaxResult.error("兌換失敗,該優惠券不能兌換當前商品!");
+                }
+                if(StringUtils.isEmpty(code) && selectMembersById.getScore() < selectMenuFoodById.getExchangePointsScord()*num * selectMyCouponById.getCouponValues()){
+                    return AjaxResult.error("兌換失敗,積分不足以兌換!");
+                }
 			}
 			if(selectMenuFoodById.getSpareField5() !=null && Integer.parseInt(selectMenuFoodById.getSpareField5()) ==HttpConstants.EmmbersType_1 && selectMembersById.getMembersType() ==HttpConstants.EmmbersType_1){
-				return AjaxResult.error("該商品僅限於VIP用戶對話,請升級VIP");
+				return AjaxResult.error("該商品僅限於VIP用戶兌換,請升級VIP");
 			}
 			if(selectMenuFoodById.getIsSellOut().equals("yes")){
 				return AjaxResult.error("商品已經售完!");

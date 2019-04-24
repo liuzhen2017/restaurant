@@ -500,61 +500,73 @@ public class MembersServiceImpl implements IMembersService {
 		if (byRole == null) {
 			log.info("submitRedemption 3.1:積分規則爲空,本次交易沒計算積分 ");
 		} else {
-			Double score = byRole.getScoreValue()
-					* Double.parseDouble(selectAccountFlowList2.get(0).getNetAmount() + "");
-			// 記錄積分
+			//非會員
+			if(selectAccountFlowList2.get(0).getNetAmount().intValue() > 2 && loginUser.getMembersType() ==0
+			|| selectAccountFlowList2.get(0).getNetAmount().intValue() > 1 && loginUser.getMembersType() ==1){
+				log.info("本次交易小於規定金額,不計入積分!");
+			}else {
+				//非會員
+				if(selectAccountFlowList2.get(0).getNetAmount().intValue() < 2 && loginUser.getMembersType() ==0
+						|| selectAccountFlowList2.get(0).getNetAmount().intValue() < 1 && loginUser.getMembersType() ==1){
+					log.info("本次交易小於規定金額,不計入積分!");
+				}else {
+					Double score = byRole.getScoreValue()
+							* Double.parseDouble(selectAccountFlowList2.get(0).getNetAmount() + "");
+					// 記錄積分
 
-			scoreHis.setDescribes("扫描二维码积分:" + score);
-			scoreHis.setMembersId(loginUser.getId());
-			scoreHis.setOlbScore(selectMembersById.getScore());
-			scoreHis.setNewScore(selectMembersById.getScore()+score.intValue());
-			scoreHis.setCreatedDate(new Date());
-			scoreHis.setBusiId(loginUser.getId() + "");
-			scoreHisService.insertScoreHis(scoreHis);
-			// 判斷用戶消費，是否滿足自動升級會員
-			if(selectMembersById.getMembersType() ==0){
-				IntegralRole selectByRoleByintegralType = roleService.selectByRoleByintegralType(selectMembersById.getMembersType(), 2);
-				int money =0;
-				if(selectByRoleByintegralType ==null){
-					String queryCigKey =HttpConstants.autoUpgradingMoney;
-					if(selectMembersById.getMembersType() ==HttpConstants.EmmbersType_1){
-						queryCigKey =HttpConstants.autoUpgradingMoneyVIP;
-					}
-					SysConfig selectByKey = sysConfigService.selectByKey(queryCigKey);
-					money =Integer.parseInt(selectByKey.getConfigValue());
-				}else{
-					money =(int)selectByRoleByintegralType.getScoreValue();
-				}
-				int moneyByMemId = accountFlowService.selectAccountMoneyByMemId(selectMembersById.getId());
-				if (moneyByMemId >= money) {
-					// 如果是會員
-					Date vipDateEnd = new Date();
-					if (loginUser.getMembersType() == HttpConstants.EmmbersType_1) {
-						Date dateTime = DateUtils.dateTime("yyyyMMdd",
-								loginUser.getVipDate());
-						if (dateTime.after(new Date())) {
-							// 如果會員沒有過期，則過期時間 +1年 20191230 + 1 =20201230
-							vipDateEnd = DateUtils.addYears(dateTime, 1);
+					scoreHis.setDescribes("扫描二维码积分:" + score);
+					scoreHis.setMembersId(loginUser.getId());
+					scoreHis.setOlbScore(selectMembersById.getScore());
+					scoreHis.setNewScore(selectMembersById.getScore() + score.intValue());
+					scoreHis.setCreatedDate(new Date());
+					scoreHis.setBusiId(loginUser.getId() + "");
+					scoreHisService.insertScoreHis(scoreHis);
+					// 判斷用戶消費，是否滿足自動升級會員
+					if (selectMembersById.getMembersType() == 0) {
+						IntegralRole selectByRoleByintegralType = roleService.selectByRoleByintegralType(selectMembersById.getMembersType(), 2);
+						int money = 0;
+						if (selectByRoleByintegralType == null) {
+							String queryCigKey = HttpConstants.autoUpgradingMoney;
+							if (selectMembersById.getMembersType() == HttpConstants.EmmbersType_1) {
+								queryCigKey = HttpConstants.autoUpgradingMoneyVIP;
+							}
+							SysConfig selectByKey = sysConfigService.selectByKey(queryCigKey);
+							money = Integer.parseInt(selectByKey.getConfigValue());
+						} else {
+							money = (int) selectByRoleByintegralType.getScoreValue();
 						}
-						loginUser.setUpgradeDate(DateUtils.parseDateToStr(
-								"yyyyMMdd", new Date()));
-						loginUser.setVipDate(DateUtils.parseDateToStr("yyyyMMdd",
-								vipDateEnd));
+						int moneyByMemId = accountFlowService.selectAccountMoneyByMemId(selectMembersById.getId());
+						if (moneyByMemId >= money) {
+							// 如果是會員
+							Date vipDateEnd = new Date();
+							if (loginUser.getMembersType() == HttpConstants.EmmbersType_1) {
+								Date dateTime = DateUtils.dateTime("yyyyMMdd",
+										loginUser.getVipDate());
+								if (dateTime.after(new Date())) {
+									// 如果會員沒有過期，則過期時間 +1年 20191230 + 1 =20201230
+									vipDateEnd = DateUtils.addYears(dateTime, 1);
+								}
+								loginUser.setUpgradeDate(DateUtils.parseDateToStr(
+										"yyyyMMdd", new Date()));
+								loginUser.setVipDate(DateUtils.parseDateToStr("yyyyMMdd",
+										vipDateEnd));
+							}
+							noticeInfoService.insertNoticeInfo(
+									"消費金額滿" + money + " 積分自動升級通知",
+									loginUser.getId(),
+									0,
+									"noticeType",
+									"恭喜您：本年度" + DateUtils.dateTime() + ", 消費金額滿"
+											+ money
+											+ " 積分自動升級,享受VIP優惠,該優惠于："
+											+ loginUser.getVipDate() + "失效.");
+						}
 					}
-					noticeInfoService.insertNoticeInfo(
-							"消費金額滿" + money + " 積分自動升級通知",
-							loginUser.getId(),
-							0,
-							"noticeType",
-							"恭喜您：本年度" + DateUtils.dateTime() + ", 消費金額滿"
-									+ money
-									+ " 積分自動升級,享受VIP優惠,該優惠于："
-									+ loginUser.getVipDate() + "失效.");
+					// 修改用户积分
+					loginUser.setScore(scoreHis.getNewScore());
+					membersMapper.updateMembers(loginUser);
 				}
 			}
-			// 修改用户积分
-			loginUser.setScore(scoreHis.getNewScore());
-			membersMapper.updateMembers(loginUser);
 		}
 		noticeInfoService.insertNoticeInfo("掃碼儲存積分通知", loginUser.getId(), 0,
 				"noticeType", "尊敬的會員,掃碼儲存積分:" + scoreHis.getNewScore()
