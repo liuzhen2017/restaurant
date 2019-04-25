@@ -150,6 +150,7 @@ public class MenuFoodServiceImpl implements IMenuFoodService
 		//查询优惠代码,看存不存在
  		Lock lock =new ReentrantLock();
 		lock.lock();
+		Integer coupCelScore=0;
 		try {
 			MenuFood selectMenuFoodById = menuFoodMapper.selectMenuFoodById(id);
 			if(selectMenuFoodById ==null){
@@ -162,14 +163,15 @@ public class MenuFoodServiceImpl implements IMenuFoodService
 				if(selectMyCouponById ==null){
 					return AjaxResult.error("該優惠代碼不存在或者已經過期,,請確認再操作");
 				}
-				if(selectMenuFoodById.getExchangePointsScord() * num  * selectMyCouponById.getCouponValues() < selectMembersById.getScore()){
+				coupCelScore = (int)(selectMenuFoodById.getExchangePointsScord() * num  * selectMyCouponById.getCouponValues());
+				/*if(celScore < selectMembersById.getScore()){
 					return AjaxResult.error("兌換失敗,優惠券積分不足以兌換!");
-				}
+				}*/
 				if(!StringUtils.isEmpty(selectMyCouponById.getSpareField2()) && selectMenuFoodById.getId() != Integer.parseInt(selectMyCouponById.getSpareField2())){
                     return AjaxResult.error("兌換失敗,該優惠券不能兌換當前商品!");
                 }
-                if(StringUtils.isEmpty(code) && selectMembersById.getScore() < selectMenuFoodById.getExchangePointsScord()*num * selectMyCouponById.getCouponValues()){
-                    return AjaxResult.error("兌換失敗,積分不足以兌換!");
+                if(!StringUtils.isEmpty(code) && selectMembersById.getScore() < coupCelScore){
+                    return AjaxResult.error("兌換失敗,優惠券積分不足以兌換!");
                 }
 			}
 			if(selectMenuFoodById.getSpareField5() !=null && Integer.parseInt(selectMenuFoodById.getSpareField5()) ==HttpConstants.EmmbersType_1 && selectMembersById.getMembersType() ==HttpConstants.EmmbersType_1){
@@ -212,7 +214,12 @@ public class MenuFoodServiceImpl implements IMenuFoodService
 				menuFoodMapper.updateMenuFood(selectMenuFoodById);
 			}
 			//修改用戶積分
-			Integer tet =(int) (selectMembersById.getScore() -selectMenuFoodById.getExchangePointsScord()*num);
+			Integer tet =null;
+			if(!StringUtils.isEmpty(code)){
+                tet =selectMembersById.getScore() -coupCelScore;
+			}else {
+                tet= selectMembersById.getScore() -(int)(selectMenuFoodById.getExchangePointsScord()*num);
+            }
 			tet =tet >0? tet:0;
 			selectMembersById.setScore(tet);
 			membersMapper.updateMembers(selectMembersById);
