@@ -158,8 +158,9 @@ public class MenuFoodServiceImpl implements IMenuFoodService
 			}
 			
 			Members selectMembersById = membersMapper.selectMembersById(memId);
-			if(!StringUtils.isEmpty(code)){
-				MyCoupon selectMyCouponById = myCouponMapper.selectMyCouponByCode(code);
+            MyCoupon selectMyCouponById =null;
+            if(!StringUtils.isEmpty(code)){
+				selectMyCouponById = myCouponMapper.selectMyCouponByCode(code);
 				if(selectMyCouponById ==null){
 					return AjaxResult.error("該優惠代碼不存在或者已經過期,,請確認再操作");
 				}
@@ -167,12 +168,15 @@ public class MenuFoodServiceImpl implements IMenuFoodService
 				/*if(celScore < selectMembersById.getScore()){
 					return AjaxResult.error("兌換失敗,優惠券積分不足以兌換!");
 				}*/
-				if(!StringUtils.isEmpty(selectMyCouponById.getSpareField2()) && selectMenuFoodById.getId() != Integer.parseInt(selectMyCouponById.getSpareField2())){
+				//等於二才是兌換餐品
+				if(selectMyCouponById.getCouponType().equals("2") && !StringUtils.isEmpty(selectMyCouponById.getSpareField2()) && selectMenuFoodById.getId() != Integer.parseInt(selectMyCouponById.getSpareField2())){
                     return AjaxResult.error("兌換失敗,該優惠券不能兌換當前商品!");
                 }
                 if(!StringUtils.isEmpty(code) && selectMembersById.getScore() < coupCelScore){
                     return AjaxResult.error("兌換失敗,優惠券積分不足以兌換!");
                 }
+
+
 			}
 			if(selectMenuFoodById.getSpareField5() !=null && Integer.parseInt(selectMenuFoodById.getSpareField5()) ==HttpConstants.EmmbersType_1 && selectMembersById.getMembersType() ==HttpConstants.EmmbersType_1){
 				return AjaxResult.error("該商品僅限於VIP用戶兌換,請升級VIP");
@@ -224,6 +228,11 @@ public class MenuFoodServiceImpl implements IMenuFoodService
 			selectMembersById.setScore(tet);
 			membersMapper.updateMembers(selectMembersById);
 			selectMembersById.setPwd(null);
+			if(selectMyCouponById != null) {
+                selectMyCouponById.setStatus(2);
+                selectMyCouponById.setIsVaild("no");
+                myCouponMapper.updateMyCoupon(selectMyCouponById);
+            }
 			return AjaxResult.success("積分兌換商品成功!",ServiceUtil.tokenByUser(selectMembersById));
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -1,5 +1,6 @@
 package com.menu.mangerw;
 
+import com.menu.manger.service.IMenuFoodService;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,6 +57,12 @@ public class MangerwApplicationTests {
 	}
 		long end =System.currentTimeMillis();
 		log.info("结束调用调用:"+(end-beginTime));
+	}
+	@Autowired
+	private IMenuFoodService menuFoodService;
+	@Test
+	public void duihuan(){
+		menuFoodService.requestExchege(19,1,"216C8BC3BF7F32",57);
 	}
 }
 
