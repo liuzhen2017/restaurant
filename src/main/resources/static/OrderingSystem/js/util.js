@@ -272,6 +272,33 @@ function getMembersInfo(){
 		return userInfo;
 }
 /**
+ * 獲取當前登錄用戶信息
+ * 
+ * @returns
+ */
+function updateUserInfo(isTis){
+	if(!window.localStorage.token || window.localStorage.token =='undefined'){
+		return null;
+	}
+		$.ajax({
+			method : "POST",
+			async:false,
+			url : pathUrl + "/api/members/updateMembers.do",
+			data : {isTis:isTis},
+			type : "post",
+			async: false,
+			jsonpCallback:'cd',
+			success : function(result) {
+				
+			},
+			error : function(error) {
+				msg("網絡連接錯誤!"+JSON.stringify(error));
+
+			}
+		});
+		return userInfo;
+}
+/**
  * 獲取系統消息
  */
 function getNotiInfo(){

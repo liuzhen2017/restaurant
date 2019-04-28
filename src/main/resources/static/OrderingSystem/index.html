@@ -102,6 +102,7 @@
         });
     });
     window.onload = function(){
+    	//显示score
     	if(localStorage.getItem('token') || localStorage.getItem('token') != undefined){
     	var user =getMembersInfo();
     	if(user && user != null){
@@ -116,7 +117,23 @@
 	    	}
     		  $("#score_butt").show();
     	}
+    }
+    //TODO 提示消息
+    if(localStorage.getItem('tisInfo') || localStorage.getItem('tisInfo') != undefined){
+    	layer.open({
+            content: '允許"炑八韓烤APP"發送通知給您'
+            ,btn: ['允许', '不允许']
+            ,yes: function(index){
+              localStorage.setItem("tisInfo","yes");
+              layer.close(index);
+            },no:function(index){
+              localStorage.setItem("tisInfo","false");
+              layer.close(index);
+            }
+          });
     	}
+    	
+    	
     	loadScord();
     	function loadScord(){
     		$('#score_butt').trigger("click");

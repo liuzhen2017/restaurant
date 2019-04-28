@@ -34,7 +34,6 @@ import storelle.api.pos.SubmitRedeemptionResponse;
 
 import com.menu.manger.constants.HttpConstants;
 import com.menu.manger.dto.AccountFlow;
-import com.menu.manger.dto.AcctBalance;
 import com.menu.manger.dto.BranchStore;
 import com.menu.manger.dto.IntegralRole;
 import com.menu.manger.dto.Members;

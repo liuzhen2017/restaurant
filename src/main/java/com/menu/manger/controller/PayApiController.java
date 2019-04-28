@@ -60,7 +60,7 @@ public class PayApiController extends BaseController {
 
 		Map<String, Object> chargeParams = new HashMap<String, Object>();
 		chargeParams.put("amount", ammount.intValue());
-		chargeParams.put("currency", "usd");
+		chargeParams.put("currency", "HKD");
 		chargeParams.put("description", "購買會員");
 		chargeParams.put("source", tokenId);
 		double price = 0;
@@ -144,12 +144,11 @@ public class PayApiController extends BaseController {
 	public AjaxResult upgradeVIP(String email, String tokenId, Double ammount,
 			String code) {
 		log.info("升級VIP 1.升級VIP開始");
-		;
 		Stripe.apiKey = configService.selectConfigByKey("pay_user_service_key");
 
 		Map<String, Object> chargeParams = new HashMap<String, Object>();
 		chargeParams.put("amount", ammount.intValue());
-		chargeParams.put("currency", "usd");
+		chargeParams.put("currency", "HKD");
 		chargeParams.put("description", "升級會員");
 		chargeParams.put("source", tokenId);
 		double price = 0;

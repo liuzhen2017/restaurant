@@ -170,15 +170,16 @@ public class MembersServiceImpl implements IMembersService {
 							dbMem.getSalt()).equals(dbMem.getPwd())) {
 				return AjaxResult.error("密碼錯誤!");
 			}
-			Members backMem =dbMem;
+			Members backMem = dbMem;
 			backMem.setPwd(null);
-			Date dt =new Date();
-			String token =JsonWebTokenUtil.sign(backMem,dt);
+			Date dt = new Date();
+			String token = JsonWebTokenUtil.sign(backMem, dt);
 			Map<String, Object> data = new HashMap<String, Object>();
 			data.put("tokent", token);
 			data.put("membersInfo", backMem);
 			data.put("myscorp", backMem.getScore());
-			dbMem.setSaveToken(new SimpleDateFormat("yyyyMMdd HH:mm:ss:SSS").format(dt));
+			dbMem.setSaveToken(new SimpleDateFormat("yyyyMMdd HH:mm:ss:SSS")
+					.format(dt));
 			membersMapper.updateMembers(dbMem);
 			return AjaxResult.success("登陸成功!", data);
 		}
@@ -214,14 +215,7 @@ public class MembersServiceImpl implements IMembersService {
 		members.setCreateDate(DateFormatUtils.format(new Date(), "yyyy-MM-dd"));
 		Map<String, Object> map = new HashMap<>();
 		int memCode = (int) ((Math.random() * 11 + 1) * 100000000);
-		map.put("key", "salt");
-		map.put("value", code);
-		Members selectMembersByKey = membersMapper.selectMembersByKey(map);
-		while (selectMembersByKey != null) {
-			code = (int) ((Math.random() * 9 + 1) * 100000);
-			map.put("value", code);
-			selectMembersByKey = membersMapper.selectMembersByKey(map);
-		}
+
 		members.setSalt(code + "");
 		members.setPwd(encryptPassword(members.getEmail(), members.getPwd(),
 				members.getSalt()));
@@ -229,23 +223,24 @@ public class MembersServiceImpl implements IMembersService {
 
 		map.put("key", "code");
 		map.put("value", memCode);
-		selectMembersByKey = membersMapper.selectMembersByKey(map);
+		Members selectMembersByKey = membersMapper.selectMembersByKey(map);
 		while (selectMembersByKey != null) {
 			memCode = (int) ((Math.random() * 11 + 1) * 100000000);
 			map.put("value", memCode);
 			selectMembersByKey = membersMapper.selectMembersByKey(map);
 		}
-		//查找導入積分
-		ScoreHis scoreHis =new ScoreHis();
+		// 查找導入積分
+		ScoreHis scoreHis = new ScoreHis();
 		scoreHis.setMembersId(-1);
 		scoreHis.setMembersName(members.getPhone());
 		members.setScore(0);
-		List<ScoreHis> selectScoreHisList = scoreHisService.selectScoreHisList(scoreHis);
-		if(selectScoreHisList !=null && selectScoreHisList.size() >0){
+		List<ScoreHis> selectScoreHisList = scoreHisService
+				.selectScoreHisList(scoreHis);
+		if (selectScoreHisList != null && selectScoreHisList.size() > 0) {
 			members.setScore(selectScoreHisList.get(0).getNewScore());
 		}
 		members.setCode(memCode + "");
-		
+
 		// 查找待領取的優惠券信息
 		MenuFoodExchange menuFoodExchange = new MenuFoodExchange();
 		menuFoodExchange.setMembersId(Long.valueOf(members.getPhone()
@@ -265,21 +260,40 @@ public class MembersServiceImpl implements IMembersService {
 			}
 		}
 		//
-		
-		
+		// 查找待領取的優惠券信息
+		/*menuFoodExchange = new MenuFoodExchange();
+		menuFoodExchange.setIsVaild("yes");
+		menuFoodExchange.setRulesType(0);
+		selectMenuFoodExchangeList = menuFoodExchangeMapper
+				.selectMenuFoodExchangeList(menuFoodExchange);
+		membersMapper.insertMembers(members);
+		if (selectMenuFoodExchangeList != null
+				&& selectMenuFoodExchangeList.size() > 0) {
+			for (MenuFoodExchange menuFoodExchange2 : selectMenuFoodExchangeList) {
+				menuFoodExchange2.setMembersId(members.getId());
+				menuFoodExchangeMapper
+						.updateMenuFoodExchange(menuFoodExchange2);
+				noticeInfoService.insertNoticeInfo("迎新人送優惠券",
+						members.getId(), menuFoodExchange2.getId().intValue(),
+						"MenuFoodExchange", menuFoodExchange2.getMenuFoodPic());
+			}
+		}*/
+
 		Members backMem = members;
 		backMem.setPwd(null);
-		Date dt =new Date();
-		String token =JsonWebTokenUtil.sign(backMem,dt);
+		Date dt = new Date();
+		String token = JsonWebTokenUtil.sign(backMem, dt);
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("tokent", token);
 		data.put("membersInfo", backMem);
 		data.put("myscorp", backMem.getScore());
-		
-		Members selectMembersById = membersMapper.selectMembersById(members.getId());
-		selectMembersById.setSaveToken(new SimpleDateFormat("yyyyMMdd HH:mm:ss:SSS").format(dt));
+
+		Members selectMembersById = membersMapper.selectMembersById(members
+				.getId());
+		selectMembersById.setSaveToken(new SimpleDateFormat(
+				"yyyyMMdd HH:mm:ss:SSS").format(dt));
 		membersMapper.updateMembers(selectMembersById);
-		
+
 		lock.unlock();
 		return AjaxResult.success("恭喜您,註冊成功!", data);
 	}
@@ -296,7 +310,8 @@ public class MembersServiceImpl implements IMembersService {
 		sendEm.setSendTo(byEmail.getEmail());
 		sendEm.setTitle(jb.getString("send_title"));
 		try {
-			String token = JsonWebTokenUtil.sign(byEmail, 1000 * 60 * 60 * 2,new Date());
+			String token = JsonWebTokenUtil.sign(byEmail, 1000 * 60 * 60 * 2,
+					new Date());
 			sendEm.setSendContent(jb.getString("send_content") + "<a href='"
 					+ jb.getString("retrieve_url") + "?token=" + token
 					+ "'>找回密碼</a>");
@@ -316,7 +331,7 @@ public class MembersServiceImpl implements IMembersService {
 			return AjaxResult.error("郵件已經過期,請重新發送郵件");
 		}
 		return AjaxResult.success(null,
-				JsonWebTokenUtil.sign(members, 60 * 20 * 60,new Date()));
+				JsonWebTokenUtil.sign(members, 60 * 20 * 60, new Date()));
 	}
 
 	@Override
@@ -384,7 +399,7 @@ public class MembersServiceImpl implements IMembersService {
 		}
 		if (sendMessagerByPhone.getSendCode().equals(code)) {
 			sendMessagerByPhone.setIsVaild("no");
-			//sendMessagerMapper.updateSendMessager(sendMessagerByPhone);
+			// sendMessagerMapper.updateSendMessager(sendMessagerByPhone);
 			return AjaxResult.success("驗證成功!");
 		}
 		return AjaxResult.error("驗證碼錯誤");
@@ -443,99 +458,124 @@ public class MembersServiceImpl implements IMembersService {
 	@Override
 	@Transactional(readOnly = false, rollbackFor = Exception.class)
 	public AjaxResult saveIntegral(String info)
-			throws UnsupportedEncodingException, NumberFormatException, ParseException {
-		Lock lock =new ReentrantLock();
+			throws UnsupportedEncodingException, NumberFormatException,
+			ParseException {
+		Lock lock = new ReentrantLock();
 		lock.lock();
 		log.info("request parmat ={}", info);
-		info=info.split("a/qrCode/s=")[1].replace("&brandId=100", "").replace("&pos=seito","");
+		info = info.split("a/qrCode/s=")[1].replace("&brandId=100", "")
+				.replace("&pos=seito", "");
 		log.info("request replace head,food ={}", info);
 		info = AESUtil.AES_CBC_Decrypt(info);
 		log.info("decrypt Info={}", info);
-		if(StringUtils.isEmpty(info)){
+		if (StringUtils.isEmpty(info)) {
 			return AjaxResult.error("解析二維碼錯誤!");
 		}
-		String [] result =info.split(";");
-		
-		AccountFlow accountFlow =new AccountFlow();
-		//判斷時間,是否是配置時間
+		String[] result = info.split(";");
+
+		AccountFlow accountFlow = new AccountFlow();
+		// 判斷時間,是否是配置時間
 		accountFlow.setInvoiceNo(result[2]);
-		List<AccountFlow> selectAccountFlowList2 = accountFlowService.selectAccountFlowList(accountFlow);
-		if(selectAccountFlowList2 ==null || selectAccountFlowList2.size() ==0) {
+		List<AccountFlow> selectAccountFlowList2 = accountFlowService
+				.selectAccountFlowList(accountFlow);
+		if (selectAccountFlowList2 == null
+				|| selectAccountFlowList2.size() == 0) {
 			return AjaxResult.error("很抱歉,该账单没有同步到系统里面");
 		}
-		if(selectAccountFlowList2.get(0).getMenuId() != null) {
+		if (selectAccountFlowList2.get(0).getMenuId() != null) {
 			return AjaxResult.error("该二维码已经积分过了,不允许重复积分");
 		}
-		SysConfig invaildDay = sysConfigService.selectByKey(HttpConstants.qcSaveDate);
-		String transactionDatetime =result[3];
-		transactionDatetime =transactionDatetime.substring(0, 8);
-		Date tranctionDate= DateUtils.addDays(DateUtils.parseDate(transactionDatetime, "yyyyMMdd"),Integer.parseInt(invaildDay.getConfigValue()));
-		if(tranctionDate.before(new Date())){
-			return AjaxResult.error("很抱歉，該交易已經過了積分有效期,交易時間:"+transactionDatetime+",有效天數:"+invaildDay.getConfigValue());
+		SysConfig invaildDay = sysConfigService
+				.selectByKey(HttpConstants.qcSaveDate);
+		String transactionDatetime = result[3];
+		transactionDatetime = transactionDatetime.substring(0, 8);
+		Date tranctionDate = DateUtils.addDays(
+				DateUtils.parseDate(transactionDatetime, "yyyyMMdd"),
+				Integer.parseInt(invaildDay.getConfigValue()));
+		if (tranctionDate.before(new Date())) {
+			return AjaxResult.error("很抱歉，該交易已經過了積分有效期,交易時間:"
+					+ transactionDatetime + ",有效天數:"
+					+ invaildDay.getConfigValue());
 		}
-		
-		Members loginUser =  (Members) ThreadLocalUtil.getUserInfo();
 
-		Members selectMembersById = membersMapper.selectMembersById(loginUser.getId());
+		Members loginUser = (Members) ThreadLocalUtil.getUserInfo();
+
+		Members selectMembersById = membersMapper.selectMembersById(loginUser
+				.getId());
 		log.info("submitRedemption 3:填写账户流水 ");
-		
-		
+
 		BranchStore branchStore = new BranchStore();
 		branchStore.setStoreNo(Integer.parseInt(result[0] + ""));
-		List<BranchStore> selectBranchStoreList = branchStoreSerivce.selectBranchStoreList(branchStore);
-		accountFlow.setBranchStoreId(result[0]+"");
+		List<BranchStore> selectBranchStoreList = branchStoreSerivce
+				.selectBranchStoreList(branchStore);
+		accountFlow.setBranchStoreId(result[0] + "");
 		BranchStore selectBranchStoreById = selectBranchStoreList.size() == 0 ? null
 				: selectBranchStoreList.get(0);
 		if (selectBranchStoreById != null) {
 			accountFlow
 					.setBranchStoreName(selectBranchStoreById.getStoreName());
 		}
-		selectAccountFlowList2.get(0).setMenuId(loginUser.getId());;
+		selectAccountFlowList2.get(0).setMenuId(loginUser.getId());
+		;
 		accountFlowService.updateAccountFlow(selectAccountFlowList2.get(0));
 		ScoreHis scoreHis = new ScoreHis();
 		// 查詢積分規則
 		log.info("submitRedemption 3:计算积分 ");
-		IntegralRole byRole = roleService.selectByRoleByintegralType(loginUser
-				.getMembersType(),null);
+		IntegralRole byRole = roleService.selectByRoleByintegralType(
+				loginUser.getMembersType(), null);
 		if (byRole == null) {
 			log.info("submitRedemption 3.1:積分規則爲空,本次交易沒計算積分 ");
 		} else {
-			//非會員
-			if(selectAccountFlowList2.get(0).getNetAmount().intValue() > 2 && loginUser.getMembersType() ==0
-			|| selectAccountFlowList2.get(0).getNetAmount().intValue() > 1 && loginUser.getMembersType() ==1){
+			// 非會員
+			if (selectAccountFlowList2.get(0).getNetAmount().intValue() > 2
+					&& loginUser.getMembersType() == 0
+					|| selectAccountFlowList2.get(0).getNetAmount().intValue() > 1
+					&& loginUser.getMembersType() == 1) {
 				log.info("本次交易小於規定金額,不計入積分!");
-			}else {
-				//非會員
-				if(selectAccountFlowList2.get(0).getNetAmount().intValue() < 2 && loginUser.getMembersType() ==0
-						|| selectAccountFlowList2.get(0).getNetAmount().intValue() < 1 && loginUser.getMembersType() ==1){
+			} else {
+				// 非會員
+				if (selectAccountFlowList2.get(0).getNetAmount().intValue() < 2
+						&& loginUser.getMembersType() == 0
+						|| selectAccountFlowList2.get(0).getNetAmount()
+								.intValue() < 1
+						&& loginUser.getMembersType() == 1) {
 					log.info("本次交易小於規定金額,不計入積分!");
-				}else {
+				} else {
 					Double score = byRole.getScoreValue()
-							* Double.parseDouble(selectAccountFlowList2.get(0).getNetAmount() + "");
+							* Double.parseDouble(selectAccountFlowList2.get(0)
+									.getNetAmount() + "");
 					// 記錄積分
 
 					scoreHis.setDescribes("扫描二维码积分:" + score);
 					scoreHis.setMembersId(loginUser.getId());
 					scoreHis.setOlbScore(selectMembersById.getScore());
-					scoreHis.setNewScore(selectMembersById.getScore() + score.intValue());
+					scoreHis.setNewScore(selectMembersById.getScore()
+							+ score.intValue());
 					scoreHis.setCreatedDate(new Date());
 					scoreHis.setBusiId(loginUser.getId() + "");
 					scoreHisService.insertScoreHis(scoreHis);
 					// 判斷用戶消費，是否滿足自動升級會員
 					if (selectMembersById.getMembersType() == 0) {
-						IntegralRole selectByRoleByintegralType = roleService.selectByRoleByintegralType(selectMembersById.getMembersType(), 2);
+						IntegralRole selectByRoleByintegralType = roleService
+								.selectByRoleByintegralType(
+										selectMembersById.getMembersType(), 2);
 						int money = 0;
 						if (selectByRoleByintegralType == null) {
 							String queryCigKey = HttpConstants.autoUpgradingMoney;
 							if (selectMembersById.getMembersType() == HttpConstants.EmmbersType_1) {
 								queryCigKey = HttpConstants.autoUpgradingMoneyVIP;
 							}
-							SysConfig selectByKey = sysConfigService.selectByKey(queryCigKey);
-							money = Integer.parseInt(selectByKey.getConfigValue());
+							SysConfig selectByKey = sysConfigService
+									.selectByKey(queryCigKey);
+							money = Integer.parseInt(selectByKey
+									.getConfigValue());
 						} else {
-							money = (int) selectByRoleByintegralType.getScoreValue();
+							money = (int) selectByRoleByintegralType
+									.getScoreValue();
 						}
-						int moneyByMemId = accountFlowService.selectAccountMoneyByMemId(selectMembersById.getId());
+						int moneyByMemId = accountFlowService
+								.selectAccountMoneyByMemId(selectMembersById
+										.getId());
 						if (moneyByMemId >= money) {
 							// 如果是會員
 							Date vipDateEnd = new Date();
@@ -544,20 +584,21 @@ public class MembersServiceImpl implements IMembersService {
 										loginUser.getVipDate());
 								if (dateTime.after(new Date())) {
 									// 如果會員沒有過期，則過期時間 +1年 20191230 + 1 =20201230
-									vipDateEnd = DateUtils.addYears(dateTime, 1);
+									vipDateEnd = DateUtils
+											.addYears(dateTime, 1);
 								}
-								loginUser.setUpgradeDate(DateUtils.parseDateToStr(
-										"yyyyMMdd", new Date()));
-								loginUser.setVipDate(DateUtils.parseDateToStr("yyyyMMdd",
-										vipDateEnd));
+								loginUser
+										.setUpgradeDate(DateUtils
+												.parseDateToStr("yyyyMMdd",
+														new Date()));
+								loginUser.setVipDate(DateUtils.parseDateToStr(
+										"yyyyMMdd", vipDateEnd));
 							}
-							noticeInfoService.insertNoticeInfo(
-									"消費金額滿" + money + " 積分自動升級通知",
-									loginUser.getId(),
-									0,
+							noticeInfoService.insertNoticeInfo("消費金額滿" + money
+									+ " 積分自動升級通知", loginUser.getId(), 0,
 									"noticeType",
-									"恭喜您：本年度" + DateUtils.dateTime() + ", 消費金額滿"
-											+ money
+									"恭喜您：本年度" + DateUtils.dateTime()
+											+ ", 消費金額滿" + money
 											+ " 積分自動升級,享受VIP優惠,該優惠于："
 											+ loginUser.getVipDate() + "失效.");
 						}
@@ -574,19 +615,20 @@ public class MembersServiceImpl implements IMembersService {
 		try {
 			return AjaxResult.success(0, "掃碼儲存積分成功!",
 					ServiceUtil.tokenByUser(loginUser));
-			
+
 		} catch (JsonProcessingException | IllegalArgumentException
 				| JWTCreationException | UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return AjaxResult.success("掃碼儲存積分成功!");
-		}finally {
+		} finally {
 			lock.unlock();
 		}
 	}
 
 	public static void main(String[] args) {
-		String info="http://flqd.majiangyun.com:8899/a/qrCode/s=cMgKCuc7QsZwNTbtGeOmKecLQ+E8CrBb6cCQVkDmmO0=&pos=seito";
-		info=info.split("a/qrCode/s=")[1].replace("&brandId=100", "").replace("&pos=seito","");
+		String info = "http://flqd.majiangyun.com:8899/a/qrCode/s=cMgKCuc7QsZwNTbtGeOmKecLQ+E8CrBb6cCQVkDmmO0=&pos=seito";
+		info = info.split("a/qrCode/s=")[1].replace("&brandId=100", "")
+				.replace("&pos=seito", "");
 		System.out.println(info);
 	}
 }

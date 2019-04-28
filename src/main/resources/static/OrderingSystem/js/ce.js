@@ -31,11 +31,11 @@ document.writeln("                        <li class='setUp-ul-li'>");
 document.writeln("                            <span><img src=\"imgs/index/yqpy-icon.png\">邀請朋友</span>");
 document.writeln("                            <span><img src=\"imgs/index/next-icon.png\"></span>");
 document.writeln("                        </li>");
-/*document.writeln("                        <li class='setUp-ul-li'>");
+document.writeln("                        <li class='setUp-ul-li'>");
 document.writeln("                            <span><img src=\"imgs/index/gywm-icon.png\">關於我們</span>");
 document.writeln("                            <span><img src=\"imgs/index/next-icon.png\"></span>");
 document.writeln("                        </li>");*/
-/*document.writeln("                        <li class='setUp-ul-li'>");
+document.writeln("                        <li class='setUp-ul-li'>");
 document.writeln("                            <span><img src=\"imgs/index/shed-icon.png\">設定</span>");
 document.writeln("                            <span><img id=\"moreIco\" src=\"imgs/index/next-icon.png\"></span>");
 document.writeln("                            <ul id=\"myBargain\" class=\"setUp-ul02\" style=\"display: none;\">");
@@ -44,7 +44,7 @@ document.writeln("                                <li>APP條款及細則</li>");
 document.writeln("                                <li>語言</li>");
 document.writeln("                                <li>消息設置</li>");
 document.writeln("                            </ul>");
-document.writeln("                        </li>");*/
+document.writeln("                        </li>");
 document.writeln("                    </ul>");
 document.writeln("                </div>");
 document.writeln("                <div class=\"exit-divBox\">");

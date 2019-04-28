@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.menu.manger.constants.HttpConstants;
 import com.menu.manger.dto.AccountFlow;
 import com.menu.manger.dto.AcctBalance;
-import com.menu.manger.dto.IntegralRole;
 import com.menu.manger.dto.Members;
 import com.menu.manger.dto.MenuFood;
 import com.menu.manger.dto.MenuFoodExchange;
@@ -303,9 +302,7 @@ public class ScoreHisServiceImpl implements IScoreHisService
 				if(!StringUtils.isEmpty(menuFood2.getInvalidDate())){
 					menuFoodExchange.setInvalidDate(menuFood2.getInvalidDate());
 				}
-				if(!StringUtils.isEmpty(menuFood2.getTakeEffectDate())){
-					menuFoodExchange.setTakeEffectDate(menuFood2.getTakeEffectDate());
-				}
+				menuFoodExchange.setTakeEffectDate(DateUtils.parseDateToStr("yyyyMMdd HH:mm:ss",DateUtils.addYears(new Date(),1)));
 				menuFoodExchange.setMenuFoodId(menuFood2.getId());
 				menuFoodExchange.setMenbersName(members.getName());
 				menuFoodExchange.setMenuFoodName(menuFood2.getTitle());
