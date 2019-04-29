@@ -18,11 +18,13 @@ import com.menu.manger.dto.AcctBalance;
 import com.menu.manger.dto.Members;
 import com.menu.manger.dto.MenuFood;
 import com.menu.manger.dto.MenuFoodExchange;
+import com.menu.manger.dto.MyCoupon;
 import com.menu.manger.dto.ScoreHis;
 import com.menu.manger.mapper.AccountFlowMapper;
 import com.menu.manger.mapper.AcctBalanceMapper;
 import com.menu.manger.mapper.MenuFoodExchangeMapper;
 import com.menu.manger.mapper.MenuFoodMapper;
+import com.menu.manger.mapper.MyCouponMapper;
 import com.menu.manger.mapper.ScoreHisMapper;
 import com.menu.manger.service.IIntegralRoleService;
 import com.menu.manger.service.IMembersService;
@@ -58,6 +60,8 @@ public class ScoreHisServiceImpl implements IScoreHisService
 	MenuFoodMapper foodMapper;
 	@Autowired
 	INoticeInfoService noticeInfoService;
+	@Autowired
+	private MyCouponMapper myCouponMapper;
     private static final Logger log = LoggerFactory.getLogger(ScoreHisServiceImpl.class);
 
 	/**
@@ -220,7 +224,7 @@ public class ScoreHisServiceImpl implements IScoreHisService
 	}
 	@Override
 	@Transactional(readOnly=false,rollbackFor=Exception.class)
-	public void upgradeVIP(String email, Double ammount, Members members) {
+	public void upgradeVIP(String email, Double ammount, Members members,String code) {
 		log.info("1.賬戶餘額增加");
 		//账户加钱
 		AcctBalance selectAcctBalanceById = balanceMapper.selectAcctBalanceById(1);
@@ -264,7 +268,7 @@ public class ScoreHisServiceImpl implements IScoreHisService
 		}*/
 		log.info("4.計算VIP年限:");
 		Members selectMembersById = membersService.selectMembersById(members.getId());
-		selectMembersById.setScore(selectMembersById.getScore()+ammount.intValue());
+		//selectMembersById.setScore(selectMembersById.getScore()+ammount.intValue());
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());//设置起时间
 		 cal.add(Calendar.YEAR, 1);//增加一年
@@ -299,10 +303,9 @@ public class ScoreHisServiceImpl implements IScoreHisService
 				menuFoodExchange.setCreateDate(new Date());
 				menuFoodExchange.setMembersId(members.getId());
 				menuFoodExchange.setIsVaild("yes");
-				if(!StringUtils.isEmpty(menuFood2.getInvalidDate())){
-					menuFoodExchange.setInvalidDate(menuFood2.getInvalidDate());
-				}
-				menuFoodExchange.setTakeEffectDate(DateUtils.parseDateToStr("yyyyMMdd HH:mm:ss",DateUtils.addYears(new Date(),1)));
+				menuFoodExchange.setInvalidDate(DateUtils.parseDateToStr("yyyyMMdd HH:mm:ss",DateUtils.addYears(new Date(),1)));
+				menuFoodExchange.setTakeEffectDate(menuFood2.getTakeEffectDate());
+				
 				menuFoodExchange.setMenuFoodId(menuFood2.getId());
 				menuFoodExchange.setMenbersName(members.getName());
 				menuFoodExchange.setMenuFoodName(menuFood2.getTitle());
@@ -322,6 +325,18 @@ public class ScoreHisServiceImpl implements IScoreHisService
 				foodMapper.updateMenuFood(menuFood2);
 			}
 		}
+		//消费优惠券
+		if(! StringUtils.isEmpty(code)){
+		   MyCoupon selectMyCouponByCode = myCouponMapper.selectMyCouponByCode(code);
+		   if(selectMyCouponByCode != null){
+			   selectMyCouponByCode.setIsVaild("no");
+			   selectMyCouponByCode.setStatus(3);
+			   myCouponMapper.updateMyCoupon(selectMyCouponByCode);
+			   
+		   }
+		}
+		
+		
 		log.info("6.完畢:");
 	}
 }

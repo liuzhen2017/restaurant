@@ -34,7 +34,7 @@ document.writeln("                        </li>");
 document.writeln("                        <li class='setUp-ul-li'>");
 document.writeln("                            <span><img src=\"imgs/index/gywm-icon.png\">關於我們</span>");
 document.writeln("                            <span><img src=\"imgs/index/next-icon.png\"></span>");
-document.writeln("                        </li>");*/
+document.writeln("                        </li>");
 document.writeln("                        <li class='setUp-ul-li'>");
 document.writeln("                            <span><img src=\"imgs/index/shed-icon.png\">設定</span>");
 document.writeln("                            <span><img id=\"moreIco\" src=\"imgs/index/next-icon.png\"></span>");

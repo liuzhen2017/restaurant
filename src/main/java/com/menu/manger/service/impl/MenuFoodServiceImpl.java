@@ -202,10 +202,10 @@ public class MenuFoodServiceImpl implements IMenuFoodService
 				menuFoodExchange.setMenuFoodName(selectMenuFoodById.getTitle());
 				menuFoodExchange.setMenuFoodPic(selectMenuFoodById.getPicUrl());
 				menuFoodExchange.setCouponType(selectMenuFoodById.getTypess());
-				menuFoodExchange.setInvalidDate(selectMenuFoodById.getInvalidDate());
+				menuFoodExchange.setInvalidDate(DateUtils.parseDateToStr("yyyyMMdd HH:mm:ss",DateUtils.addDays(new Date(),30)));
 				menuFoodExchange.setSpareField1(selectMenuFoodById.getSpareField1());
 				
-				menuFoodExchange.setTakeEffectDate(DateUtils.parseDateToStr("yyyyMMdd HH:mm:ss",DateUtils.addDays(new Date(),30)));
+				menuFoodExchange.setTakeEffectDate(selectMenuFoodById.getTakeEffectDate());
 				menuFoodExchange.setCouponType(selectMenuFoodById.getTypess());
 				menuFoodExchange.setCouponCode(RC4.encry_RC4_string(String.format("%07d",(int) (Math.random()*1000))+"",UUID.randomUUID().toString()));
 				menuFoodExchange.setExchangeStatus(0);
@@ -367,9 +367,9 @@ public class MenuFoodServiceImpl implements IMenuFoodService
 		menuFoodExchange.setMenuFoodName(menuFood2.getTitle());
 		menuFoodExchange.setMenuFoodPic(menuFood2.getPicUrl());
 		menuFoodExchange.setCouponType(menuFood2.getTypess());
-		menuFoodExchange.setInvalidDate(menuFood2.getInvalidDate());
+		menuFoodExchange.setInvalidDate(DateUtils.parseDateToStr("yyyyMMdd HH:mm:ss",DateUtils.addDays(new Date(),30)));
 		menuFoodExchange.setSpareField1(menuFood2.getSpareField1());
-		menuFoodExchange.setTakeEffectDate(DateUtils.parseDateToStr("yyyyMMdd HH:mm:ss",DateUtils.addDays(new Date(),30)));
+		menuFoodExchange.setTakeEffectDate(menuFood2.getTakeEffectDate());
 		menuFoodExchange.setCouponType(menuFood2.getTypess());
 		menuFoodExchange.setCouponCode(RC4.encry_RC4_string(String.format("%07d",(int) (Math.random()*1000))+"",UUID.randomUUID().toString()));
 		menuFoodExchange.setExchangeStatus(0);

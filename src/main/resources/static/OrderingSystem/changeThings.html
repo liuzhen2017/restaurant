@@ -94,10 +94,7 @@ $(function(){
 				var str ='';
 				if (result.code =='0') {
 					if(result.data){
-						var user =getMembersInfo();
-							if(result.data.spareField5 && result.data.spareField5 == 1 && user.membersType != 1){
-								$("#isPass").html('該菜品僅限於VIP會員兌換').removeAttr("onclick").attr('disabled',true);
-							}
+						
 						$("#showImg").attr('src',getUrlParmat(result.data.picUrl));
 						$("#showTitle").html(result.data.title);
 						$("#rule-content").html(result.data.describes);

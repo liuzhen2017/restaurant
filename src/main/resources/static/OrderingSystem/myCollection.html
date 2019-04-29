@@ -134,7 +134,7 @@
 								
 								//顯示加載數據
 								if(result.pageNum * result.pageSize >= result.total){
-									$(".nothing").html("沒有更多了...");
+									//$(".nothing").html("沒有更多了...");
 								}else{
 									$(".nothing").html("<a href='#' onclick='myCollection("+type+","+(result.pageNum+1)+")'>加載更多...</a>");
 								}

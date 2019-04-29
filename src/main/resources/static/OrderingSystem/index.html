@@ -103,7 +103,7 @@
     });
     window.onload = function(){
     	//显示score
-    	if(localStorage.getItem('token') || localStorage.getItem('token') != undefined){
+   	if(localStorage.getItem('token') || localStorage.getItem('token') != undefined){
     	var user =getMembersInfo();
     	if(user && user != null){
 	    	$("#score").html(user.score);
@@ -119,21 +119,6 @@
     	}
     }
     //TODO 提示消息
-    if(localStorage.getItem('tisInfo') || localStorage.getItem('tisInfo') != undefined){
-    	layer.open({
-            content: '允許"炑八韓烤APP"發送通知給您'
-            ,btn: ['允许', '不允许']
-            ,yes: function(index){
-              localStorage.setItem("tisInfo","yes");
-              layer.close(index);
-            },no:function(index){
-              localStorage.setItem("tisInfo","false");
-              layer.close(index);
-            }
-          });
-    	}
-    	
-    	
     	loadScord();
     	function loadScord(){
     		$('#score_butt').trigger("click");
@@ -275,6 +260,19 @@
     		});
     }
     	 
+    	 if(!localStorage.getItem('tisInfo') || localStorage.getItem('tisInfo') == undefined){
+    	    	layer.open({
+    	            content: '該商品僅限於VIP用戶對話,請升級VIP'
+    	            ,btn: ['允许', '不允许']
+    	            ,yes: function(index){
+    	              localStorage.setItem("tisInfo","yes");
+    	              layer.close(index);
+    	            },no:function(index){
+    	              localStorage.setItem("tisInfo","false");
+    	              layer.close(index);
+    	            }
+    	          });
+    	    	}
     }
 </script>
 <script type="text/javascript" src="./js/ce.js"></script>

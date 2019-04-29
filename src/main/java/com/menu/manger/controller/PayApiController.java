@@ -89,7 +89,7 @@ public class PayApiController extends BaseController {
 			if (charge.getStatus().equals("succeeded")) {
 				log.info("購買VIP 3.寫入積分處理");
 				;
-				hisService.upgradeVIP(email, ammount, getUserInfo());
+				hisService.upgradeVIP(email, ammount, getUserInfo(),code);
 
 				// 發送贈送菜
 
@@ -180,7 +180,7 @@ public class PayApiController extends BaseController {
 			if (charge.getStatus().equals("succeeded")) {
 				log.info("升級VIP 5.升級業務處理:" + JSONObject.toJSONString(charge));
 				;
-				hisService.upgradeVIP(email, ammount, getUserInfo());
+				hisService.upgradeVIP(email, ammount, getUserInfo(),code);
 
 				// 發送贈送菜
 

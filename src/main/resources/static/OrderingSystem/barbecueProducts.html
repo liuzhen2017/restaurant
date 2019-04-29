@@ -45,6 +45,7 @@
             data.pageNum=page;
             data.pageSize=size;
             data.isExchange='yes';
+            data.rulesType='2';
             data.typess=GetUrlParam('id');
         				$.ajax({
         					method : "POST",
@@ -60,30 +61,18 @@
         								var divHeard ='<div class="pic-row">';
         				                var divFood ='</div>';    
         				                var img;
+        				                var user =getMembersInfo();
         								for(var i=0;i<result.rows.length;i++){
         									obj =result.rows[i];
         									if(i ==0 || i % 2 ==0){
         										str+=divHeard;
         									}
-        									img =obj.isColle=='yes'? "imgs/choice.png":"imgs/not_choice.png";
-        									str+=' <div class="store-pic bar-cai-name">'
-	        						                +'<a href="changeThings.html?id='+obj.id+'"><img src="'+getUrlParmat(obj.picUrl)+'" />'
-	        						                +'<span class="dishes-name" style="color: #333333;">'+obj.title+'</span>'
-	        						                +'<span class="dishes-score" style="color: #333333;">'+obj.exchangePointsScord+' 分</span></a>'
-	        						                +'<span class="zan-pic" style="color: #333333;"><a onclick="addOrRemove('+obj.id+','+2+',\''+obj.picUrl+'\')" href="#"><img src="'+img+'" /></span>'
-	        						                +'</a>'
-        						                +'</div>';
+        									//undifit
+        									str+=pintStr(obj,user);
         						                i++;
         						                obj =result.rows[i];
         						                if(obj){
-        						             	img =obj.isColle=='yes'? "imgs/choice.png":"imgs/not_choice.png";
-        						                str+='<div class="store-pic bar-cai-name">'
-        						                +'<a href="changeThings.html?id='+obj.id+'"><img src="'+getUrlParmat(obj.picUrl)+'" />'
-        						                +'<span class="dishes-name" style="color: #333333;">'+obj.title+'</span>'
-        						                +'<span class="dishes-score" style="color: #333333;">'+obj.exchangePointsScord+' 分</span></a>'
-        						                +'<span class="zan-pic" style="color: #333333;"><a onclick="addOrRemove('+obj.id+','+2+',\''+obj.picUrl+'\')" href="#"><img src="'+img+'" /></span>'
-	        						                +'</a>'
-        						                +'</div>'
+        						                  str+=pintStr(obj,user);
         						                }
         						                if(i !=0 &&  (i+1) % 2 ==0 || (i ==result.rows.length && (i+1) % 2 !=0)){
         										str+=divFood;	
@@ -104,8 +93,42 @@
         				});
         }
     
+        function pintStr(obj,user){
+        	var str='';
+        	var img;
+        	if(obj.spareField5 == 1 && user.membersType != 1){
+	            str+='<div class="store-pic bar-cai-name">'
+	            +'<a href="#" onclick="showTis()"><img src="imgs/undifit.jpg"/>'
+	            +'<span class="dishes-name" style="color: #333333;"></span>'
+	            +'<span class="dishes-score" style="color: #333333;"></span></a>'
+	            +'<span class="zan-pic" style="color: #333333;"><img src="" /></span>'
+	                +'</a>'
+	            +'</div>'
+			}else{
+	        	img =obj.isColle=='yes'? "imgs/choice.png":"imgs/not_choice.png";
+	            str+='<div class="store-pic bar-cai-name">'
+	            +'<a href="changeThings.html?id='+obj.id+'"><img src="'+getUrlParmat(obj.picUrl)+'" />'
+	            +'<span class="dishes-name" style="color: #333333;">'+obj.title+'</span>'
+	            +'<span class="dishes-score" style="color: #333333;">'+obj.exchangePointsScord+' 分</span></a>'
+	            +'<span class="zan-pic" style="color: #333333;"><a onclick="addOrRemove('+obj.id+','+2+',\''+obj.picUrl+'\')" href="#"><img src="'+img+'" /></span>'
+	                +'</a>'
+	            +'</div>'
+			}
+        	return str;
+        }
+        
     });
-    
+    function showTis(){
+    	layer.open({
+            content: '該商品僅限於VIP用戶對話,請升級VIP'
+            ,btn: ['確定']
+            ,yes: function(index){
+              layer.close(index);
+            },no:function(index){
+              layer.close(index);
+            }
+          });
+    }
 </script>
 </body>
 </html>

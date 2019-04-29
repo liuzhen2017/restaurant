@@ -100,7 +100,7 @@
 										obj =result.rows[i];
 										$("#showImg").attr('src',getUrlParmat(obj.picUrl));
 										$("#showTitle").html(obj.storeName);
-										$("#showBill").html(obj.businessBegin+' - '+obj.businessEnd);
+										$("#showBill").html(obj.businessBegin.substring(0,5)+' - '+obj.businessEnd.substring(0,5));
 										$("#showAddress").html(obj.address);
 										$("#showTel").html(obj.phone);
 										//openApp
@@ -126,7 +126,7 @@
 								
 								//顯示加載數據
 								if(result.pageNum * result.pageSize >= result.total){
-									$(".nothing").html("沒有更多了...");
+									//$(".nothing").html("沒有更多了...");
 								}else{
 									$(".nothing").html("<a href='#' onclick='loadBranchStore("+(result.pageNum+1)+")'>加載更多...</a>");
 								}

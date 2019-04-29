@@ -1,5 +1,6 @@
 package com.menu.manger.util;
  
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -57,7 +58,13 @@ public class SendEmailUtil {
          //发送邮件，并发送到所有收件人地址，message.getAllRecipients() 获取到的是在创建邮件对象时添加的所有收件人, 抄送人, 密送人
          transport.sendMessage(msg,msg.getAllRecipients());
           
-          
+         String nick="";  
+         try {  
+             nick=javax.mail.internet.MimeUtility.encodeText("炑八韓烤");
+             msg.setFrom(new InternetAddress(nick+" <"+jsonObject.getString("senderAccount")+">"));  
+         } catch (UnsupportedEncodingException e) {  
+             e.printStackTrace();  
+         }   
          //5、关闭邮件连接
          transport.close();
      }

@@ -65,5 +65,5 @@ public interface IScoreHisService
 	 * @param ammount
 	 * @param members
 	 */
-	void upgradeVIP(String email, Double ammount, Members members);
+	void upgradeVIP(String email, Double ammount, Members members,String code);
 }
