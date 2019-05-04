@@ -198,6 +198,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
      AND  (STR_TO_DATE(invalid_date, '%Y-%m-%d %H:%i:%S') >NOW()  OR invalid_date IS NULL)
         AND  ( NOW() >STR_TO_DATE(take_effect_date, '%Y-%m-%d %H:%i:%S')   OR take_effect_date IS NULL)
         and is_valid ='yes'
+        and rules_type  = 2
         and  exchange_points_scord >    #{scord}
         order by exchange_points_scord ASC limit 1 
     </select>
@@ -208,6 +209,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
      AND  (STR_TO_DATE(invalid_date, '%Y-%m-%d %H:%i:%S') >NOW()  OR invalid_date IS NULL)
         AND  ( NOW() >STR_TO_DATE(take_effect_date, '%Y-%m-%d %H:%i:%S')   OR take_effect_date IS NULL)
         and is_valid ='yes'
+        and rules_type  = 2
         and  #{scord} >exchange_points_scord     
         order by exchange_points_scord desc limit 1 
     </select>

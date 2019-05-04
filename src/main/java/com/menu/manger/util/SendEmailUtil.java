@@ -55,8 +55,6 @@ public class SendEmailUtil {
          Transport transport = session.getTransport();
          //设置发件人的账户名和密码
          transport.connect(jsonObject.getString("senderAccount"),jsonObject.getString("senderPassword"));
-         //发送邮件，并发送到所有收件人地址，message.getAllRecipients() 获取到的是在创建邮件对象时添加的所有收件人, 抄送人, 密送人
-         transport.sendMessage(msg,msg.getAllRecipients());
           
          String nick="";  
          try {  
@@ -65,6 +63,8 @@ public class SendEmailUtil {
          } catch (UnsupportedEncodingException e) {  
              e.printStackTrace();  
          }   
+         //发送邮件，并发送到所有收件人地址，message.getAllRecipients() 获取到的是在创建邮件对象时添加的所有收件人, 抄送人, 密送人
+         transport.sendMessage(msg,msg.getAllRecipients());
          //5、关闭邮件连接
          transport.close();
      }

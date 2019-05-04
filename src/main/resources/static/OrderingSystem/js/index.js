@@ -187,7 +187,6 @@ $(".canting-address").on("click",function(){
 $(".setUp-ul .setUp-ul-li").on("click",function(){
     switch ($(this).index()){
         case 0:
-
             break;
         case 1:
             window.location.href="vipAuth.html";
@@ -209,10 +208,14 @@ $(".setUp-ul .setUp-ul-li").on("click",function(){
         	fakeLink.click();
             break;
         case 6:
-            var show = $('#myBargain').css('display');
-            $('#myBargain').css('display',show =='none'?'block':'none');
-            $(this).attr('src',show =='none'?'imgs/index/close-img.png':'imgs/index/next-icon.png');
-            break;
+      	  window.location.href="showPricePro.html?key=about";
+          break;    
+        case 7:
+        	debugger;
+        	var show = $('#myBargain').css('display');
+        	$('#myBargain').css('display',show =='none'?'block':'none');
+        	$(this).attr('src',show =='none'?'imgs/index/close-img.png':'imgs/index/next-icon.png');
+        	break;
     }
 });
 

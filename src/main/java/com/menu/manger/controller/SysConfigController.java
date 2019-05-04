@@ -33,7 +33,13 @@ public class SysConfigController extends BaseController
         
     }
 
-
+    @RequestMapping("querycigByKey.do")
+    @ResponseBody
+    public SysConfig querycigByKey(String key)
+    {
+        return configService.selectByKey(key);
+        
+    }
     /**
      * 查询参数配置列表
      */

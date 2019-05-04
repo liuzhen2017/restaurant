@@ -215,7 +215,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 and is_vaild = 'no'
                 and (NOW() >STR_TO_DATE(effective_time_end, '%Y-%m-%d %H:%i:%S')  OR effective_time_end IS NULL or status not in (0,1))
           </if>
-             
+            order by create_date desc 
       
     </select>
 </mapper>

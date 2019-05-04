@@ -80,8 +80,8 @@
   			if (result.code =='0') {
   				for(var i=0;i<result.rows.length;i++){
 	  				str+='<div class="swiper-slide">'
-	  	            +'<a href="showFood.html?id='+result.rows[i].id+'"><img src="'+getUrlParmat(result.rows[i].picUrl)+'" /></a>'
-                    +'<span>'+result.rows[i].title+'</span>'	  	            		
+	  	            +'<a href="showFood.html?id='+result.rows[i].id+'"><img style="margin:20px 0 -10px .293333rem" src="'+getUrlParmat(result.rows[i].picUrl)+'" /></a>'
+                    +'<span style="font-size:.4rem;margin:10px;0px;">'+result.rows[i].title+'</span>'	  	            		
 	  	            +'</div>';
   				}
   				if(str && !name){

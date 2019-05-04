@@ -183,6 +183,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	      <if test="isVaild != null  and isVaild == 'no' ">
                 AND (is_vaild = 'no' OR (NOW() >STR_TO_DATE(invalid_date, '%Y-%m-%d %H:%i:%S') OR invalid_date IS NULL) OR exchange_status NOT IN (0) )
           </if>
-      
+      	   order by create_date desc
     </select>
 </mapper>
