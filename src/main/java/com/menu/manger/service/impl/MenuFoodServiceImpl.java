@@ -175,6 +175,9 @@ public class MenuFoodServiceImpl implements IMenuFoodService
                 if(!StringUtils.isEmpty(code) && selectMembersById.getScore() < coupCelScore){
                     return AjaxResult.error("兌換失敗,優惠券積分不足以兌換!");
                 }
+                if(selectMyCouponById.getSpareField3().equals("5")){
+                	return AjaxResult.error("該優惠券類型不能兌換商品!");
+                }
 
 
 			}

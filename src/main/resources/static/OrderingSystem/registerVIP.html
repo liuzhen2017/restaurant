@@ -275,7 +275,7 @@
 						price =result.data.newPrice;
 						localStorage.setItem("buyTitle",title);
 						localStorage.setItem("buyPrice",price);
-						localStorage.setItem("code",$("#couponCode").val());
+						localStorage.setItem("couponCode",$("#couponCode").val());
 						if(beginRegist())
 						{
 						  window.location.href="registerVIP2.html";
@@ -292,19 +292,20 @@
 			 var pwd =hex_md5($("#pwd").val());
 			$("#pwd").val(pwd);
 			var formData = $('#formData').serializeJSON();
-				$.ajax({
+			localStorage.setItem("members",JSON.stringify(formData));
+				 $.ajax({
 					method : "POST",
 					async:false,
-					url : pathUrl + "/api/members/regist.do",
+					url : pathUrl + "/api/members/cheCkRegist.do",
 					data : {members:JSON.stringify(formData)},
 					type : "post",
 					async: false,
 					jsonpCallback:'cd',
 					success : function(result) {
 						if (result.code =='0') {
-							msg('注冊成功!請進行下一步，充值VIP!')
+							//msg('注冊成功!請進行下一步，充值VIP!')
 							pass =true
-							localStorage.setItem("token",result.data.tokent);
+							//localStorage.setItem("token",result.data.tokent);
 						}else{
 						  msg(result.msg);
 						}

@@ -1,5 +1,5 @@
 var pathUrl ="https://meokbang.com.hk";
-//var appUpload ="https://dl.pconline.com.cn/html_2/1/59/id=37973&pn=0.html";
+var appUpload ="https://dl.pconline.com.cn/html_2/1/59/id=37973&pn=0.html";
 //var pathUrl ='';
 // 上传图片
 function uploadFile() {

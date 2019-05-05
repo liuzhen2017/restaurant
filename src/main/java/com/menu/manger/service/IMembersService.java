@@ -115,5 +115,11 @@ public interface IMembersService
 	 * @throws NumberFormatException 
 	 */
 	public AjaxResult saveIntegral(String str) throws UnsupportedEncodingException, NumberFormatException, ParseException;
+
+	/**
+	 * @param mem
+	 * @return
+	 */
+	public AjaxResult cheCkRegist(Members mem);
 	
 }

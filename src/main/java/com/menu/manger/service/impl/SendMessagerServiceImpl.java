@@ -107,7 +107,8 @@ public class SendMessagerServiceImpl implements ISendMessagerService
 			sendMessager.setSendCode(random+"");
 			sendMessager.setCreateDate(new Date());
 			sendMessagerMapper.insertSendMessager(sendMessager);
-			return result;
+			
+			return AjaxResult.success("發送信息成功");
 		} catch (Exception e) {
 			System.out.println("發送短信錯誤");
 			return  AjaxResult.error();

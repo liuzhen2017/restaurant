@@ -215,7 +215,7 @@ public class MyCouponServiceImpl implements IMyCouponService
 		if(selectMyCouponByCode.getMembersId() !=null) {
 			return AjaxResult.error("該優惠券已經綁定用戶,請重新輸入!");
 		}
-		if(selectMyCouponByCode.getCouponRole() !=1  ) {
+		if(selectMyCouponByCode.getSpareField3() != null && selectMyCouponByCode.getSpareField3().equals("3")) {
 			return AjaxResult.error("該優惠券類型不能使用購買VIP");
 		}
 		double money = Double.parseDouble(vipPrice.getConfigValue()) * selectMyCouponByCode.getCouponValues();

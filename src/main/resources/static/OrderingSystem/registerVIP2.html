@@ -86,7 +86,8 @@ $(function(){
 	
 	var byEmail =window.localStorage.getItem('byEmail');
 	var title = window.localStorage.getItem('buyTitle');
-	var price = window.localStorage.getItem('buyPrice')
+	var price = window.localStorage.getItem('buyPrice');
+	var code = window.localStorage.getItem('couponCode');
 	if(title && price){
 		VIPPay();
 	}else{
@@ -165,8 +166,8 @@ function VIPPay(){
 function requestService(email,tokenId,amount){
 	 $.ajax({
     	 type: "post",
-         url: "/api/payApi/payment.do",
-         data: {email:email, tokenId:tokenId,ammount:amount,token:window.localStorage.token,byEmail,code:window.localStorage.getItem('code')},
+         url: "/api/payApi/paymentRegist.do",
+         data: {email:email, tokenId:tokenId,ammount:amount,token:window.localStorage.token,byEmail,code:code,members:window.localStorage.members},
          jsonpCallback:'cd',
          method : "POST",
          success: function(data){

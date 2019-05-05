@@ -124,6 +124,37 @@ public class MembersAPIController extends BaseController
 		}
 	}
 	/**
+	 * 註冊
+	 * @param email
+	 * @param passWord
+	 * @return
+	 */
+	@PostMapping("cheCkRegist.do")
+	public AjaxResult cheCkRegist(@RequestParam("members")String members) {
+		try {
+			members=members.replace("\\", "");
+			members=members.substring(1,members.length()-1);
+			Members mem =JSONObject.parseObject(members,Members.class);
+			if(mem ==null){
+				return AjaxResult.error("請求參數爲空!");
+			}
+			if(mem.getName() ==null){
+				return AjaxResult.error("姓名不能爲空!");
+			}
+			if(mem.getEmail() ==null){
+				return AjaxResult.error("郵箱不能爲空!");
+			}
+			if(mem.getPhone() ==null){
+				return AjaxResult.error("電話不能爲空!");
+			}
+		    return	membersService.cheCkRegist(mem);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return AjaxResult.error("系统错误!"+e.getMessage());
+		}
+	}
+	
+	/**
 	 * 發送短信,驗證短信驗證碼
 	 * <li>查詢該手機號是否存在</li>
 	 * <li>發送短信</li>

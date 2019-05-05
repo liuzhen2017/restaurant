@@ -120,7 +120,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          m.menu_food_type =2
          and f.typess =m.id
          and f.is_hot !=3
-		 GROUP BY m.`id`
+		 GROUP BY m.order_by
     </select>
     <select id="queryJX" resultMap="MenuFoodTypeResult">
        SELECT m.id, m.type_name, m.order_by, m.pic_url, m.describes, m.is_vaild
@@ -129,7 +129,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          m.menu_food_type =2
          and f.typess =m.id
          and f.is_hot =3
-		 GROUP BY m.`id`
+		 GROUP BY m.order_by
     </select>
     
 </mapper>

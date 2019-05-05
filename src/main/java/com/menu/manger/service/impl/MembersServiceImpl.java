@@ -631,4 +631,26 @@ public class MembersServiceImpl implements IMembersService {
 				.replace("&pos=seito", "");
 		System.out.println(info);
 	}
+
+	@Override
+	public AjaxResult cheCkRegist(Members members) {
+		Members dbMembers = membersMapper.selectMembersByEmail(members
+				.getEmail());
+
+		if (!isEmail(members.getEmail())) {
+			return AjaxResult.error("Email格式不正確!");
+		}
+		if (dbMembers != null) {
+			return AjaxResult.error("註冊失敗!該email已經存在!");
+		}
+		if (StringUtils.isEmpty(members.getPhone())) {
+			return AjaxResult.error("手机号不能为空");
+		}
+		Members phoneMembers = membersMapper.selectMembersByPhone(members
+				.getPhone());
+		if (phoneMembers != null) {
+			return AjaxResult.error("註冊失敗!該電話已經存在!");
+		}
+		return AjaxResult.success();
+	}
 }
