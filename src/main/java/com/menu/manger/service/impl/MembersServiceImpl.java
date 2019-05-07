@@ -527,14 +527,14 @@ public class MembersServiceImpl implements IMembersService {
 			log.info("submitRedemption 3.1:積分規則爲空,本次交易沒計算積分 ");
 		} else {
 			// 非會員
-			if (selectAccountFlowList2.get(0).getNetAmount().intValue() > 2
+			if (selectAccountFlowList2.get(0).getNetAmount().doubleValue() > 2
 					&& loginUser.getMembersType() == 0
-					|| selectAccountFlowList2.get(0).getNetAmount().intValue() > 1
+					|| selectAccountFlowList2.get(0).getNetAmount().doubleValue() > 1
 					&& loginUser.getMembersType() == 1) {
 				log.info("本次交易小於規定金額,不計入積分!");
 			} else {
 				// 非會員
-				if (selectAccountFlowList2.get(0).getNetAmount().intValue() < 2
+				if (selectAccountFlowList2.get(0).getNetAmount().doubleValue() < 2
 						&& loginUser.getMembersType() == 0
 						|| selectAccountFlowList2.get(0).getNetAmount()
 								.intValue() < 1

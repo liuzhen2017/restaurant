@@ -373,8 +373,8 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 			if(byRole ==null){
 				log.info("closeTransaction 3.1:積分規則爲空,本次交易沒計算積分 ");
 			}else{
-				if(Integer.valueOf(netAmount) > 2 && selectMembersList.get(0).getMembersType() ==0
-						|| Integer.valueOf(netAmount) > 1 && selectMembersList.get(0).getMembersType() ==1){
+				if(Double.valueOf(netAmount) > 2 && selectMembersList.get(0).getMembersType() ==0
+						|| Double.valueOf(netAmount) > 1 && selectMembersList.get(0).getMembersType() ==1){
 					log.info("本次交易小於規定金額,不計入積分!");
 				}else {
 

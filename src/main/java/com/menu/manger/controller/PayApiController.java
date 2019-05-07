@@ -257,7 +257,7 @@ public class PayApiController extends BaseController {
 		if(!ajax.get("code").toString().equals("0")){
 			return ajax; 
 		}
-		Map<String, Object> map =(Map)ajax.get("data");
+		Map<String, Object> map =(Map<String, Object>)ajax.get("data");
 		Members membersRegis= (Members)map.get("membersInfo");
 		log.info("購買VIP 1.核對金額");
 		if (StringUtils.isNoneEmpty(code)) {

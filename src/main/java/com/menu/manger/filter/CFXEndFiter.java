@@ -96,7 +96,7 @@ public class CFXEndFiter extends AbstractPhaseInterceptor<SoapMessage> {
 	public  String repiyStr(String key, String msg) {
 
 		// 按指定模式在字符串查找
-		msg = msg.replace("<ns2:" + key + " xmlns:ns2=\"http://meokbang.com.hk/storelle/api/pos\">",
+		msg = msg.replace("<ns2:" + key + " xmlns:ns2=\"http://www.meokbang.com.hk:81/storelle/api/pos\">",
 				//msg = msg.replace("<ns2:" + key + " xmlns:ns2=\"http://flqd.majiangyun.com:8899/storelle/api/pos\">",
 				"<" + key + ">");
 		msg =msg.replaceAll("<soap:Body>", "<SOAP-ENV:Header/><SOAP-ENV:Body>");

@@ -20,7 +20,7 @@ import com.menu.manger.service.impl.PosTransactionSerivce;
  * @author liuzhen
  *
  */
-@WebService(serviceName="pos", targetNamespace="http://meokbang.com.hk/storelle/api/pos",endpointInterface="storelle.api.pos.IPosTransaction")
+@WebService(serviceName="pos", targetNamespace="http://www.meokbang.com.hk:81/storelle/api/pos",endpointInterface="storelle.api.pos.IPosTransaction")
 @Component
 public class PosTransaction implements IPosTransaction {
 

@@ -293,8 +293,9 @@ color: #999999;font-size: .48rem;text-align: center;}
 .restaurant-list-box .pic-row{display: flex;justify-content: space-between;align-items: center;margin-bottom: 0.32rem;padding: 0 .293333rem;}
 .restaurant-list-box .pic-row .store-pic{width: 48%;position:relative}
 .restaurant-list-box .pic-row .store-pic img{width: 100%;}
-.restaurant-list-box .pic-row .store-pic .store-name{position:absolute;left: 0.266667rem;top: 0.586667rem;font-size: 0.4rem;color:#cccccc;
-    max-width: 2.1rem; padding: .05rem .1rem;background: rgba(0, 0, 0, .4);}
+.restaurant-list-box .pic-row .store-pic .store-name{/*position:absolute;left: 0.266667rem;top: 0.586667rem;font-size: 0.4rem;
+    color:#cccccc; max-width: 2.1rem; padding: .05rem .1rem;background: rgba(0, 0, 0, .4);*/position: absolute;left: 0.266667rem; top: 0.586667rem;
+    font-size: 0.4rem;color: #ffffff;max-width: 2.1rem;padding: .05rem .1rem;background: rgba(0, 0, 0, .5);}
 .restaurant-list-box .pic-row .store-pic .zan-pic{position:absolute;left: 0.266667rem;bottom: 0.346667rem;width: 0.4rem;}
 .restaurant-list-box .pic-row .store-pic .zan-pic img{width: 100%}
 /*餐厅列表 end*/
@@ -304,7 +305,8 @@ color: #999999;font-size: .48rem;text-align: center;}
 .restaurant-list-box .pic-row{display: flex;justify-content: space-between;align-items: center;margin-bottom: 0.32rem;padding: 0 .293333rem;}
 .restaurant-list-box .pic-row .store-pic{width: 48%;position:relative}
 .restaurant-list-box .pic-row .store-pic img{width: 100%;}
-.restaurant-list-box .pic-row .store-pic .dishes-name{position:absolute;left: 0.266667rem;top: 0.586667rem;font-size: 0.4rem;color:#ffffff;}
+.restaurant-list-box .pic-row .store-pic .dishes-name{position: absolute;left: 0.266667rem;top: 0.586667rem;font-size: 0.4rem;
+    color: #ffffff;max-width: 2.1rem;padding: .05rem .1rem; background: rgba(0, 0, 0, .5);}
 .restaurant-list-box .pic-row .store-pic .dishes-score{position:absolute;left: 0.266667rem;top: 1.1999999rem;font-size: 0.3333rem;color:#ffffff;}
 .restaurant-list-box .pic-row .store-pic .zan-pic{position:absolute;left: 0.266667rem;bottom: 0.346667rem;width: 0.4rem;}
 .restaurant-list-box .pic-row .store-pic .zan-pic img{width: 100%}
@@ -319,14 +321,12 @@ color: #999999;font-size: .48rem;text-align: center;}
 .location-pic .location-store-pic{margin:0 auto 0.293333rem;position:relative;width: 100%;}
 .location-pic .location-store-pic a{display: inline-block;}
 .location-pic .location-store-pic img{width: 9.306666rem;height:100%;}
-.location-pic .location-store-name{position:absolute ;left: 0.8rem;top: 0.75rem;font-size: 0.4rem;color: white;letter-spacing:0.1rem;font-weight: bold}
+.location-pic .location-store-name{position: absolute;left: 0.266667rem;top: 0.586667rem;font-size: 0.4rem;color: #ffffff;max-width: 2.1rem;
+    padding: .05rem .1rem;background: rgba(0, 0, 0, .5);}
 .location-pic .location-store-name label{padding-top: .216666rem;display: inline-block;font-weight: normal;}
 
-.address-selectTop{ text-align: center;    display: flex;
-    justify-content: center;
-    align-items: center;}
+.address-selectTop{ text-align: center;display: flex;justify-content: center;align-items: center;}
 .address-selectTop .address-icon{ margin-right: .266667rem; width: .506666rem;}
-
 .address-selectTop a{ font-size: .4rem;color: #333333;}
 /**兑换商品 start**/
 .changeThings-wrap{ margin-bottom: 1.666667rem;}

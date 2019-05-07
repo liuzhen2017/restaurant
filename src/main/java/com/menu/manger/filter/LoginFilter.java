@@ -15,8 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.stereotype.Component;
@@ -24,6 +22,7 @@ import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.Verification;
 import com.menu.manger.constants.HttpConstants;
@@ -99,7 +98,10 @@ public class LoginFilter implements Filter {
 					return false;
 				}
 			}
-		} catch (Exception e) {
+		}catch(TokenExpiredException e){
+			strErrMsg= "用戶已經過期!";
+		}
+		catch (Exception e) {
 			if (userInfo == null && !noNeedLogin.contains(requestUrl)) {
 				isLogin = false;
 			}

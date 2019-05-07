@@ -2,6 +2,8 @@ package com.menu.manger.controller;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -363,7 +365,7 @@ public class MembersAPIController extends BaseController
      */
     @RequestMapping("/common/readMembers.do")
     @ResponseBody
-    public AjaxResult uploadFile(MultipartFile file) throws Exception
+    public AjaxResult uploadFile(MultipartFile file)
     {
 		String str =null;
     	try {
@@ -374,7 +376,14 @@ public class MembersAPIController extends BaseController
     	logger.info("解析二维码: {}",str);
     	//扫描獲取優惠代碼 積分
     	if(!StringUtils.isEmpty(str) && str.contains("/a/qrCode/s=")){
-    		return	membersService.saveIntegral(str);
+    		try {
+				return	membersService.saveIntegral(str);
+			} catch (NumberFormatException | UnsupportedEncodingException
+					| ParseException e) {
+				e.printStackTrace();
+				logger.error("处理信息错误:"+e.getMessage(),e);
+				return AjaxResult.error("信息处理错误");
+			}
     	}
     	if(!str.contains("https://www.mrokbang.com.hk=")){
     		return AjaxResult.error("很抱歉,二維碼掃錯了!請核對...");

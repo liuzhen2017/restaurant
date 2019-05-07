@@ -50,7 +50,7 @@ public class MangerwApplicationTests {
 		long beginTime =System.currentTimeMillis();
 		log.info("开始调用..");
 	//扫描獲取優惠代碼 積分
-    String str ="http://meokbang.com.hk/a/qrCode/s=zT2KolOlItBE+e3eWYAJBguf0JA2kM0eL/uazYUx6D0=&pos=seito";
+    String str ="http://www.meokbang.com.hk:81/a/qrCode/s=zT2KolOlItBE+e3eWYAJBguf0JA2kM0eL/uazYUx6D0=&pos=seito";
 	if(!StringUtils.isEmpty(str)){
 			AjaxResult saveIntegral = membersService.saveIntegral(str);
 			System.out.println(JSONObject.toJSONString(saveIntegral));
