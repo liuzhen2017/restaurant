@@ -369,12 +369,12 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 			ScoreHis scoreHis =new ScoreHis();
 			//查詢積分規則
 			log.info("closeTransaction 3:计算积分 ");
-			IntegralRole byRole = roleService.selectByRoleByintegralType(selectMembersList.get(0).getMembersType(),2);
+			IntegralRole byRole = roleService.selectByRoleByintegralType(selectMembersList.get(0).getMembersType(),0);
 			if(byRole ==null){
 				log.info("closeTransaction 3.1:積分規則爲空,本次交易沒計算積分 ");
 			}else{
-				if(Double.valueOf(netAmount) > 2 && selectMembersList.get(0).getMembersType() ==0
-						|| Double.valueOf(netAmount) > 1 && selectMembersList.get(0).getMembersType() ==1){
+				if(Double.valueOf(netAmount) < 2 && selectMembersList.get(0).getMembersType() ==0
+						|| Double.valueOf(netAmount) < 1 && selectMembersList.get(0).getMembersType() ==1){
 					log.info("本次交易小於規定金額,不計入積分!");
 				}else {
 
@@ -393,7 +393,7 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 					scoreHisService.insertScoreHis(scoreHis);
 					//判斷用戶消費，是否滿足自動升級會員
 					//查詢是否有活動
-					if (selectMembersList.get(0).getMembersType() == 0) {
+//					if (selectMembersList.get(0).getMembersType() == 0) {
 						IntegralRole selectByRoleByintegralType = roleService.selectByRoleByintegralType(selectMembersList.get(0).getMembersType(), 2);
 						int money = 0;
 						if (selectByRoleByintegralType == null) {
@@ -407,7 +407,8 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 							money = (int) selectByRoleByintegralType.getScoreValue();
 						}
 						int moneyByMemId = accountFlowService.selectAccountMoneyByMemId(selectMembersList.get(0).getId());
-						if (moneyByMemId >= money) {
+						Date dateTemp =selectMembersList.get(0).getSpareField1() ==null ?null: DateUtils.dateTime("yyyyMMdd", selectMembersList.get(0).getSpareField1());
+						if (moneyByMemId >= money &&( dateTemp == null || DateUtils.addYears(new Date(), -1).after(dateTemp))) {
 							//如果是會員
 							Date vipDateEnd = new Date();
 							if (selectMembersList.get(0).getMembersType() == HttpConstants.EmmbersType_1) {
@@ -416,12 +417,15 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 									//如果會員沒有過期，則過期時間 +1年  20191230 + 1 =20201230
 									vipDateEnd = DateUtils.addYears(dateTime, 1);
 								}
-								selectMembersList.get(0).setUpgradeDate(DateUtils.parseDateToStr("yyyyMMdd", new Date()));
-								selectMembersList.get(0).setVipDate(DateUtils.parseDateToStr("yyyyMMdd", vipDateEnd));
 							}
+							selectMembersList.get(0).setUpgradeDate(DateUtils.parseDateToStr("yyyyMMdd", new Date()));
+							selectMembersList.get(0).setVipDate(DateUtils.parseDateToStr("yyyyMMdd", vipDateEnd));
+							selectMembersList.get(0).setSpareField1(DateUtils.parseDateToStr("yyyyMMdd", new Date()));
 							noticeInfoService.insertNoticeInfo("消費金額滿" + money + " 積分自動升級通知", members.getId(), 0, "noticeType", "恭喜您：本年度" + DateUtils.dateTime() + ", 消費金額滿" + money + " 積分自動升級,享受VIP優惠,該優惠于：" + selectMembersList.get(0).getVipDate() + "失效.");
+							
+							accountFlowService.updateAccountFlow(accountFlow);
 						}
-					}
+//					}
 //				AcctBalance selectAcctBalanceById = accBalanceService.selectAcctBalanceById(1);
 //				selectAcctBalanceById.setCanBalance(selectAcctBalanceById.getCanBalance().add(accountFlow.getMoney()));
 //				accBalanceService.updateAcctBalance(selectAcctBalanceById);
@@ -553,6 +557,7 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
         return new String(md);
     }
     public static void main(String[] args) {
-    	System.out.println(DateUtils.dateTime("yyyy-MM-dd HH:mm:ss","2019-03-26 00:00:00").before(new Date()));
+    	Date dateTemp =DateUtils.dateTime("yyyyMMdd", "2018050");
+    	System.out.println(DateUtils.addYears(new Date(), -1).after(dateTemp));
 	}
 }

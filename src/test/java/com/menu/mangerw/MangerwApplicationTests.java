@@ -38,7 +38,7 @@ public class MangerwApplicationTests {
 		String  netAmount ="5824.5";
 		String pax ="9";
 		String coupons ="";
-		String memberID ="711757162";
+		String memberID ="512759652";
 		String t="1554371515446";
 		String h ="fd40a402d8af9ff871ec8aec0a104be8";
 		transactionService.closeTransaction(brandID, transactionDatetime, shopCode, invoiceNo, invoiceAmount, netAmount, pax, coupons, memberID, t, h);

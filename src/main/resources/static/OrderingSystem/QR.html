@@ -126,7 +126,11 @@
 				jsonpCallback : 'cd',
 				method : "POST",
 				success : function(result) {
-					msg(JSON.parse(result).msg);
+					if(result.msg){
+						msg(result.msg);
+					}else{
+					    msg(JSON.parse(result).msg);
+					}
 					if (result.code == 0) {
 						//window.location.href="couponDetail02.html?id="+result.data;
 						if (result.msg.indexOf('掃碼儲存積分成功')) {

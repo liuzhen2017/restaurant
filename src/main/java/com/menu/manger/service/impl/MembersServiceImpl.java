@@ -522,14 +522,14 @@ public class MembersServiceImpl implements IMembersService {
 		// 查詢積分規則
 		log.info("submitRedemption 3:计算积分 ");
 		IntegralRole byRole = roleService.selectByRoleByintegralType(
-				loginUser.getMembersType(), null);
+				loginUser.getMembersType(), 0);
 		if (byRole == null) {
 			log.info("submitRedemption 3.1:積分規則爲空,本次交易沒計算積分 ");
 		} else {
 			// 非會員
-			if (selectAccountFlowList2.get(0).getNetAmount().doubleValue() > 2
+			if (selectAccountFlowList2.get(0).getNetAmount().doubleValue() < 2
 					&& loginUser.getMembersType() == 0
-					|| selectAccountFlowList2.get(0).getNetAmount().doubleValue() > 1
+					|| selectAccountFlowList2.get(0).getNetAmount().doubleValue() < 1
 					&& loginUser.getMembersType() == 1) {
 				log.info("本次交易小於規定金額,不計入積分!");
 			} else {
@@ -555,7 +555,7 @@ public class MembersServiceImpl implements IMembersService {
 					scoreHis.setBusiId(loginUser.getId() + "");
 					scoreHisService.insertScoreHis(scoreHis);
 					// 判斷用戶消費，是否滿足自動升級會員
-					if (selectMembersById.getMembersType() == 0) {
+//					if (selectMembersById.getMembersType() == 0) {
 						IntegralRole selectByRoleByintegralType = roleService
 								.selectByRoleByintegralType(
 										selectMembersById.getMembersType(), 2);
@@ -576,7 +576,8 @@ public class MembersServiceImpl implements IMembersService {
 						int moneyByMemId = accountFlowService
 								.selectAccountMoneyByMemId(selectMembersById
 										.getId());
-						if (moneyByMemId >= money) {
+						Date dateTemp =loginUser.getSpareField1() ==null ?null: DateUtils.dateTime("yyyyMMdd", loginUser.getSpareField1());
+						if (moneyByMemId >= money &&( dateTemp == null || DateUtils.addYears(new Date(), -1).after(dateTemp))) {
 							// 如果是會員
 							Date vipDateEnd = new Date();
 							if (loginUser.getMembersType() == HttpConstants.EmmbersType_1) {
@@ -587,13 +588,14 @@ public class MembersServiceImpl implements IMembersService {
 									vipDateEnd = DateUtils
 											.addYears(dateTime, 1);
 								}
-								loginUser
-										.setUpgradeDate(DateUtils
-												.parseDateToStr("yyyyMMdd",
-														new Date()));
-								loginUser.setVipDate(DateUtils.parseDateToStr(
-										"yyyyMMdd", vipDateEnd));
 							}
+							loginUser
+							.setUpgradeDate(DateUtils
+									.parseDateToStr("yyyyMMdd",
+											new Date()));
+							loginUser.setVipDate(DateUtils.parseDateToStr(
+									"yyyyMMdd", vipDateEnd));
+							loginUser.setSpareField1(DateUtils.parseDateToStr("yyyyMMdd", new Date()));
 							noticeInfoService.insertNoticeInfo("消費金額滿" + money
 									+ " 積分自動升級通知", loginUser.getId(), 0,
 									"noticeType",
@@ -602,7 +604,7 @@ public class MembersServiceImpl implements IMembersService {
 											+ " 積分自動升級,享受VIP優惠,該優惠于："
 											+ loginUser.getVipDate() + "失效.");
 						}
-					}
+//					}
 					// 修改用户积分
 					loginUser.setScore(scoreHis.getNewScore());
 					membersMapper.updateMembers(loginUser);
