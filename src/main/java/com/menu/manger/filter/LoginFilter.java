@@ -69,6 +69,7 @@ public class LoginFilter implements Filter {
 			if(StringUtils.isEmpty(token)){
 				token = request.getParameter("token");
 			}
+			request.getParameter("text");
 			requestUrl =requestUrl.substring(requestUrl.lastIndexOf("/")+1,requestUrl.lastIndexOf("."));
 			if ((StringUtils.isEmpty(token)  || "undefined".equals(token)) && !noNeedLogin.contains(requestUrl) ) {
 				LOG.info("request token is Empty..");

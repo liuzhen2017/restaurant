@@ -378,7 +378,7 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 					log.info("本次交易小於規定金額,不計入積分!");
 				}else {
 
-					Double score = byRole.getScoreValue() * Double.parseDouble(invoiceAmount);
+					Double score = Double.parseDouble(byRole.getScoreValue()) * Double.parseDouble(invoiceAmount);
 					//記錄積分
 
 					scoreHis.setDescribes("pos機消費積分:" + score);
@@ -404,7 +404,7 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 							SysConfig selectByKey = sysConfigService.selectByKey(queryCigKey);
 							money = Integer.parseInt(selectByKey.getConfigValue());
 						} else {
-							money = (int) selectByRoleByintegralType.getScoreValue();
+							money =Double.valueOf(selectByRoleByintegralType.getScoreValue()).intValue();
 						}
 						int moneyByMemId = accountFlowService.selectAccountMoneyByMemId(selectMembersList.get(0).getId());
 						Date dateTemp =selectMembersList.get(0).getSpareField1() ==null ?null: DateUtils.dateTime("yyyyMMdd", selectMembersList.get(0).getSpareField1());

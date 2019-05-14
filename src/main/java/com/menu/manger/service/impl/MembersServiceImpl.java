@@ -55,7 +55,6 @@ import com.menu.manger.util.JsonWebTokenUtil;
 import com.menu.manger.util.SMSDto;
 import com.menu.manger.util.SendEmailUtil;
 import com.menu.manger.util.SendEmaill;
-import com.menu.manger.util.ServiceUtil;
 import com.menu.manger.util.ThreadLocalUtil;
 
 /**
@@ -515,39 +514,39 @@ public class MembersServiceImpl implements IMembersService {
 			accountFlow
 					.setBranchStoreName(selectBranchStoreById.getStoreName());
 		}
-		selectAccountFlowList2.get(0).setMenuId(loginUser.getId());
+		selectAccountFlowList2.get(0).setMenuId(selectMembersById.getId());
 		;
 		accountFlowService.updateAccountFlow(selectAccountFlowList2.get(0));
 		ScoreHis scoreHis = new ScoreHis();
 		// 查詢積分規則
 		log.info("submitRedemption 3:计算积分 ");
 		IntegralRole byRole = roleService.selectByRoleByintegralType(
-				loginUser.getMembersType(), 0);
+				selectMembersById.getMembersType(), 0);
 		if (byRole == null) {
 			log.info("submitRedemption 3.1:積分規則爲空,本次交易沒計算積分 ");
 		} else {
 			// 非會員
 			if (selectAccountFlowList2.get(0).getNetAmount().doubleValue() < 2
-					&& loginUser.getMembersType() == 0
+					&& selectMembersById.getMembersType() == 0
 					|| selectAccountFlowList2.get(0).getNetAmount().doubleValue() < 1
-					&& loginUser.getMembersType() == 1) {
+					&& selectMembersById.getMembersType() == 1) {
 				log.info("本次交易小於規定金額,不計入積分!");
 			} else {
 				// 非會員
 				if (selectAccountFlowList2.get(0).getNetAmount().doubleValue() < 2
-						&& loginUser.getMembersType() == 0
+						&& selectMembersById.getMembersType() == 0
 						|| selectAccountFlowList2.get(0).getNetAmount()
 								.intValue() < 1
-						&& loginUser.getMembersType() == 1) {
+						&& selectMembersById.getMembersType() == 1) {
 					log.info("本次交易小於規定金額,不計入積分!");
 				} else {
-					Double score = byRole.getScoreValue()
+					Double score = Double.parseDouble(byRole.getScoreValue())
 							* Double.parseDouble(selectAccountFlowList2.get(0)
 									.getNetAmount() + "");
 					// 記錄積分
 
 					scoreHis.setDescribes("扫描二维码积分:" + score);
-					scoreHis.setMembersId(loginUser.getId());
+					scoreHis.setMembersId(selectMembersById.getId());
 					scoreHis.setOlbScore(selectMembersById.getScore());
 					scoreHis.setNewScore(selectMembersById.getScore()
 							+ score.intValue());
@@ -570,61 +569,52 @@ public class MembersServiceImpl implements IMembersService {
 							money = Integer.parseInt(selectByKey
 									.getConfigValue());
 						} else {
-							money = (int) selectByRoleByintegralType
-									.getScoreValue();
+							money = Double.valueOf(selectByRoleByintegralType
+									.getScoreValue()).intValue();
 						}
 						int moneyByMemId = accountFlowService
 								.selectAccountMoneyByMemId(selectMembersById
 										.getId());
-						Date dateTemp =loginUser.getSpareField1() ==null ?null: DateUtils.dateTime("yyyyMMdd", loginUser.getSpareField1());
+						Date dateTemp =selectMembersById.getSpareField1() ==null ?null: DateUtils.dateTime("yyyyMMdd", selectMembersById.getSpareField1());
 						if (moneyByMemId >= money &&( dateTemp == null || DateUtils.addYears(new Date(), -1).after(dateTemp))) {
 							// 如果是會員
 							Date vipDateEnd = new Date();
-							if (loginUser.getMembersType() == HttpConstants.EmmbersType_1) {
+							if (selectMembersById.getMembersType() == HttpConstants.EmmbersType_1) {
 								Date dateTime = DateUtils.dateTime("yyyyMMdd",
-										loginUser.getVipDate());
+										selectMembersById.getVipDate());
 								if (dateTime.after(new Date())) {
 									// 如果會員沒有過期，則過期時間 +1年 20191230 + 1 =20201230
 									vipDateEnd = DateUtils
 											.addYears(dateTime, 1);
 								}
 							}
-							loginUser
+							selectMembersById
 							.setUpgradeDate(DateUtils
 									.parseDateToStr("yyyyMMdd",
 											new Date()));
-							loginUser.setVipDate(DateUtils.parseDateToStr(
+							selectMembersById.setVipDate(DateUtils.parseDateToStr(
 									"yyyyMMdd", vipDateEnd));
-							loginUser.setSpareField1(DateUtils.parseDateToStr("yyyyMMdd", new Date()));
+							selectMembersById.setSpareField1(DateUtils.parseDateToStr("yyyyMMdd", new Date()));
 							noticeInfoService.insertNoticeInfo("消費金額滿" + money
-									+ " 積分自動升級通知", loginUser.getId(), 0,
+									+ " 積分自動升級通知", selectMembersById.getId(), 0,
 									"noticeType",
 									"恭喜您：本年度" + DateUtils.dateTime()
 											+ ", 消費金額滿" + money
 											+ " 積分自動升級,享受VIP優惠,該優惠于："
-											+ loginUser.getVipDate() + "失效.");
+											+ selectMembersById.getVipDate() + "失效.");
 						}
 //					}
 					// 修改用户积分
-					loginUser.setScore(scoreHis.getNewScore());
-					membersMapper.updateMembers(loginUser);
+					selectMembersById.setScore(scoreHis.getNewScore());
+					membersMapper.updateMembers(selectMembersById);
 				}
 			}
 		}
-		noticeInfoService.insertNoticeInfo("掃碼儲存積分通知", loginUser.getId(), 0,
+		noticeInfoService.insertNoticeInfo("掃碼儲存積分通知", selectMembersById.getId(), 0,
 				"noticeType", "尊敬的會員,掃碼儲存積分:" + scoreHis.getNewScore()
-						+ ",纍計積分為:" + loginUser.getScore());
-		try {
-			return AjaxResult.success(0, "掃碼儲存積分成功!",
-					ServiceUtil.tokenByUser(loginUser));
-
-		} catch (JsonProcessingException | IllegalArgumentException
-				| JWTCreationException | UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return AjaxResult.success("掃碼儲存積分成功!");
-		} finally {
-			lock.unlock();
-		}
+						+ ",纍計積分為:" + selectMembersById.getScore());
+		lock.unlock();
+		return AjaxResult.success("掃碼儲存積分成功!");
 	}
 
 	public static void main(String[] args) {

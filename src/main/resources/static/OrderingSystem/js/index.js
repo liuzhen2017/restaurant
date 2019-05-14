@@ -211,7 +211,6 @@ $(".setUp-ul .setUp-ul-li").on("click",function(){
       	  window.location.href="showPricePro.html?key=about";
           break;    
         case 7:
-        	debugger;
         	var show = $('#myBargain').css('display');
         	$('#myBargain').css('display',show =='none'?'block':'none');
         	$(this).attr('src',show =='none'?'imgs/index/close-img.png':'imgs/index/next-icon.png');
@@ -222,15 +221,16 @@ $(".setUp-ul .setUp-ul-li").on("click",function(){
 $("#myBargain li").on("click",function(){
     switch ($(this).index()){
         case 0:
-
+			window.location.href="showPricePro.html?title=常見問題&key=frequentlyAskedques";
             break;
         case 1:
-            window.location.href="rule.html";
+            window.location.href="showPricePro.html?title=APP條款及細則&key=termsConditions";
             break;
         case 2:
-
+			window.location.href="showPricePro.html?title=消息設置";
             break;
         case 3:
+            
             break;
     }
 });

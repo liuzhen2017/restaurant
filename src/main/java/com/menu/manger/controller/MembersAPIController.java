@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.exceptions.TokenExpiredException;
@@ -365,19 +364,18 @@ public class MembersAPIController extends BaseController
      */
     @RequestMapping("/common/readMembers.do")
     @ResponseBody
-    public AjaxResult uploadFile(MultipartFile file)
+    public AjaxResult uploadFile(String result)
     {
-		String str =null;
-    	try {
-    		str =QrCodeCreateUtil.decode(file.getInputStream());
-		} catch (Exception e) {
-			return AjaxResult.error("無法識別該二維碼!");
-		}
-    	logger.info("解析二维码: {}",str);
+//    	try {
+//    		str =QrCodeCreateUtil.decode(file.getInputStream());
+//		} catch (Exception e) {
+//			return AjaxResult.error("無法識別該二維碼!");
+//		}
+    	//logger.info("解析二维码: {}",str);
     	//扫描獲取優惠代碼 積分
-    	if(!StringUtils.isEmpty(str) && str.contains("/a/qrCode/s=")){
+    	if(!StringUtils.isEmpty(result) && result.contains("/a/qrCode/s=")){
     		try {
-				return	membersService.saveIntegral(str);
+				return	membersService.saveIntegral(result);
 			} catch (NumberFormatException | UnsupportedEncodingException
 					| ParseException e) {
 				e.printStackTrace();
@@ -385,17 +383,17 @@ public class MembersAPIController extends BaseController
 				return AjaxResult.error("信息处理错误");
 			}
     	}
-    	if(!str.contains("https://www.mrokbang.com.hk=")){
+    	if(!result.contains("https://www.mrokbang.com.hk=")){
     		return AjaxResult.error("很抱歉,二維碼掃錯了!請核對...");
     	}
-    	str =str.replace("https://www.mrokbang.com.hk=","");
-    	str =AESUtil.AES_CBC_Decrypt(str);
+    	result =result.replace("https://www.mrokbang.com.hk=","");
+    	result =AESUtil.AES_CBC_Decrypt(result);
     	//扫描二维码獲取食品
-    	if(!StringUtils.isEmpty(str) && str.contains("type=menuFood;")){
-    		return	menuFoodService.qcMenuFood(str);
+    	if(!StringUtils.isEmpty(result) && result.contains("type=menuFood;")){
+    		return	menuFoodService.qcMenuFood(result);
     	}
     	//扫描獲取優惠代碼
-    	return   couponService.selectCouponMangerByCouponCode(str);
+    	return   couponService.selectCouponMangerByCouponCode(result);
     }
 	/**
 	 * 查询会员管理列表

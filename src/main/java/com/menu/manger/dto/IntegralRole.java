@@ -44,7 +44,7 @@ public class IntegralRole extends BaseEntity
 	/** 金額 */
 	private Double amount;
 	/** 積分，注意，是 金額   * 積分值 */
-	private double scoreValue;
+	private String scoreValue;
 
 	public void setId(Integer id) 
 	{
@@ -175,12 +175,12 @@ public class IntegralRole extends BaseEntity
 	{
 		return amount;
 	}
-	public void setScoreValue(Integer scoreValue) 
+	public void setScoreValue(String scoreValue) 
 	{
 		this.scoreValue = scoreValue;
 	}
 
-	public double getScoreValue() 
+	public String getScoreValue() 
 	{
 		return scoreValue;
 	}

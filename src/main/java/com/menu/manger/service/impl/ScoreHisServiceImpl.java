@@ -240,7 +240,7 @@ public class ScoreHisServiceImpl implements IScoreHisService
 		accountFlow.setMenuAccNo(email);
 		accountFlow.setCreateDate(new Date());
 		accountFlow.setBranchStoreName("綫上支護");
-		accountFlow.setNetAmount(new BigDecimal(ammount));
+		accountFlow.setNetAmount(new BigDecimal(ammount/100));
 		balanceMapperMapper.insertAccountFlow(accountFlow);
 		accountFlow.setTranDes("升級VIP！");
 		log.info("3.計算積分");
