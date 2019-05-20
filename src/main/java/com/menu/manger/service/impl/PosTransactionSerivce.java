@@ -102,16 +102,16 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 		}*/
 		
 		log.info("begin request memberEnquiry,parmat ={}",memberID,phone,brandID,t,h);
-		BranchStore branchStore =new BranchStore();
+//		BranchStore branchStore =new BranchStore();
 		MemberEnquiryResponse response =new MemberEnquiryResponse();
-		branchStore.setStoreNo(Integer.parseInt(brandID));
-		List<BranchStore> selectBranchStoreList = branchMapper.selectBranchStoreList(branchStore);
-		if(selectBranchStoreList ==null || selectBranchStoreList.size() ==0){
-			 response.setResult(2);;
-	    	 response.setErrCode(2);
-	    	 response.setErrMsg("根據分店ID查找,分店沒有錄入該系統不存在!,分店ID: "+brandID);
-	    	 return response;
-		}
+//		branchStore.setStoreNo(Integer.parseInt(brandID));
+//		List<BranchStore> selectBranchStoreList = branchMapper.selectBranchStoreList(branchStore);
+//		if(selectBranchStoreList ==null || selectBranchStoreList.size() ==0){
+//			 response.setResult(2);;
+//	    	 response.setErrCode(2);
+//	    	 response.setErrMsg("根據分店ID查找,分店沒有錄入該系統不存在!,分店ID: "+brandID);
+//	    	 return response;
+//		}
 		
 		Lock lock =new ReentrantLock();
 		lock.lock();
