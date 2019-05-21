@@ -504,7 +504,7 @@ public class MembersServiceImpl implements IMembersService {
 		log.info("submitRedemption 3:填写账户流水 ");
 
 		selectAccountFlowList2.get(0).setMenuId(selectMembersById.getId());
-		
+		selectAccountFlowList2.get(0).setUpdateBy(loginUser.getName());
 		accountFlowService.updateAccountFlow(selectAccountFlowList2.get(0));
 		ScoreHis scoreHis = new ScoreHis();
 		// 查詢積分規則
@@ -591,6 +591,7 @@ public class MembersServiceImpl implements IMembersService {
 											+ ", 消費金額滿" + money
 											+ " 積分自動升級,享受VIP優惠,該優惠于："
 											+ selectMembersById.getVipDate() + "失效.");
+							selectMembersById.setMembersType(1);	
 						}
 //					}
 					// 修改用户积分
