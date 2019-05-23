@@ -221,22 +221,12 @@ public class PayApiController extends BaseController {
 			return AjaxResult.error("支付失敗！請重試");
 		}
 	}
-	@SuppressWarnings("unchecked")
 	@PostMapping("paymentRegist.do")
 	@ResponseBody
 	public AjaxResult paymentRegist(String email, String tokenId, Double ammount,
-			String code,String members) throws JsonProcessingException, IllegalArgumentException, JWTCreationException, UnsupportedEncodingException, Exception {
+			String code,String members){
 		log.info("購買VIP開始");
 		;
-		Stripe.apiKey = configService.selectConfigByKey("pay_user_service_key");
-
-		Map<String, Object> chargeParams = new HashMap<String, Object>();
-		chargeParams.put("amount", ammount.intValue());
-		chargeParams.put("currency", "HKD");
-		chargeParams.put("description", "購買會員");
-		chargeParams.put("source", tokenId);
-		double price = 0;
-		
 		members=members.replace("\\", "");
 		members=members.substring(1,members.length()-1);
 		Members mem =JSONObject.parseObject(members,Members.class);
@@ -252,46 +242,11 @@ public class PayApiController extends BaseController {
 		if(mem.getPhone() ==null){
 			return AjaxResult.error("電話不能爲空!");
 		}
-		
-		AjaxResult ajax =membersService.regist(mem);
-		if(!ajax.get("code").toString().equals("0")){
-			return ajax; 
+		try {			
+			return hisService.payTest(email, ammount, mem, code,tokenId);
+		} catch (Exception e) {
+			return AjaxResult.error(e.getMessage());
 		}
-		Map<String, Object> map =(Map<String, Object>)ajax.get("data");
-		Members membersRegis= (Members)map.get("membersInfo");
-		log.info("購買VIP 1.核對金額");
-		if (StringUtils.isNoneEmpty(code)) {
-			AjaxResult calVIPCode = myCouponService.calVIPCode(code);
-			if (calVIPCode.get("code").toString().equals("1")) {
-				return AjaxResult.error("計算交易金額錯誤!");
-			}
-			Map<String, Object> data = new HashMap<>();
-			data = (Map<String, Object>) calVIPCode.get("data");
-			price = (double) data.get("newPrice");
-		} else {
-			SysConfig selectByKey = configService
-					.selectByKey(HttpConstants.VIPPrice);
-			price = Double.parseDouble(selectByKey.getConfigValue());
-		}
-		if (price != ammount) {
-			return AjaxResult.error("交易金額被和系統不匹配!");
-		}
-			log.info("購買VIP 2.調用支付系統");
-			;
-		Charge charge =  Charge.create(chargeParams);
-		if (charge.getStatus().equals("succeeded")) {
-			log.info("購買VIP 3.寫入積分處理");
-			;
-			hisService.upgradeVIP(email, ammount, membersRegis,code);
-
-			// 發送贈送菜
-
-			Map<String, Object> data = new HashMap<String, Object>();
-			data.put("myscorp", membersRegis.getScore());
-			AjaxResult.success("升級VIP會員成功,贈送菜品已經發放到優惠券!",ajax.get("data"));
-			return AjaxResult.success("升級VIP會員成功,贈送菜品已經發放到優惠券!", data);
-		}
-		throw new Exception("支護失敗,支護狀態: "+ charge.getStatus());
 	}
 
 }

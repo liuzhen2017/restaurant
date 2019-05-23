@@ -1,6 +1,7 @@
 var pathUrl ="https://meokbang.com.hk";
 var appUpload ="https://dl.pconline.com.cn/html_2/1/59/id=37973&pn=0.html";
-//var pathUrl ='';
+//var pathUrl ='http://192.168.0.103:8080/';
+//var pathUrl="http://localhost:8080/"
 // 上传图片
 function uploadFile() {
 	var fileUrl;
@@ -125,7 +126,7 @@ function sendSMS(phone){
 		type:"POST",
 		async:false,
 		url : pathUrl + "/api/sendMessager/sendSMS.do",
-		data : {phone,phone},
+		data : {phone:phone},
 		type : "post",
 		async: false,
 		jsonpCallback:'cd',
@@ -396,41 +397,11 @@ function msg(msg){
 	layer.open({
 		content: msg
 		,skin: 'msg'
-		,time: 2 // 2秒后自动关闭
+		,time: 5 // 2秒后自动关闭
   });
 }
 
 function openMap(){
-	let browser = {
-	        versions: function () {
-	            let u = navigator.userAgent,
-	                app = navigator.appVersion;
-	            return {
-	                trident: u.indexOf('Trident') > -1, /*IE内核*/
-	                presto: u.indexOf('Presto') > -1, /*opera内核*/
-	                webKit: u.indexOf('AppleWebKit') > -1, /*苹果、谷歌内核*/
-	                gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, /*火狐内核*/
-	                mobile: !!u.match(/AppleWebKit.*Mobile.*/), /*是否为移动终端*/
-	                ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), /*ios终端*/
-	                // android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, /*android终端或者uc浏览器*/
-	                android: u.indexOf('Android') > -1 || u.indexOf('Adr') > -1,
-	                iPhone: u.indexOf('iPhone') > -1, /*是否为iPhone或者QQHD浏览器*/
-	                iPad: u.indexOf('iPad') > -1, /*是否iPad*/
-	                webApp: u.indexOf('Safari') == -1, /*是否web应该程序，没有头部与底部*/
-	                souyue: u.indexOf('souyue') > -1,
-	                superapp: u.indexOf('superapp') > -1,
-	                weixin: u.toLowerCase().indexOf('micromessenger') > -1,
-	                Safari: u.indexOf('Safari') > -1,
-	                uc: u.indexOf('Linux') > -1
-	            };
-
-	        }(),
-	        language: (navigator.browserLanguage || navigator.language).toLowerCase()
-	    };
-	 if (browser.versions.ios) {
-		 window.location.href = "https://www.google.com/maps/dir/?api=1&origin="+startAddress+"&destination="+endAddress+"&travelmode=driving";
-		 } else if (browser.versions.android)
-		 { window.location.href = "https://www.google.com/maps/dir/?api=1&origin="+startAddress+"&destination="+endAddress+"&travelmode=driving"; 
-		 }
+	
 }
 

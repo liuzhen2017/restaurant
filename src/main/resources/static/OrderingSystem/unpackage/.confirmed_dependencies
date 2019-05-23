@@ -1,1 +1,48 @@
-null
+{
+	"QR.html": {
+		"refer": [
+			"index.html",
+			"vipCenter.html"
+		]
+	},
+	"index.html": {
+		"refer": [
+			"shopLocation.html",
+			"Login.html",
+			"canPai.html",
+			"register_choice.html",
+			"BannerDetail.html"
+		]
+	},
+	"vipCenter.html": {
+		"refer": [
+			"index.html"
+		]
+	},
+	"shopLocation.html": {
+		"refer": [
+			"vipCenter.html"
+		]
+	},
+	"canPai.html": {
+		"refer": [
+			"shopLocation.html"
+		]
+	},
+	"register_choice.html": {
+		"refer": [
+			"registerVIP.html",
+			"index.html"
+		]
+	},
+	"registerVIP.html": {
+		"refer": [
+			"register_choice.html"
+		]
+	},
+	"BannerDetail.html": {
+		"refer": [
+			"index.html"
+		]
+	}
+}

@@ -39,7 +39,7 @@ document.writeln("                        <li class='setUp-ul-li'>");
 document.writeln("                            <span><img src=\"imgs/index/shed-icon.png\">設定</span>");
 document.writeln("                            <span><img id=\"moreIco\" src=\"imgs/index/next-icon.png\"></span>");
 document.writeln("                            <ul id=\"myBargain\" class=\"setUp-ul02\" style=\"display: none;\">");
-document.writeln("                                <li href='showPricePro.html?key=frequentlyAskedques'>常見問題</li>");
+document.writeln("                                <li href='showPricePro.html?key=frequentlyAskedques'>隱私政策</li>");
 document.writeln("                                <li href='showPricePro.html?key=termsConditions'>APP條款及細則</li>");
 /*document.writeln("                                <li>語言</li>");*/
 document.writeln("                                <li>消息設置</li>");

@@ -102,16 +102,16 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 		}*/
 		
 		log.info("begin request memberEnquiry,parmat ={}",memberID,phone,brandID,t,h);
-		BranchStore branchStore =new BranchStore();
+//		BranchStore branchStore =new BranchStore();
 		MemberEnquiryResponse response =new MemberEnquiryResponse();
-		branchStore.setStoreNo(Integer.parseInt(brandID));
-		List<BranchStore> selectBranchStoreList = branchMapper.selectBranchStoreList(branchStore);
-		if(selectBranchStoreList ==null || selectBranchStoreList.size() ==0){
-			 response.setResult(2);;
-	    	 response.setErrCode(2);
-	    	 response.setErrMsg("根據分店ID查找,分店沒有錄入該系統不存在!,分店ID: "+brandID);
-	    	 return response;
-		}
+//		branchStore.setStoreNo(Integer.parseInt(brandID));
+//		List<BranchStore> selectBranchStoreList = branchMapper.selectBranchStoreList(branchStore);
+//		if(selectBranchStoreList ==null || selectBranchStoreList.size() ==0){
+//			 response.setResult(2);;
+//	    	 response.setErrCode(2);
+//	    	 response.setErrMsg("根據分店ID查找,分店沒有錄入該系統不存在!,分店ID: "+brandID);
+//	    	 return response;
+//		}
 		
 		Lock lock =new ReentrantLock();
 		lock.lock();
@@ -363,7 +363,7 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 	    accountFlow.setTranType(2);
 	    accountFlow.setNetAmount(new BigDecimal(netAmount));
 	    accountFlow.setCouponCode(coupons);
-	    
+	    accountFlow.setCreateBy(selectMembersList !=null? selectMembersList.get(0).getName(): null);
 		accountFlowService.insertAccountFlow(accountFlow);
 		if(!StringUtils.isEmpty(memberID)) {
 			ScoreHis scoreHis =new ScoreHis();
@@ -430,7 +430,7 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 //				selectAcctBalanceById.setCanBalance(selectAcctBalanceById.getCanBalance().add(accountFlow.getMoney()));
 //				accBalanceService.updateAcctBalance(selectAcctBalanceById);
 					//修改用户积分
-					selectMembersList.get(0).setScore(selectMembersList.get(0).getScore() + scoreHis.getNewScore());
+					selectMembersList.get(0).setScore(scoreHis.getNewScore());
 					memBersMapper.updateMembers(selectMembersList.get(0));
 				}
 			}

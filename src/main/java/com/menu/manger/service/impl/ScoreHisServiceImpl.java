@@ -3,7 +3,9 @@ package com.menu.manger.service.impl;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -20,6 +22,7 @@ import com.menu.manger.dto.MenuFood;
 import com.menu.manger.dto.MenuFoodExchange;
 import com.menu.manger.dto.MyCoupon;
 import com.menu.manger.dto.ScoreHis;
+import com.menu.manger.dto.SysConfig;
 import com.menu.manger.mapper.AccountFlowMapper;
 import com.menu.manger.mapper.AcctBalanceMapper;
 import com.menu.manger.mapper.MenuFoodExchangeMapper;
@@ -28,10 +31,15 @@ import com.menu.manger.mapper.MyCouponMapper;
 import com.menu.manger.mapper.ScoreHisMapper;
 import com.menu.manger.service.IIntegralRoleService;
 import com.menu.manger.service.IMembersService;
+import com.menu.manger.service.IMyCouponService;
 import com.menu.manger.service.INoticeInfoService;
 import com.menu.manger.service.IScoreHisService;
+import com.menu.manger.service.ISysConfigService;
+import com.menu.manger.util.AjaxResult;
 import com.menu.manger.util.Convert;
 import com.menu.manger.util.DateUtils;
+import com.stripe.Stripe;
+import com.stripe.model.Charge;
 
 /**
  * 积分记录 服务层实现
@@ -64,6 +72,15 @@ public class ScoreHisServiceImpl implements IScoreHisService
 	private MyCouponMapper myCouponMapper;
     private static final Logger log = LoggerFactory.getLogger(ScoreHisServiceImpl.class);
 
+    @Autowired
+	ISysConfigService configService;
+	@Autowired
+	IScoreHisService hisService;
+	@Autowired
+	IMyCouponService myCouponService;
+	
+	
+	
 	/**
      * 查询积分记录信息
      * 
@@ -338,5 +355,65 @@ public class ScoreHisServiceImpl implements IScoreHisService
 		
 		
 		log.info("6.完畢:");
+	}
+
+	@Override
+	@Transactional(readOnly=false,rollbackFor=Exception.class)
+	public AjaxResult payTest(String email, Double ammount, Members members,
+			String code,String tokenId) throws Exception {
+		Stripe.apiKey = configService.selectConfigByKey("pay_user_service_key");
+
+		Map<String, Object> chargeParams = new HashMap<String, Object>();
+		chargeParams.put("amount", ammount.intValue());
+		chargeParams.put("currency", "HKD");
+		chargeParams.put("description", "購買會員");
+		chargeParams.put("source", tokenId);
+		double price = 0;
+		
+		
+		AjaxResult ajax =membersService.regist(members);
+		if(!ajax.get("code").toString().equals("0")){
+			return ajax; 
+		}
+		Map<String, Object> map =(Map<String, Object>)ajax.get("data");
+		Members membersRegis= (Members)map.get("membersInfo");
+		log.info("購買VIP 1.核對金額");
+		if (StringUtils.isNoneEmpty(code) && !"null".equals(code)) {
+			AjaxResult calVIPCode = myCouponService.calVIPCode(code);
+			if (calVIPCode.get("code").toString().equals("1")) {
+				return AjaxResult.error("計算交易金額錯誤!");
+			}
+			Map<String, Object> data = new HashMap<>();
+			data = (Map<String, Object>) calVIPCode.get("data");
+			if(data ==null){
+				throw new Exception(calVIPCode.get("msg").toString());
+			}
+			price = (double) data.get("newPrice");
+		} else {
+			SysConfig selectByKey = configService
+					.selectByKey(HttpConstants.VIPPrice);
+			price = Double.parseDouble(selectByKey.getConfigValue());
+		}
+		if (price/10 != ammount) {
+			throw new Exception("交易金額被和系統不匹配!");
+		}
+			log.info("購買VIP 2.調用支付系統");
+			;
+		Charge charge =  Charge.create(chargeParams);
+		if (charge.getStatus().equals("succeeded")) {
+			log.info("購買VIP 3.寫入積分處理");
+			;
+			hisService.upgradeVIP(email, ammount, membersRegis,code);
+
+			// 發送贈送菜
+
+			Map<String, Object> data = new HashMap<String, Object>();
+			data.put("myscorp", membersRegis.getScore());
+			AjaxResult.success("升級VIP會員成功,贈送菜品已經發放到優惠券!",ajax.get("data"));
+			return AjaxResult.success("升級VIP會員成功,贈送菜品已經發放到優惠券!", data);
+		}else{
+			throw new Exception("交易失败!:"+charge.getStatus());
+		}
+		
 	}
 }

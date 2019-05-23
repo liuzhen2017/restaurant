@@ -221,7 +221,7 @@ $(".setUp-ul .setUp-ul-li").on("click",function(){
 $("#myBargain li").on("click",function(){
     switch ($(this).index()){
         case 0:
-			window.location.href="showPricePro.html?title=常見問題&key=frequentlyAskedques";
+			window.location.href="showPricePro.html?title=隱私政策&key=frequentlyAskedques";
             break;
         case 1:
             window.location.href="showPricePro.html?title=APP條款及細則&key=termsConditions";

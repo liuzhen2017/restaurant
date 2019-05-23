@@ -516,6 +516,7 @@ public class MembersServiceImpl implements IMembersService {
 		}
 		selectAccountFlowList2.get(0).setMenuId(selectMembersById.getId());
 		;
+		selectAccountFlowList2.get(0).setCreateBy(selectMembersById.getName());
 		accountFlowService.updateAccountFlow(selectAccountFlowList2.get(0));
 		ScoreHis scoreHis = new ScoreHis();
 		// 查詢積分規則

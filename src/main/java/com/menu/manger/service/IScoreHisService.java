@@ -1,9 +1,13 @@
 package com.menu.manger.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import com.auth0.jwt.exceptions.JWTCreationException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.menu.manger.dto.Members;
 import com.menu.manger.dto.ScoreHis;
+import com.menu.manger.util.AjaxResult;
 
 /**
  * 积分记录 服务层
@@ -66,4 +70,6 @@ public interface IScoreHisService
 	 * @param members
 	 */
 	void upgradeVIP(String email, Double ammount, Members members,String code);
+	
+	AjaxResult payTest(String email, Double ammount, Members members,String code,String tokenId)throws Exception;
 }
