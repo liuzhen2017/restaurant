@@ -409,8 +409,7 @@ public class ScoreHisServiceImpl implements IScoreHisService
 
 			Map<String, Object> data = new HashMap<String, Object>();
 			data.put("myscorp", membersRegis.getScore());
-			AjaxResult.success("升級VIP會員成功,贈送菜品已經發放到優惠券!",ajax.get("data"));
-			return AjaxResult.success("升級VIP會員成功,贈送菜品已經發放到優惠券!", data);
+			return AjaxResult.success("升級VIP會員成功,贈送菜品已經發放到優惠券!",ajax.get("data"));
 		}else{
 			throw new Exception("交易失败!:"+charge.getStatus());
 		}

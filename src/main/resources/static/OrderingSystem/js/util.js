@@ -1,7 +1,7 @@
-var pathUrl ="https://meokbang.com.hk";
+//var pathUrl ="https://meokbang.com.hk";
 var appUpload ="https://dl.pconline.com.cn/html_2/1/59/id=37973&pn=0.html";
 //var pathUrl ='http://192.168.0.103:8080/';
-//var pathUrl="http://localhost:8080/"
+var pathUrl="http://localhost:8080/"
 // 上传图片
 function uploadFile() {
 	var fileUrl;

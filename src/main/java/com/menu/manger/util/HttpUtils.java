@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.cert.X509Certificate;
@@ -23,16 +22,20 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import org.apache.http.HttpResponse;
+import org.apache.http.Consts;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * 通用http发送方法
@@ -111,28 +114,28 @@ public class HttpUtils
 	 * @param params
 	 * @return
 	 */
-	public static String doPost(String url, Map params){
+	public static String doPost(String url, Map<String,Object> params){
 		
 		BufferedReader in = null;  
         try {  
             // 定义HttpClient  
-            HttpClient client = new DefaultHttpClient();  
+        	CloseableHttpClient httpClient = HttpClients.createDefault();
             // 实例化HTTP方法  
-            HttpPost request = new HttpPost();  
-            request.setURI(new URI(url));
+            HttpPost request = new HttpPost(url);
+            request.setHeader("Content-Type", "application/json");
             
             //设置参数
             List<NameValuePair> nvps = new ArrayList<NameValuePair>(); 
-            for (Iterator iter = params.keySet().iterator(); iter.hasNext();) {
+            for (Iterator<String> iter = params.keySet().iterator(); iter.hasNext();) {
     			String name = (String) iter.next();
     			String value = String.valueOf(params.get(name));
     			nvps.add(new BasicNameValuePair(name, value));
     			
-    			//System.out.println(name +"-"+value);
+    			System.out.println(name +"="+value);
     		}
-            request.setEntity(new UrlEncodedFormEntity(nvps,HTTP.UTF_8));
-            
-            HttpResponse response = client.execute(request);  
+            request.addHeader("Content-Type", "application/json");
+            request.setEntity(new StringEntity(JSONObject.toJSONString(params)));
+            CloseableHttpResponse response = httpClient.execute(request);  
             int code = response.getStatusLine().getStatusCode();
             if(code == 200){	//请求成功
             	in = new BufferedReader(new InputStreamReader(response.getEntity()  
@@ -143,14 +146,13 @@ public class HttpUtils
                 while ((line = in.readLine()) != null) {  
                     sb.append(line + NL);  
                 }
-                
                 in.close();  
-                
+                System.out.println(sb.toString());
                 return sb.toString();
             }
             else{	//
             	System.out.println("状态码：" + code);
-            	return null;
+            	return "status: "+code;
             }
         }
         catch(Exception e){

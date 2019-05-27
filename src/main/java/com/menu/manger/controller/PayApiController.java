@@ -1,6 +1,5 @@
 package com.menu.manger.controller;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
-import com.auth0.jwt.exceptions.JWTCreationException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.menu.manger.constants.HttpConstants;
 import com.menu.manger.dto.AccountFlow;
 import com.menu.manger.dto.Members;
@@ -84,7 +81,7 @@ public class PayApiController extends BaseController {
 					.selectByKey(HttpConstants.VIPPrice);
 			price = Double.parseDouble(selectByKey.getConfigValue());
 		}
-		if (price != ammount) {
+		if (price/10 != ammount) {
 			return AjaxResult.error("交易金額被和系統不匹配!");
 		}
 		try {
@@ -173,7 +170,7 @@ public class PayApiController extends BaseController {
 					.selectByKey(HttpConstants.VIPPrice);
 			price = Double.parseDouble(selectByKey.getConfigValue());
 		}
-		if (price != ammount) {
+		if (price/10 != ammount) {
 			return AjaxResult.error("交易金額被和系統不匹配!");
 		}
 		try {

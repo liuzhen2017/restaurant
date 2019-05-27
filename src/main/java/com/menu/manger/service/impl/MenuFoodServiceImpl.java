@@ -181,7 +181,7 @@ public class MenuFoodServiceImpl implements IMenuFoodService
 
 
 			}
-			if(selectMenuFoodById.getSpareField5() !=null && Integer.parseInt(selectMenuFoodById.getSpareField5()) ==HttpConstants.EmmbersType_1 && selectMembersById.getMembersType() ==HttpConstants.EmmbersType_1){
+			if(selectMenuFoodById.getSpareField5() !=null && Integer.parseInt(selectMenuFoodById.getSpareField5()) ==HttpConstants.EmmbersType_1 && selectMembersById.getMembersType() !=HttpConstants.EmmbersType_1){
 				return AjaxResult.error("該商品僅限於VIP用戶兌換,請升級VIP");
 			}
 			if(selectMenuFoodById.getIsSellOut().equals("yes")){

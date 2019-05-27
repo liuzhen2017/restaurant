@@ -140,9 +140,9 @@ public class LoginFilter implements Filter {
 		String noNeedLogin =selectByKey.getConfigValue();
 		if (!request.getRequestURI().contains(noNeedLogin) && request.getRequestURI().endsWith(".do")) {
 			try {
-				 if(forwardLogin(request, response)){
-					 arg2.doFilter(request, response);
-				 }
+				arg2.doFilter(request, response);
+//				 if(forwardLogin(request, response)){
+//				 }
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
