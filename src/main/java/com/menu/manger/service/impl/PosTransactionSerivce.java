@@ -345,12 +345,13 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 	        accountFlow.setAccNo(memberID);
 	        accountFlow.setMenuId(selectMembersList.get(0).getId());
 	    	accountFlow.setMenuAccNo(selectMembersList.get(0).getCode());
+	    	accountFlow.setUpdateBy(selectMembersList.get(0).getName());
 	    }
 	    
 		BranchStore branchStore =new BranchStore();
-		branchStore.setStoreNo(Integer.parseInt(brandID));
+		branchStore.setStoreNo(Integer.parseInt(shopCode));
 		List<BranchStore> selectBranchStoreList = branchStoreSerivce.selectBranchStoreList(branchStore);
-		accountFlow.setBranchStoreId(brandID);
+		accountFlow.setBranchStoreId(shopCode);
 	    BranchStore selectBranchStoreById = selectBranchStoreList.size()==0? null :selectBranchStoreList.get(0);
 	    if(selectBranchStoreById !=null){
 	    	accountFlow.setBranchStoreName(selectBranchStoreById.getStoreName());
@@ -407,7 +408,7 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 							money =Double.valueOf(selectByRoleByintegralType.getScoreValue()).intValue();
 						}
 						int moneyByMemId = accountFlowService.selectAccountMoneyByMemId(selectMembersList.get(0).getId());
-						Date dateTemp =selectMembersList.get(0).getSpareField1() ==null ?null: DateUtils.dateTime("yyyyMMdd", selectMembersList.get(0).getSpareField1());
+						Date dateTemp =StringUtils.isEmpty(selectMembersList.get(0).getSpareField2()) ?null: DateUtils.dateTime("yyyyMMdd", selectMembersList.get(0).getSpareField2());
 						if (moneyByMemId >= money &&( dateTemp == null || DateUtils.addYears(new Date(), -1).after(dateTemp))) {
 							//如果是會員
 							Date vipDateEnd = new Date();
@@ -420,7 +421,8 @@ public class PosTransactionSerivce implements IPosTransactionSerivce {
 							}
 							selectMembersList.get(0).setUpgradeDate(DateUtils.parseDateToStr("yyyyMMdd", new Date()));
 							selectMembersList.get(0).setVipDate(DateUtils.parseDateToStr("yyyyMMdd", vipDateEnd));
-							selectMembersList.get(0).setSpareField1(DateUtils.parseDateToStr("yyyyMMdd", new Date()));
+							selectMembersList.get(0).setSpareField2(DateUtils.parseDateToStr("yyyyMMdd", new Date()));
+							selectMembersList.get(0).setMembersType(1);
 							noticeInfoService.insertNoticeInfo("消費金額滿" + money + " 積分自動升級通知", members.getId(), 0, "noticeType", "恭喜您：本年度" + DateUtils.dateTime() + ", 消費金額滿" + money + " 積分自動升級,享受VIP優惠,該優惠于：" + selectMembersList.get(0).getVipDate() + "失效.");
 							
 							accountFlowService.updateAccountFlow(accountFlow);

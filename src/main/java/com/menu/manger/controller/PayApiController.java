@@ -222,7 +222,7 @@ public class PayApiController extends BaseController {
 	@ResponseBody
 	public AjaxResult paymentRegist(String email, String tokenId, Double ammount,
 			String code,String members){
-		log.info("購買VIP開始");
+		log.info("購買VIP開始,email={},email={},tokenId={},tokenId={},ammount={},code={},members={}",email,tokenId,ammount,code,members);
 		;
 		members=members.replace("\\", "");
 		members=members.substring(1,members.length()-1);

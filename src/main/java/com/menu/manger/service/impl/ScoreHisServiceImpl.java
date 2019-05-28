@@ -394,9 +394,10 @@ public class ScoreHisServiceImpl implements IScoreHisService
 					.selectByKey(HttpConstants.VIPPrice);
 			price = Double.parseDouble(selectByKey.getConfigValue());
 		}
-		if (price/10 != ammount) {
-			throw new Exception("交易金額被和系統不匹配!");
-		}
+		log.info("price={},dbPriece={}",price,ammount);;
+//		if (price/10 != ammount) {
+//			throw new Exception("交易金額被和系統不匹配!");
+//		}
 			log.info("購買VIP 2.調用支付系統");
 			;
 		Charge charge =  Charge.create(chargeParams);

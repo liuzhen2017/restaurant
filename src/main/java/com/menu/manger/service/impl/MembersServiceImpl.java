@@ -29,7 +29,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.menu.manger.constants.HttpConstants;
 import com.menu.manger.dto.AccountFlow;
-import com.menu.manger.dto.BranchStore;
 import com.menu.manger.dto.IntegralRole;
 import com.menu.manger.dto.Members;
 import com.menu.manger.dto.MenuFoodExchange;
@@ -503,20 +502,9 @@ public class MembersServiceImpl implements IMembersService {
 				.getId());
 		log.info("submitRedemption 3:填写账户流水 ");
 
-		BranchStore branchStore = new BranchStore();
-		branchStore.setStoreNo(Integer.parseInt(result[0] + ""));
-		List<BranchStore> selectBranchStoreList = branchStoreSerivce
-				.selectBranchStoreList(branchStore);
-		accountFlow.setBranchStoreId(result[0] + "");
-		BranchStore selectBranchStoreById = selectBranchStoreList.size() == 0 ? null
-				: selectBranchStoreList.get(0);
-		if (selectBranchStoreById != null) {
-			accountFlow
-					.setBranchStoreName(selectBranchStoreById.getStoreName());
-		}
 		selectAccountFlowList2.get(0).setMenuId(selectMembersById.getId());
-		;
 		selectAccountFlowList2.get(0).setCreateBy(selectMembersById.getName());
+		selectAccountFlowList2.get(0).setUpdateBy(loginUser.getName());
 		accountFlowService.updateAccountFlow(selectAccountFlowList2.get(0));
 		ScoreHis scoreHis = new ScoreHis();
 		// 查詢積分規則
@@ -576,7 +564,7 @@ public class MembersServiceImpl implements IMembersService {
 						int moneyByMemId = accountFlowService
 								.selectAccountMoneyByMemId(selectMembersById
 										.getId());
-						Date dateTemp =selectMembersById.getSpareField1() ==null ?null: DateUtils.dateTime("yyyyMMdd", selectMembersById.getSpareField1());
+						Date dateTemp =selectMembersById.getSpareField2() ==null ?null: DateUtils.dateTime("yyyyMMdd", selectMembersById.getSpareField2());
 						if (moneyByMemId >= money &&( dateTemp == null || DateUtils.addYears(new Date(), -1).after(dateTemp))) {
 							// 如果是會員
 							Date vipDateEnd = new Date();
@@ -595,7 +583,7 @@ public class MembersServiceImpl implements IMembersService {
 											new Date()));
 							selectMembersById.setVipDate(DateUtils.parseDateToStr(
 									"yyyyMMdd", vipDateEnd));
-							selectMembersById.setSpareField1(DateUtils.parseDateToStr("yyyyMMdd", new Date()));
+							selectMembersById.setSpareField2(DateUtils.parseDateToStr("yyyyMMdd", new Date()));
 							noticeInfoService.insertNoticeInfo("消費金額滿" + money
 									+ " 積分自動升級通知", selectMembersById.getId(), 0,
 									"noticeType",
@@ -603,6 +591,7 @@ public class MembersServiceImpl implements IMembersService {
 											+ ", 消費金額滿" + money
 											+ " 積分自動升級,享受VIP優惠,該優惠于："
 											+ selectMembersById.getVipDate() + "失效.");
+							selectMembersById.setMembersType(1);	
 						}
 //					}
 					// 修改用户积分
