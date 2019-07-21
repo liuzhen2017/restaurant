@@ -177,11 +177,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
           where members_id = #{membersId}
           <if test="isVaild != null  and isVaild == 'yes' "> 
                and is_vaild = 'yes'
-               and ( STR_TO_DATE(invalid_date, '%Y-%m-%d %H:%i:%S') >NOW()  OR invalid_date IS NULL )
+               and ( STR_TO_DATE(invalid_date, '%Y-%m-%d %H:%i:%S') >NOW()  OR invalid_date IS NULL or STR_TO_DATE(invalid_date, '%Y%m%d %H:%i:%S') >NOW())
                and exchange_status  = 0
           </if>
 	      <if test="isVaild != null  and isVaild == 'no' ">
-                AND (is_vaild = 'no' OR (NOW() >STR_TO_DATE(invalid_date, '%Y-%m-%d %H:%i:%S') OR invalid_date IS NULL) OR exchange_status NOT IN (0) )
+                AND (is_vaild = 'no' OR (NOW() >STR_TO_DATE(invalid_date, '%Y-%m-%d %H:%i:%S') OR invalid_date IS NULL STR_TO_DATE(invalid_date, '%Y%m%d %H:%i:%S') >NOW()) OR exchange_status NOT IN (0) )
           </if>
       	   order by create_date desc
     </select>

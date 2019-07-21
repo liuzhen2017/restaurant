@@ -34,7 +34,7 @@ public class SMSDto {
 	 * 發送内容
 	 */
 	private String MessageBody;
-	
+	private String DestinationCountry="HK";
 	/**
 	 * 發送返回MSG
 	 */
@@ -117,6 +117,14 @@ public class SMSDto {
 
 	public void setMessageBody(String messageBody) {
 		MessageBody = messageBody;
+	}
+
+	public String getDestinationCountry() {
+		return DestinationCountry;
+	}
+
+	public void setDestinationCountry(String destinationCountry) {
+		DestinationCountry = destinationCountry;
 	}
 
 }

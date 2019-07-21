@@ -1,5 +1,6 @@
 package com.menu.manger.dto;
 
+import java.net.URLDecoder;
 import java.util.Date;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -212,6 +213,9 @@ public class CouponManger extends BaseEntity
 
 	public String getInstructions()
 	{
+		if(instructions !=null){
+			return URLDecoder.decode(instructions);
+		}
 		return instructions;
 	}
 	public void setCouponCode(String couponCode)

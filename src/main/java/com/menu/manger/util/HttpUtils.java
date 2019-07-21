@@ -133,7 +133,6 @@ public class HttpUtils
     			
     			System.out.println(name +"="+value);
     		}
-            request.addHeader("Content-Type", "application/json");
             request.setEntity(new StringEntity(JSONObject.toJSONString(params)));
             CloseableHttpResponse response = httpClient.execute(request);  
             int code = response.getStatusLine().getStatusCode();

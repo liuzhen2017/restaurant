@@ -1,6 +1,7 @@
 package com.menu.manger.util;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,7 +26,7 @@ public class SMSUtil{
 				parmat.getClass());
 		// 请求短信接口
 		System.out.println("發送消息:"+parmatJson);
-		String json = HttpUtils.doPost(url, parmat);
+		String json = HttpUtils.sendGet(url, createGetParmat(parmat));
 		System.out.println("返回消息:"+json);
 		// 正则表达式解析
 		String pattem = "<Success>true</Success><ResponseCode>A000</ResponseCode>";
@@ -49,6 +50,17 @@ public class SMSUtil{
 			}
 		}
 		return AjaxResult.error(500,"發送消息失敗!",sms);
+	}
+	public static String createGetParmat(Map<String, Object> map){
+		Iterator<String> iterator = map.keySet().iterator();
+		StringBuffer sb =new StringBuffer();
+		String key =null;
+		while (iterator.hasNext()) {
+			key =iterator.next();
+			sb.append(key+"="+map.get(key));
+			sb.append("&");
+		}
+		return sb.toString();
 	}
 
 }

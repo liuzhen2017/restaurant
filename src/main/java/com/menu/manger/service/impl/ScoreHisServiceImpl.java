@@ -320,7 +320,7 @@ public class ScoreHisServiceImpl implements IScoreHisService
 				menuFoodExchange.setCreateDate(new Date());
 				menuFoodExchange.setMembersId(members.getId());
 				menuFoodExchange.setIsVaild("yes");
-				menuFoodExchange.setInvalidDate(DateUtils.parseDateToStr("yyyyMMdd HH:mm:ss",DateUtils.addYears(new Date(),1)));
+				menuFoodExchange.setInvalidDate(DateUtils.parseDateToStr("yyyy-MM-dd HH:mm:ss",DateUtils.addYears(new Date(),1)));
 				menuFoodExchange.setTakeEffectDate(menuFood2.getTakeEffectDate());
 				
 				menuFoodExchange.setMenuFoodId(menuFood2.getId());

@@ -1,5 +1,7 @@
 package com.menu.manger.dto;
 
+import java.net.URLDecoder;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -32,6 +34,8 @@ public class SysConfig extends BaseEntity
         return configId;
     }
 
+    private String remark;
+    
     public void setConfigId(Long configId)
     {
         this.configId = configId;
@@ -92,4 +96,16 @@ public class SysConfig extends BaseEntity
             .append("remark", getRemark())
             .toString();
     }
+
+	public String getRemark() {
+		if(remark !=null){
+			return URLDecoder.decode(remark);
+		}
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		
+		this.remark = remark;
+	}
 }

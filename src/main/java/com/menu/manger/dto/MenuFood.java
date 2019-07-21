@@ -2,6 +2,8 @@ package com.menu.manger.dto;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.net.URLDecoder;
 import java.util.Date;
 
 /**
@@ -101,6 +103,9 @@ public class MenuFood extends BaseEntity
 
 	public String getDescribes() 
 	{
+		if(describes !=null){
+			return URLDecoder.decode(describes);
+		}
 		return describes;
 	}
 	public void setPicUrl(String picUrl) 
